@@ -59,10 +59,33 @@ Updated 2026-08-12 (end of day).
 - NOT yet re-reviewed after the fix round; PGlite-based SQL tests are
   planned for the clinic-mode build phase.
 
+## UI: BUILT, VERIFIED IN A REAL BROWSER
+
+- 23 test files, 223 tests green; production build clean; walked the BUILT
+  artifact (vite preview) end to end: setup wizard with empty-list
+  refusal, backdrop non-close, Escape discard confirm (instrumented,
+  message verified), live patient-number generation (AMNA12041990 case),
+  save + reload persistence, pediatric stats, phone layout with bottom
+  tab bar.
+- Shell: data-driven tabs (Visits / New visit / Settings; clinic Board tab
+  adds one entry + one case), storage health banners, adopt-older-copy
+  flow, multi-tab warning, honest sync chip.
+- Encounter form: every scar-tissue rule from the reference contract.
+  IMPORTANT SEAM: the form owns its dialog chrome (backdrop, focus trap,
+  Escape-through-discard); never wrap it in another dialog. onSaved
+  receives (saved, andNext): plain Save closes, Save & next stays open.
+
+## Deferred consciously (next build cycles)
+
+- Template builder UI (drag/drop editor; library read-only in Settings),
+  Rx/Dx preset editors + one-tap apply, lab reference-range editor,
+  Analytics screen, service worker / vite-plugin-pwa wiring (user-gated
+  updates for the clinical app, auto for demo), PGlite SQL tests.
+
 ## Next
 
-1. Core build in flight: domain algorithms + parity tests, per-record
-   storage kernel, config model, sync engine (workflow, 4 builders).
-2. Fix residual test failures after the build fleet reports; commit green.
-3. Then: encounter form + records UI, clinic mode (auth/roles/flow board),
-   demo, website.
+1. Clinic mode (auth screens, roles, patient-flow board) on the v4.1
+   schema.
+2. Demo (DH_DEMO build, seeded fictional clinic, all 5 safety laws) and
+   website + guides (needs the pivot story from Alec).
+3. Device tests on real hardware before anything ships.
