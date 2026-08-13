@@ -38,6 +38,11 @@ Field mode orgs are DONE after step 3; skip to Verify.
 
 ## 4. Clinic mode: enable sign-in and create the first admin
 
+NOTE ON CURRENT APP STATUS: the clinic-mode app screens (sign-in, account
+approval, mode switch, flow board) are still being built. Every step below
+has a dashboard or SQL route that works today; the "in the app" phrases
+describe where this lands once the clinic build ships.
+
 1. Authentication -> Sign In / Up -> enable the Email provider.
 2. Turn OFF "Confirm email". This matters more than it looks: without your
    own SMTP server configured, Supabase's built-in mailer is restricted
@@ -46,30 +51,44 @@ Field mode orgs are DONE after step 3; skip to Verify.
    the app (built into the schema) replaces what confirmation was for.
    For the same reason, do not rely on email-based password resets; see
    the recovery section below.
-3. Have the org lead sign up in the app (or Authentication -> Users ->
-   Add user). Signing up NEVER grants access by itself: every new account
-   starts pending. That is deliberate; anyone in the world who obtains the
-   project URL and publishable key can sign up, so signup must carry no
-   power.
+3. Create the org lead's account: Authentication -> Users -> Add user ->
+   choose "Create new user" and set a password (do NOT use "Send
+   invitation" - it depends on the same restricted mailer). Staff signing
+   up themselves in the app also works once the clinic build ships.
+   Either way, a new account NEVER has access by itself: every account
+   starts pending. That is deliberate; anyone in the world who obtains
+   the project URL and publishable key can sign up, so signup must carry
+   no power.
 4. Make that first account the administrator - back in the SQL Editor,
-   one line:
+   one line (the editor must show exactly ONE returned row; zero rows
+   means the email did not match or the account does not exist yet):
 
        UPDATE users_profiles
        SET is_admin = true, activated_at = now()
-       WHERE id = (SELECT id FROM auth.users WHERE email = 'LEAD@EXAMPLE.ORG');
+       WHERE id = (SELECT id FROM auth.users WHERE lower(email) = lower('LEAD@EXAMPLE.ORG'))
+       RETURNING id, is_admin, activated_at;
 
-5. From now on the admin approves every new staff account inside the app.
-   No one else ever needs the SQL editor.
-6. Switch the org to clinic mode inside the app (Settings -> Organization
-   -> Mode), or from the SQL editor:
+5. The admin approves every new staff account. Until the clinic-mode app
+   ships its approval screen, approval is this line (one row must return):
+
+       UPDATE users_profiles
+       SET activated_at = now()
+       WHERE id = (SELECT id FROM auth.users WHERE lower(email) = lower('STAFF@EXAMPLE.ORG'))
+       RETURNING id, activated_at;
+
+6. Switch the org to clinic mode from the SQL editor (or in the app once
+   its Settings -> Organization screen ships):
 
        INSERT INTO config (key, value) VALUES ('orgMode', '{"mode":"clinic"}')
        ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
 
    IMPORTANT if the org previously ran field devices: sync every field
    iPad to zero pending records FIRST. The moment the mode flips, the
-   shared-key surface closes and unsynced field records cannot push until
-   someone signs in on that device or an admin flips the mode back.
+   shared-key surface closes and stranded field records cannot push. The
+   recovery for stranded records is an admin flipping the mode back to
+   field, draining the fleet, and flipping forward again. (Signing in on
+   the stranded device also works once the clinic app ships, but note it
+   stamps whoever signs in as the author of every pushed record.)
 
 ## 5. Verify
 
@@ -78,10 +97,12 @@ Field mode orgs are DONE after step 3; skip to Verify.
 2. Field mode: save one test visit and sync; Table Editor -> records shows
    one row. Delete the test visit in the APP afterward (it tombstones;
    rows are never hard-deleted, which is by design).
-3. Clinic mode, additionally: sign in as the admin (should reach the flow
-   board), sign up a second test account (should land on "awaiting
-   approval" and see NO data), approve it as the admin, confirm it then
-   sees data. Two minutes, and it exercises the entire access model.
+3. Clinic mode, additionally (once the clinic-mode app build ships): sign
+   in as the admin (should reach the flow board), sign up a second test
+   account (should land on "awaiting approval" and see NO data), approve
+   it, confirm it then sees data. Two minutes, and it exercises the whole
+   access model. Until then, verify.sql rows 9-24 cover the same rules
+   server-side.
 
 ## Recovery playbook (SQL Editor)
 
@@ -90,13 +111,17 @@ situations need the SQL editor and nothing else does:
 
 Sole admin forgot their password (email resets are unreliable without
 custom SMTP): create a replacement admin. Authentication -> Users -> Add
-user (temporary password), then:
+user -> "Create new user" with a temporary password, then (one row must
+return):
 
-    UPDATE users_profiles SET is_admin = true, activated_at = now()
-    WHERE id = (SELECT id FROM auth.users WHERE email = 'NEW@EXAMPLE.ORG');
+    UPDATE users_profiles SET is_admin = true, activated_at = now(), revoked_at = NULL
+    WHERE id = (SELECT id FROM auth.users WHERE lower(email) = lower('NEW@EXAMPLE.ORG'))
+    RETURNING id, is_admin, activated_at;
 
 Org is adminless (sole admin revoked or deleted): same one-liner against
-any existing trusted account, or a fresh one.
+any existing trusted account, or a fresh one. The revoked_at = NULL part
+matters: promoting a once-revoked account without clearing the revocation
+does nothing, silently.
 
 Un-revoke an account or device (the app can never do this):
 

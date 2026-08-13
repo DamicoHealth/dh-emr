@@ -80,13 +80,17 @@ DROP POLICY IF EXISTS "auth_update_profiles" ON users_profiles;
 -- 3. Remove the v4 triggers and functions. The device-rules trigger and
 --    update_synced_at stay: they are v3.0 machinery.
 DROP TRIGGER IF EXISTS trg_users_rules ON users_profiles;
-DROP TRIGGER IF EXISTS trg_on_auth_user_created ON auth.users;
 DROP TRIGGER IF EXISTS trg_config_rules ON config;
 DROP TRIGGER IF EXISTS trg_records_rules ON records;
 DROP TRIGGER IF EXISTS trg_config_updated_at ON config;
 
+-- The signup trigger lives on auth.users, which the postgres role does
+-- not own on every stack; DROP TRIGGER there can fail with 'must be owner
+-- of relation users' and abort the whole rollback. Dropping the function
+-- with CASCADE removes the dependent trigger without needing ownership.
+DROP FUNCTION IF EXISTS dh_handle_new_user() CASCADE;
+
 DROP FUNCTION IF EXISTS dh_enforce_user_rules();
-DROP FUNCTION IF EXISTS dh_handle_new_user();
 DROP FUNCTION IF EXISTS dh_enforce_config_rules();
 DROP FUNCTION IF EXISTS dh_enforce_record_rules();
 DROP FUNCTION IF EXISTS dh_touch_config_updated_at();
@@ -94,7 +98,10 @@ DROP FUNCTION IF EXISTS dh_org_mode();
 DROP FUNCTION IF EXISTS dh_active_profile();
 DROP FUNCTION IF EXISTS dh_is_admin();
 
--- 4. Confirm: this should return no rows.
+-- 4. Confirm: this should return no rows. trg_on_auth_user_created is in
+--    the list because its drop is the permission-fragile one; if it shows
+--    up here, the signup trigger survived and is still creating profile
+--    rows.
 SELECT tgname FROM pg_trigger
 WHERE tgname IN ('trg_users_rules', 'trg_config_rules', 'trg_records_rules',
-                 'trg_config_updated_at');
+                 'trg_config_updated_at', 'trg_on_auth_user_created');

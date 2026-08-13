@@ -11,15 +11,22 @@
 -- meaningless because writes were blocked by permissions, not by policy.
 --
 -- Section B (rows 9+) seeds rows directly in auth.users to simulate
--- signups. If your Supabase version rejects that insert, section B stops
--- with an error: the section A results above it are still valid, and the
--- clinic-mode checks can be done by hand per SETUP.md section 5.
+-- signups. If your Supabase version rejects that insert, row 9 says SKIP
+-- (with the database's reason) and the rows after it will show FAIL noise;
+-- the section A results above stay valid either way, and the clinic-mode
+-- checks can be done by hand per SETUP.md section 5.
+--
+-- Best run on a project WITHOUT real staff accounts yet (fresh project or
+-- field-mode org). On a project with existing active admins, row 14 says
+-- SKIP (the sole-admin guard cannot be probed when other admins exist).
 -- ============================================================================
 
 BEGIN;
 
 CREATE TEMP TABLE dh_verify (n INT, result TEXT, check_name TEXT, detail TEXT) ON COMMIT DROP;
 GRANT INSERT, SELECT ON dh_verify TO anon, authenticated;
+CREATE TEMP TABLE dh_env (k TEXT PRIMARY KEY, v TEXT) ON COMMIT DROP;
+GRANT SELECT ON dh_env TO anon, authenticated;
 
 -- ---------------------------------------------------------------------------
 -- Seed (as the trusted SQL-editor role; triggers bypass on purpose)
@@ -125,31 +132,48 @@ RESET ROLE;
 -- SECTION B: staff accounts and clinic mode
 -- ===========================================================================
 
+-- Remember whether this project already has active admin accounts (used
+-- to SKIP the sole-admin probe rather than report false alarms).
+INSERT INTO dh_env
+SELECT 'preexisting_admins', count(*)::text
+FROM users_profiles
+WHERE is_admin AND activated_at IS NOT NULL AND revoked_at IS NULL;
+
 -- Simulate two signups (fires the same trigger a real signup does).
-INSERT INTO auth.users (instance_id, id, aud, role, email, encrypted_password,
-                        email_confirmed_at, created_at, updated_at,
-                        confirmation_token, recovery_token,
-                        email_change_token_new, email_change)
-VALUES ('00000000-0000-0000-0000-000000000000', '00000000-0000-4000-8000-0000000000a1',
-        'authenticated', 'authenticated', 'dh-verify-lead@example.org', '',
-        now(), now(), now(), '', '', '', ''),
-       ('00000000-0000-0000-0000-000000000000', '00000000-0000-4000-8000-0000000000a2',
-        'authenticated', 'authenticated', 'dh-verify-staff@example.org', '',
-        now(), now(), now(), '', '', '', '');
+-- Wrapped so a version-sensitive auth.users shape cannot abort the whole
+-- transaction and hide section A's results.
+DO $$ BEGIN
+  INSERT INTO auth.users (instance_id, id, aud, role, email, encrypted_password,
+                          email_confirmed_at, created_at, updated_at,
+                          confirmation_token, recovery_token,
+                          email_change_token_new, email_change)
+  VALUES ('00000000-0000-0000-0000-000000000000', '00000000-0000-4000-8000-0000000000a1',
+          'authenticated', 'authenticated', 'dh-verify-lead@example.org', '',
+          now(), now(), now(), '', '', '', ''),
+         ('00000000-0000-0000-0000-000000000000', '00000000-0000-4000-8000-0000000000a2',
+          'authenticated', 'authenticated', 'dh-verify-staff@example.org', '',
+          now(), now(), now(), '', '', '', '');
+EXCEPTION WHEN OTHERS THEN
+  INSERT INTO dh_verify VALUES (9, 'SKIP', 'section B skipped: auth.users seeding rejected on this Supabase version', SQLERRM);
+END $$;
 
 -- 9. signing up grants nothing: both profiles pending, neither admin
 DO $$
 DECLARE bad INT;
 BEGIN
-  SELECT count(*) INTO bad FROM users_profiles
-  WHERE id IN ('00000000-0000-4000-8000-0000000000a1', '00000000-0000-4000-8000-0000000000a2')
-    AND (is_admin OR activated_at IS NOT NULL);
-  IF bad = 0 AND (SELECT count(*) FROM users_profiles
-                  WHERE id IN ('00000000-0000-4000-8000-0000000000a1',
-                               '00000000-0000-4000-8000-0000000000a2')) = 2 THEN
-    INSERT INTO dh_verify VALUES (9, 'PASS', 'signing up grants nothing (pending, not admin)', '');
+  IF EXISTS (SELECT 1 FROM dh_verify WHERE n = 9 AND result = 'SKIP') THEN
+    NULL;  -- seeding failed; the SKIP row already explains why
   ELSE
-    INSERT INTO dh_verify VALUES (9, 'FAIL', 'signing up grants nothing (pending, not admin)', bad || ' profiles had privileges');
+    SELECT count(*) INTO bad FROM users_profiles
+    WHERE id IN ('00000000-0000-4000-8000-0000000000a1', '00000000-0000-4000-8000-0000000000a2')
+      AND (is_admin OR activated_at IS NOT NULL);
+    IF bad = 0 AND (SELECT count(*) FROM users_profiles
+                    WHERE id IN ('00000000-0000-4000-8000-0000000000a1',
+                                 '00000000-0000-4000-8000-0000000000a2')) = 2 THEN
+      INSERT INTO dh_verify VALUES (9, 'PASS', 'signing up grants nothing (pending, not admin)', '');
+    ELSE
+      INSERT INTO dh_verify VALUES (9, 'FAIL', 'signing up grants nothing (pending, not admin)', bad || ' profiles had privileges');
+    END IF;
   END IF;
 END $$;
 
@@ -210,12 +234,20 @@ EXCEPTION WHEN OTHERS THEN
 END $$;
 
 -- 14. the only admin cannot revoke, demote, or deactivate themselves
+--     (skipped when the project already has other active admins - the
+--     guard correctly allows self-removal in that case)
 DO $$ BEGIN
-  UPDATE users_profiles SET revoked_at = now()
-  WHERE id = '00000000-0000-4000-8000-0000000000a1';
-  INSERT INTO dh_verify VALUES (14, 'FAIL', 'the only admin cannot disable themselves', 'self-revoke was allowed');
-EXCEPTION WHEN OTHERS THEN
-  INSERT INTO dh_verify VALUES (14, 'PASS', 'the only admin cannot disable themselves', SQLERRM);
+  IF (SELECT v FROM dh_env WHERE k = 'preexisting_admins') <> '0' THEN
+    INSERT INTO dh_verify VALUES (14, 'SKIP', 'the only admin cannot disable themselves', 'project already has active admins; guard not probeable');
+  ELSE
+    BEGIN
+      UPDATE users_profiles SET revoked_at = now()
+      WHERE id = '00000000-0000-4000-8000-0000000000a1';
+      INSERT INTO dh_verify VALUES (14, 'FAIL', 'the only admin cannot disable themselves', 'self-revoke was allowed');
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO dh_verify VALUES (14, 'PASS', 'the only admin cannot disable themselves', SQLERRM);
+    END;
+  END IF;
 END $$;
 
 -- 15. an admin can switch the org to clinic mode
@@ -240,6 +272,11 @@ BEGIN
 END $$;
 
 RESET ROLE;
+-- RESET ROLE does not clear GUCs: blank the JWT claims so the anon checks
+-- below run as a true key-only caller, not as the admin's leftover
+-- identity. Empty string, not NULL: auth.uid() nullif()s '' to NULL.
+SELECT set_config('request.jwt.claims', '', true);
+SELECT set_config('request.jwt.claim.sub', '', true);
 SET LOCAL ROLE anon;
 
 -- 17. clinic mode: the shared key cannot read records

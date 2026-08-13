@@ -147,11 +147,18 @@ CREATE TABLE IF NOT EXISTS users_profiles (
   id UUID PRIMARY KEY REFERENCES auth.users (id) ON DELETE CASCADE,
   display_name TEXT NOT NULL DEFAULT '',
   role TEXT DEFAULT 'provider',
-  is_admin BOOLEAN DEFAULT false,
+  is_admin BOOLEAN NOT NULL DEFAULT false, -- NOT NULL: a NULL here would slip
+                                           -- through boolean guards as
+                                           -- "unknown" and dodge the
+                                           -- last-admin protection
   activated_at TIMESTAMPTZ,                -- NULL = awaiting admin approval
   created_at TIMESTAMPTZ DEFAULT now(),
   revoked_at TIMESTAMPTZ                   -- kill switch, same semantics as devices
 );
+-- Idempotent hardening for projects that created the table before the
+-- NOT NULL constraint existed.
+UPDATE users_profiles SET is_admin = false WHERE is_admin IS NULL;
+ALTER TABLE users_profiles ALTER COLUMN is_admin SET NOT NULL;
 COMMENT ON COLUMN users_profiles.activated_at IS
   'NULL means the account is waiting for approval. The first admin is created from the SQL editor (SETUP.md section 4); after that, admins approve accounts in the app.';
 COMMENT ON COLUMN users_profiles.revoked_at IS
@@ -171,6 +178,12 @@ COMMENT ON COLUMN users_profiles.revoked_at IS
 -- v3.0 "never SECURITY DEFINER" rule (which is about the TRIGGERS below,
 -- where current_user distinguishes app callers from the SQL editor) does
 -- not apply to them.
+--
+-- Corollary: never add FORCE ROW LEVEL SECURITY to any of these tables.
+-- The definer bypass works because the table owner is exempt from RLS;
+-- FORCE removes that exemption and every helper re-enters its own
+-- table's policies - all four tables then fail closed with recursion
+-- errors.
 -- ============================================================================
 
 -- The org's mode. Absent config row means 'field' so v3.0 projects upgrade
@@ -351,11 +364,16 @@ BEGIN
     -- would be locked out of its own settings and, because there is no
     -- self-service admin path, only the SQL editor could recover it.
     -- Guard all three ways an admin could vanish: demotion, revocation,
-    -- deactivation.
+    -- deactivation. The comparison is null-strict (IS DISTINCT FROM true)
+    -- and the count runs under an advisory lock so two admins removing
+    -- themselves at the same moment cannot both slip through.
     IF OLD.id = auth.uid()
        AND OLD.is_admin AND OLD.activated_at IS NOT NULL AND OLD.revoked_at IS NULL
-       AND (NOT NEW.is_admin OR NEW.activated_at IS NULL OR NEW.revoked_at IS NOT NULL)
+       AND (NEW.is_admin IS DISTINCT FROM true
+            OR NEW.activated_at IS NULL
+            OR NEW.revoked_at IS NOT NULL)
     THEN
+      PERFORM pg_advisory_xact_lock(hashtext('dh_users_admin_guard'));
       SELECT count(*) INTO other_admins
       FROM users_profiles
       WHERE is_admin AND activated_at IS NOT NULL AND revoked_at IS NULL
@@ -433,18 +451,36 @@ BEGIN
     RETURN NEW;
   END IF;
 
-  IF TG_OP = 'UPDATE' THEN
-    -- Rewriting a record id would break sync identity on every device.
-    IF NEW.id IS DISTINCT FROM OLD.id THEN
-      RAISE EXCEPTION 'A record id cannot be changed.';
+  IF TG_OP = 'INSERT' THEN
+    -- A device (anon has no auth.uid) can never claim authorship for a
+    -- new row; a signed-in insert is already forced to self-attribute by
+    -- the auth_insert_records policy.
+    IF auth.uid() IS NULL THEN
+      NEW.user_id := NULL;
     END IF;
-    -- Attribution: the author can be backfilled once (field-era records
-    -- have none) but never reassigned by non-admins. Devices (anon) must
-    -- round-trip user_id untouched.
-    IF NEW.user_id IS DISTINCT FROM OLD.user_id
-       AND NOT (OLD.user_id IS NULL AND NEW.user_id = auth.uid())
-       AND NOT dh_is_admin()
-    THEN
+    RETURN NEW;
+  END IF;
+
+  -- UPDATE rules.
+  -- Rewriting a record id would break sync identity on every device.
+  IF NEW.id IS DISTINCT FROM OLD.id THEN
+    RAISE EXCEPTION 'A record id cannot be changed.';
+  END IF;
+
+  -- Attribution rules. Two failure modes bound this design:
+  -- a raise on anon writes would wedge a whole device's sync batch the
+  -- first time a field iPad round-trips a clinic-era row whose user_id
+  -- it never knew (one poisoned row aborts a PostgREST bulk upsert),
+  -- and a naive uuid = auth.uid() comparison is NULL for anon callers,
+  -- which plpgsql IF treats as false and the guard silently passes.
+  -- So: devices get COERCED (attribution preserved, sync never wedges);
+  -- signed-in users may backfill an unattributed row to themselves,
+  -- admins may reassign, and everything else raises.
+  IF NEW.user_id IS DISTINCT FROM OLD.user_id THEN
+    IF auth.uid() IS NULL THEN
+      NEW.user_id := OLD.user_id;
+    ELSIF NOT (OLD.user_id IS NULL AND NEW.user_id = auth.uid())
+          AND NOT dh_is_admin() THEN
       RAISE EXCEPTION 'The author of a visit cannot be changed.';
     END IF;
   END IF;
@@ -455,7 +491,7 @@ $$;
 
 DROP TRIGGER IF EXISTS trg_records_rules ON records;
 CREATE TRIGGER trg_records_rules
-  BEFORE UPDATE ON records
+  BEFORE INSERT OR UPDATE ON records
   FOR EACH ROW
   EXECUTE FUNCTION dh_enforce_record_rules();
 
@@ -599,16 +635,19 @@ CREATE POLICY "anon_update_records" ON records
   );
 
 -- ---- records: staff accounts (authenticated) ----
+-- Helpers are wrapped in scalar subqueries so they evaluate once per
+-- statement (initplan), not once per row - same pattern as the anon
+-- policies' dh_org_mode() calls.
 DROP POLICY IF EXISTS "auth_read_records" ON records;
 CREATE POLICY "auth_read_records" ON records
   FOR SELECT TO authenticated
-  USING (dh_active_profile());
+  USING ((SELECT dh_active_profile()));
 
 DROP POLICY IF EXISTS "auth_insert_records" ON records;
 CREATE POLICY "auth_insert_records" ON records
   FOR INSERT TO authenticated
   WITH CHECK (
-    dh_active_profile()
+    (SELECT dh_active_profile())
     AND user_id = auth.uid()
     AND device_id IS NOT NULL
     AND EXISTS (SELECT 1 FROM devices d WHERE d.id = device_id AND d.revoked_at IS NULL)
@@ -617,9 +656,9 @@ CREATE POLICY "auth_insert_records" ON records
 DROP POLICY IF EXISTS "auth_update_records" ON records;
 CREATE POLICY "auth_update_records" ON records
   FOR UPDATE TO authenticated
-  USING (dh_active_profile())
+  USING ((SELECT dh_active_profile()))
   WITH CHECK (
-    dh_active_profile()
+    (SELECT dh_active_profile())
     AND device_id IS NOT NULL
     AND EXISTS (SELECT 1 FROM devices d WHERE d.id = device_id AND d.revoked_at IS NULL)
   );
@@ -648,18 +687,18 @@ CREATE POLICY "anon_update_devices" ON devices
 DROP POLICY IF EXISTS "auth_read_devices" ON devices;
 CREATE POLICY "auth_read_devices" ON devices
   FOR SELECT TO authenticated
-  USING (dh_active_profile());
+  USING ((SELECT dh_active_profile()));
 
 DROP POLICY IF EXISTS "auth_insert_devices" ON devices;
 CREATE POLICY "auth_insert_devices" ON devices
   FOR INSERT TO authenticated
-  WITH CHECK (dh_active_profile());
+  WITH CHECK ((SELECT dh_active_profile()));
 
 DROP POLICY IF EXISTS "auth_update_devices" ON devices;
 CREATE POLICY "auth_update_devices" ON devices
   FOR UPDATE TO authenticated
-  USING (dh_active_profile())
-  WITH CHECK (dh_active_profile());
+  USING ((SELECT dh_active_profile()))
+  WITH CHECK ((SELECT dh_active_profile()));
 
 -- ---- config ----
 -- anon: full read in field mode; in clinic mode exactly ONE row stays
@@ -686,20 +725,20 @@ CREATE POLICY "anon_update_config" ON config
 DROP POLICY IF EXISTS "auth_read_config" ON config;
 CREATE POLICY "auth_read_config" ON config
   FOR SELECT TO authenticated
-  USING (dh_active_profile() OR key = 'orgMode');
+  USING ((SELECT dh_active_profile()) OR key = 'orgMode');
 
 -- Staff config writes are ADMIN ONLY - tighter than field mode, where the
 -- client gates admin actions (documented honest limit).
 DROP POLICY IF EXISTS "auth_write_config" ON config;
 CREATE POLICY "auth_write_config" ON config
   FOR INSERT TO authenticated
-  WITH CHECK (dh_is_admin());
+  WITH CHECK ((SELECT dh_is_admin()));
 
 DROP POLICY IF EXISTS "auth_update_config" ON config;
 CREATE POLICY "auth_update_config" ON config
   FOR UPDATE TO authenticated
-  USING (dh_is_admin())
-  WITH CHECK (dh_is_admin());
+  USING ((SELECT dh_is_admin()))
+  WITH CHECK ((SELECT dh_is_admin()));
 
 -- ---- users_profiles ----
 -- Active staff see the roster (the flow board shows names). A pending or
@@ -708,7 +747,7 @@ CREATE POLICY "auth_update_config" ON config
 DROP POLICY IF EXISTS "auth_read_profiles" ON users_profiles;
 CREATE POLICY "auth_read_profiles" ON users_profiles
   FOR SELECT TO authenticated
-  USING (id = auth.uid() OR dh_active_profile());
+  USING (id = auth.uid() OR (SELECT dh_active_profile()));
 
 -- Signup normally flows through the auth trigger; direct insert is limited
 -- to the caller's own row and the rules trigger forces it pending.
@@ -722,8 +761,8 @@ CREATE POLICY "auth_insert_profiles" ON users_profiles
 DROP POLICY IF EXISTS "auth_update_profiles" ON users_profiles;
 CREATE POLICY "auth_update_profiles" ON users_profiles
   FOR UPDATE TO authenticated
-  USING (id = auth.uid() OR dh_is_admin())
-  WITH CHECK (id = auth.uid() OR dh_is_admin());
+  USING (id = auth.uid() OR (SELECT dh_is_admin()))
+  WITH CHECK (id = auth.uid() OR (SELECT dh_is_admin()));
 
 -- ---- no hard deletes, any table, any app role ----
 DROP POLICY IF EXISTS "no_delete_records" ON records;
