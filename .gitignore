@@ -1,0 +1,10 @@
+node_modules/
+dist/
+dist-*/
+.DS_Store
+*.log
+.env
+.env.*
+
+# Patient data exports never enter git. Never open this directory.
+exports/
