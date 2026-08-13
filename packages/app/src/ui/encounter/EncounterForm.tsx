@@ -1002,8 +1002,13 @@ function MedQtyPreview({ med, formulary }: {
 export interface EncounterFormProps {
   /** Close the panel. The real form intercepts this with a discard confirm. */
   onClose: () => void
-  /** Notify the shell that a visit was saved so lists refresh. */
-  onSaved?: () => void
+  /**
+   * Notify the shell that a visit was saved so lists refresh. andNext is
+   * false for a plain Save (the shell should close the panel) and true for
+   * Save & next patient (the form has already reset for the next entry and
+   * must stay open).
+   */
+  onSaved?: (saved: PatientRecord, andNext: boolean) => void
 }
 
 export default function EncounterFormHost({ onClose, onSaved }: EncounterFormProps) {
@@ -1039,7 +1044,7 @@ export default function EncounterFormHost({ onClose, onSaved }: EncounterFormPro
       seedFrom={null}
       allRecords={loaded.all}
       deviceId={loaded.deviceId}
-      onSaved={() => onSaved?.()}
+      onSaved={(saved, andNext) => onSaved?.(saved, andNext)}
       onClose={onClose}
     />
   )

@@ -51,7 +51,7 @@ export const BUILTIN_SECTIONS: {
   required?: boolean
   notOnForm?: boolean
 }[] = [
-  { id: 'encounter', title: 'Encounter', required: true },
+  { id: 'encounter', title: 'Visit', required: true },
   { id: 'patient', title: 'Patient', required: true },
   { id: 'vitals', title: 'Vitals' },
   { id: 'accessToCare', title: 'Access to Care', notOnForm: true },

@@ -337,9 +337,12 @@ export function App() {
       {visitOpen ? (
         <EncounterForm
           onClose={() => setVisitOpen(false)}
-          onSaved={() => {
+          onSaved={(_saved, andNext) => {
             bumpData()
             setTab('visits')
+            // Plain Save files the visit and closes; Save & next patient has
+            // already reset the form for the next entry and stays open.
+            if (!andNext) setVisitOpen(false)
           }}
         />
       ) : null}
