@@ -1,0 +1,67 @@
+/*
+ * Setup wizard: one centered card on the app background. Honors the shared
+ * accessibility floor (44px targets, 16px inputs, global focus ring).
+ */
+
+.setup {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px 48px;
+  background: var(--bg);
+}
+
+.setup-card {
+  width: 100%;
+  max-width: 560px;
+  margin-top: 4vh;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+}
+
+.setup-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 18px;
+  font-weight: 700;
+}
+
+/* The two first-class path choices: full-width, multi-line, equal weight. */
+.setup-choice {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  width: 100%;
+  min-height: var(--tap);
+  height: auto;
+  margin-bottom: 10px;
+  padding: 14px 16px;
+  text-align: left;
+  white-space: normal;
+}
+
+.setup-choice span {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Description line inside the ghost variant must not inherit the teal. */
+.btn-ghost.setup-choice span {
+  color: var(--ink-soft);
+}
+
+.setup .btn-row {
+  justify-content: flex-end;
+}
+
+@media (min-width: 640px) {
+  .setup-card {
+    padding: 28px;
+  }
+}

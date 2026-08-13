@@ -1,0 +1,50 @@
+/*
+ * DH EMR design tokens. Calm, clinical, high-contrast, sunlight-legible.
+ * Light theme only for now.
+ *
+ * COLOR DISCIPLINE (non-negotiable, from shipped bugs):
+ *  - Every text color here is 4.5:1+ on the surface it is specified for.
+ *  - --brand-bright is DECORATIVE ONLY: fills and illustrations. It is
+ *    2.51:1 against white and must NEVER carry text or sit under text.
+ *  - Surfaces that carry white text use --primary or --brand, never
+ *    --brand-bright.
+ */
+:root {
+  /* Text */
+  --ink: #1a2330; /* primary text, 13.9:1 on white */
+  --ink-soft: #4a5568; /* secondary text, 7.5:1 on white */
+
+  /* Surfaces */
+  --bg: #f7f8fa; /* app background */
+  --surface: #ffffff; /* cards, panels, bars */
+  --line: #d9dee6; /* borders */
+
+  /* Primary: deep teal. Buttons, active tab, focus ring. 5.9:1 on white. */
+  --primary: #0e6e64;
+  --primary-ink: #ffffff; /* text on primary */
+
+  /* Heritage orange. --brand is accessible and may carry text (4.88:1 for
+     white on it, 4.9:1 as text on white). --brand-bright is decorative
+     fills ONLY - never text, never under text. */
+  --brand: #b5560a;
+  --brand-bright: #f68630;
+
+  /* States */
+  --danger: #b3261e; /* 6.3:1 on white */
+  --danger-bg: #fdecea;
+  --ok: #1e7d34; /* 4.9:1 on white */
+  --ok-bg: #e7f3ea;
+  --warn-bg: #fff4e0;
+  --warn-ink: #6b4700; /* 7.6:1 on warn-bg */
+
+  /* Shape and rhythm */
+  --radius: 10px;
+  --tap: 44px; /* minimum hit target */
+  --shadow-1: 0 1px 2px rgba(26, 35, 48, 0.06), 0 1px 4px rgba(26, 35, 48, 0.06);
+  --shadow-2: 0 4px 12px rgba(26, 35, 48, 0.1), 0 2px 4px rgba(26, 35, 48, 0.08);
+
+  --sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}

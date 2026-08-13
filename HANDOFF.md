@@ -1,6 +1,23 @@
 # DH EMR - current state
 
-Updated 2026-08-12.
+Updated 2026-08-12 (end of day).
+
+## Core: BUILT AND GREEN
+
+- 18 test files, 166 tests, all passing; TypeScript strict clean.
+- src/domain: MRN + dispensing math, byte-compatible with legacy, proven
+  by differential parity suites (tests/fixtures/legacy is scraped by
+  regex - NEVER reformat those files).
+- src/kernel: per-record IndexedDB store (DB v2, in-place migration from
+  the old blob), bounded 500-record mirror with the v3 recovery decision
+  table verbatim, single-writer locks, wipe guard, loud failures.
+  Integrators: call setCurrentDeviceId(id) after device registration;
+  resetStorage() in tests, never deleteDatabase.
+- src/config: template library model, builder guards, vendored default
+  catalogs (formulary, labs, presets, ICD-10).
+- src/sync: engine with injectable transport (createSyncEngine), honest
+  reporting, key classification (classifySupabaseKey - every key-entry UI
+  must use it); src/lib: backup, importCloud, csv, patients grouping.
 
 ## Where things stand
 

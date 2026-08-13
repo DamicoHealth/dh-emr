@@ -1,0 +1,453 @@
+/*
+ * Records screens: stat tiles, search + filters, the patient list, and the
+ * patient chart. Consumes design tokens from src/styles/tokens.css; shared
+ * shell classes (.btn, .panel, .field, .card, .alert, .empty spacing basics)
+ * come from src/styles/base.css.
+ *
+ * ACCESSIBILITY FLOOR (do not lower): text 4.5:1+, hit targets 44px min,
+ * inputs 16px min, focus ring from base.css.
+ * RESPONSIVE: mobile-first; cards on phones, table-like rows at 1000px+.
+ */
+
+/* ------------------------------------------------------------- stat tiles */
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+  padding: 12px 14px;
+}
+
+.stat-n {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-l {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------------- toolbar */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.search {
+  flex: 1 1 220px;
+  min-width: 0;
+  min-height: var(--tap);
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px; /* stops iOS focus zoom */
+}
+
+/* Active-filter badge state. --brand may carry text (4.9:1 on white). */
+.btn-ghost.has-badge {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+/* ---------------------------------------------------------------- filters */
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px 12px;
+  align-items: end;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.filters .field {
+  margin-bottom: 0;
+}
+
+.filters .field > span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+/* -------------------------------------------------------------- notice bar */
+
+.alert-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 14px;
+  margin-bottom: 12px;
+  background: #e9f2f1; /* calm teal tint; --ink on it is 12.5:1 */
+  border-color: #bcd7d4;
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------ empty states */
+
+.empty {
+  text-align: center;
+  color: var(--ink-soft);
+  padding: 40px 16px;
+}
+
+.empty.small {
+  padding: 14px;
+  font-size: 14px;
+}
+
+/* ------------------------------------------------------------ patient list */
+
+.patient-list {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.patient-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: var(--tap);
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.patient-card:active {
+  background: var(--bg);
+}
+
+.pc-main {
+  min-width: 0;
+}
+
+.pc-name {
+  font-weight: 700;
+}
+
+.pc-meta {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+.pc-dx {
+  font-size: 14px;
+  color: var(--ink);
+  margin-top: 4px;
+}
+
+.pc-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+  flex: none;
+  max-width: 45%;
+}
+
+.badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Badge text colors all clear 4.5:1 on their tinted backgrounds. */
+.badge-red {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.badge-amber {
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+}
+
+.badge-blue {
+  background: #e3edf8;
+  color: #1d4f8c; /* 6.9:1 on #e3edf8 */
+}
+
+.badge-green {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+/* ------------------------------------------------------------- chart panel */
+
+.panel-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.panel-sub {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+.panel-head .btn-row {
+  margin-top: 0;
+  flex: none;
+}
+
+.visit-count {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+
+.visit-head {
+  display: flex;
+  align-items: center;
+  gap: 8px 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.visit-num {
+  font-weight: 700;
+}
+
+.visit-meta {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.chip {
+  font-size: 12px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 10px;
+  color: var(--ink-soft);
+}
+
+.visit-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.visit-actions .btn {
+  padding: 6px 12px;
+  font-size: 14px; /* min-height stays at --tap from base.css */
+}
+
+/* Outline danger button: calmer than a solid red block in a chart header,
+   still 6.3:1 for the label. Two classes outrank base.css's .btn-danger. */
+.btn-ghost.btn-danger {
+  background: var(--surface);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* ------------------------------------------------------------ chart blocks */
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 16px;
+}
+
+.block {
+  margin-bottom: 12px;
+}
+
+.block h4 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  padding: 3px 0;
+}
+
+.row-k {
+  flex: none;
+  width: 108px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.row-v {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.row-v.bad {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.meds {
+  margin: 6px 0;
+  display: grid;
+  gap: 4px;
+}
+
+.med {
+  font-size: 15px;
+}
+
+/* ------------------------------------------------------------ vitals trend */
+
+.table-scroll {
+  overflow-x: auto; /* wide trend tables scroll here, never the page */
+}
+
+.trend {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+.trend th,
+.trend td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.trend th {
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.trend .th-date {
+  font-weight: 400;
+  font-size: 11px;
+}
+
+.trend td.warn {
+  color: var(--warn-ink);
+  font-weight: 700;
+}
+
+.trend td.bad {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+/* Sparklines: decorative inline SVG, aria-hidden; the table carries values. */
+.spark-rows {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin: 2px 0 10px;
+}
+
+.spark-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spark-k {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+}
+
+.spark {
+  display: block;
+}
+
+/* ------------------------------------------------- tablet/desktop >= 640 */
+
+@media (min-width: 640px) {
+  .stat-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .row-k {
+    width: 130px;
+  }
+}
+
+/* ------------------------------------------------- wide desktop >= 1000 */
+
+@media (min-width: 1000px) {
+  /* Table-like rows: name | meta | diagnosis in aligned columns. */
+  .patient-list {
+    gap: 8px;
+  }
+
+  .patient-card {
+    align-items: center;
+    padding: 10px 16px;
+  }
+
+  .pc-main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(160px, 220px) minmax(240px, 1fr) minmax(0, 1fr);
+    gap: 2px 16px;
+    align-items: baseline;
+  }
+
+  .pc-meta,
+  .pc-dx {
+    margin-top: 0;
+  }
+
+  .pc-dx {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

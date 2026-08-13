@@ -1,0 +1,161 @@
+/*
+ * Settings screen styles. Honors the shared accessibility floor: 44px
+ * targets, 16px inputs, global focus ring, all text 4.5:1+.
+ */
+
+.settings > .alert {
+  margin-bottom: 14px;
+}
+
+.alert-info {
+  background: var(--ok-bg);
+  border-color: #b3d4bc;
+}
+
+/* Key-value rows */
+.kv-list {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.kv-row {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.kv-k {
+  flex: none;
+  width: 128px;
+  color: var(--ink-soft);
+}
+
+.kv-v {
+  overflow-wrap: anywhere;
+}
+
+/* Admin gate: the reason is VISIBLE, never a silent no-op. */
+.gate-note {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+  font-size: 15px;
+}
+
+/* One-per-line list editors */
+.list-editor {
+  margin-bottom: 18px;
+}
+
+.list-editor .btn-row {
+  margin-top: 8px;
+}
+
+.list-editor textarea:disabled {
+  background: var(--bg);
+  color: var(--ink-soft);
+}
+
+/* Editable config tables (formulary, lab tests) */
+.table-scroll {
+  overflow-x: auto;
+  margin-bottom: 10px;
+}
+
+.cfg-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 640px;
+}
+
+.cfg-table th {
+  text-align: left;
+  padding: 4px 8px 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.cfg-table td {
+  padding: 3px 8px 3px 0;
+  vertical-align: middle;
+}
+
+.cfg-table input[type='text'],
+.cfg-table select {
+  width: 100%;
+  min-width: 110px;
+  min-height: var(--tap);
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px; /* stops iOS focus zoom */
+}
+
+.cfg-table input:disabled,
+.cfg-table select:disabled {
+  background: var(--bg);
+  color: var(--ink-soft);
+}
+
+.cfg-table input[type='checkbox'] {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--primary);
+}
+
+.cfg-check {
+  text-align: center;
+}
+
+/* Read-only template library */
+.template-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+.template-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.template-list li:last-child {
+  border-bottom: none;
+}
+
+/* Screen-reader-only text (table header for the Remove column) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 400px) {
+  .kv-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .kv-k {
+    width: auto;
+  }
+}

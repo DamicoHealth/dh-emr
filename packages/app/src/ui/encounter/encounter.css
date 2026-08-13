@@ -1,0 +1,292 @@
+/*
+ * Encounter form styles. Consumes the shell's tokens (src/styles/tokens.css)
+ * and rides on base.css for inputs, buttons, panel chrome and the
+ * accessibility floor (44px targets, 16px inputs, 3px focus ring).
+ *
+ * Responsive: single column at 375px, multi-column rows from 640px, wider
+ * drawer from 1000px. No horizontal page scroll ever.
+ */
+
+/* The visit form is the widest panel in the app. */
+@media (min-width: 640px) {
+  .panel-wide {
+    width: min(860px, 100%);
+  }
+}
+
+@media (min-width: 1000px) {
+  .panel-wide {
+    width: min(920px, 100%);
+  }
+}
+
+.panel-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.panel-sub {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------------- alerts */
+
+.alert-ok {
+  background: var(--ok-bg);
+  border-color: #bfdcc6;
+  color: var(--ok);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.alert-info {
+  background: #eaf3f2;
+  border-color: #c4dcda;
+  margin-bottom: 14px;
+}
+
+.alert-info > strong {
+  color: var(--primary);
+}
+
+.alert.alert-bad {
+  margin-bottom: 14px;
+}
+
+.problem-list {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 4px;
+}
+
+/* -------------------------------------------------------------- sections */
+
+.form-section {
+  padding: 0;
+  overflow: hidden;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: var(--tap);
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.section-head:disabled {
+  cursor: default;
+  color: var(--ink); /* a non-collapsible header is not "disabled" visually */
+  opacity: 1;
+}
+
+.section-head h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.chev {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.section-body {
+  padding: 4px 16px 16px;
+  border-top: 1px solid var(--line);
+}
+
+/* ------------------------------------------------------------ field rows */
+
+/* Phone: one column. */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 14px;
+}
+
+@media (min-width: 640px) {
+  .form-row {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+.form-label {
+  font-weight: 600;
+}
+
+.req {
+  color: var(--danger);
+}
+
+.hint {
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.err {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.form-field.invalid .form-label {
+  color: var(--danger);
+}
+
+input.readonly {
+  background: var(--bg);
+  color: var(--ink-soft);
+}
+
+.subhead {
+  margin: 16px 0 8px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------------ labs */
+
+.lab-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+@media (min-width: 640px) {
+  .lab-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+.lab {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.lab.on {
+  border-color: var(--primary);
+}
+
+.lab-name {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.ua-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 14px;
+}
+
+@media (min-width: 640px) {
+  .ua-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Denser toggle buttons for the UA grid; hit height stays at the 44px floor. */
+.toggle-group.small {
+  flex-wrap: wrap;
+}
+
+.toggle-group.small .toggle {
+  padding: 6px 12px;
+  font-size: 15px;
+}
+
+/* ------------------------------------------------------------ medications */
+
+.med-line {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 8px;
+}
+
+@media (min-width: 640px) {
+  .med-line {
+    grid-template-columns: minmax(160px, 2fr) minmax(110px, 1.4fr) minmax(120px, 1.6fr) minmax(100px, 1.2fr) auto auto;
+  }
+}
+
+.med-line select,
+.med-line input {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.med-qty {
+  font-weight: 700;
+  color: var(--ok);
+  white-space: nowrap;
+}
+
+.med-qty-bad {
+  color: var(--danger);
+}
+
+.med-qty.muted {
+  color: var(--ink-soft);
+}
+
+.btn.icon {
+  min-width: var(--tap);
+  padding: 8px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* ------------------------------------------------------------------ pills */
+
+.pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.pill {
+  min-height: var(--tap);
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pill.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-ink);
+}

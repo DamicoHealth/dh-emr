@@ -80,6 +80,6 @@ export function storageWarning(h: StorageHealth): string | null {
     `This device is down to a single copy of its records. The on-device backup copy ${behind}` +
     `${h.mirrorAt ? `, last updated ${new Date(h.mirrorAt).toLocaleDateString()}` : ''}. ` +
     'Download a backup now and at the end of every clinic day, and ask your admin to ' +
-    'archive older encounters off this device.'
+    'archive older visits off this device.'
   )
 }
