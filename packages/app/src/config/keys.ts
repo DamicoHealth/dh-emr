@@ -36,6 +36,9 @@ export const CONFIG_PUSH_KEYS = [
   'hiddenPresets',
   'formSchema',
   'formTemplates',
+  // v4: clinic-mode flow board stations. Field-mode devices carry the key
+  // harmlessly; older clients ignore unknown config keys by design.
+  'flowStations',
 ] as const
 
 export type ConfigKey = (typeof CONFIG_PUSH_KEYS)[number]
@@ -55,6 +58,10 @@ export interface ConfigValues {
   /** Legacy mirror of formTemplates.templates[0].schema. */
   formSchema: { sections: RawSection[] }
   formTemplates: FormTemplateLibrary
+  /** Clinic-mode flow board stations, in board order. Station names are the
+   *  identity records point at (like sites): renaming strands old visits
+   *  under the old name, so the editor warns before renames. */
+  flowStations: string[]
 }
 
 /**
@@ -115,6 +122,13 @@ export function setRxPresets(kv: KV, presets: RxPreset[]): Promise<void> {
 /** Preserve unknown categories (legacy 'diagnoses', 'rxPresets') when writing. */
 export function setHiddenPresets(kv: KV, hidden: HiddenPresets): Promise<void> {
   return setConfig(kv, 'hiddenPresets', hidden)
+}
+
+/** Board columns in order. The last station means "done for the day". */
+export const DEFAULT_FLOW_STATIONS = ['Check-in', 'Triage', 'Provider', 'Pharmacy', 'Done']
+
+export function setFlowStations(kv: KV, stations: string[]): Promise<void> {
+  return setConfig(kv, 'flowStations', stations)
 }
 
 /**

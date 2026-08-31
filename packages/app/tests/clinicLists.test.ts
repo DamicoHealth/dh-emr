@@ -68,10 +68,12 @@ describe('writing the clinic lists', () => {
 
   it('only ever writes keys the sync engine pushes', () => {
     // The closed replication list, verbatim. Any drift here means an admin's
-    // edit stays device-local forever.
+    // edit stays device-local forever. v4 added flowStations (clinic-mode
+    // board columns).
     expect([...CONFIG_PUSH_KEYS]).toEqual([
       'sites', 'providers', 'formulary', 'rxPresets', 'procedures', 'referralTypes',
       'customDxPresets', 'complaints', 'customLabTests', 'hiddenPresets', 'formSchema', 'formTemplates',
+      'flowStations',
     ]);
   });
 });

@@ -169,6 +169,15 @@ export interface PatientRecord {
   templateName: string
   customFields: CustomFields
 
+  // --- clinic mode (v4 cloud columns; absent on field-era records) ---
+  /** auth user id of the visit's author in clinic mode. Devices round-trip
+   *  it untouched; the server coerces any device-side change anyway. */
+  user_id?: string | null
+  /** current station on the clinic flow board; null/absent = not on the board */
+  flow_station?: string | null
+  /** when the station last changed (ISO); display and wait-time only */
+  flow_updated_at?: string | null
+
   // --- bookkeeping ---
   savedAt: string
   deleted?: boolean

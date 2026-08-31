@@ -72,6 +72,12 @@ export function recordToSupabaseRow(
     template_id: r.templateId || r.template_id || null,
     template_name: r.templateName || r.template_name || null,
     deleted: !!r.deleted,
+    // Clinic-mode columns round-trip verbatim. A device must ship user_id
+    // back unchanged (the server preserves it regardless), and flow fields
+    // move records across the board from any client.
+    user_id: r.user_id ?? null,
+    flow_station: r.flow_station ?? null,
+    flow_updated_at: r.flow_updated_at ?? null,
   }
 }
 
@@ -130,6 +136,9 @@ export function supabaseRowToRecord(row: SupabaseRow): PatientRecord {
     templateId: (row.template_id as string) || '',
     templateName: (row.template_name as string) || '',
     deleted: !!row.deleted,
+    user_id: (row.user_id as string) || null,
+    flow_station: (row.flow_station as string) || null,
+    flow_updated_at: (row.flow_updated_at as string) || null,
     sync_version: (row.sync_version as number) || 1,
     synced_version: (row.sync_version as number) || 1, // Pulled records are already synced
   }
