@@ -1,0 +1,151 @@
+/*
+ * Lab reference-range editor. Shares .panel/.btn/.alert from base.css and
+ * honors the accessibility floor: 44px targets, 16px inputs, 4.5:1+ text.
+ */
+
+.lab-range-panel {
+  max-width: 760px;
+}
+
+.lab-range-headnote {
+  margin: 2px 0 0;
+}
+
+.lab-snapshot-note p {
+  margin: 4px 0 0;
+}
+
+/* Ranges table */
+.lab-range-scroll {
+  overflow-x: auto;
+  margin-bottom: 10px;
+}
+
+.lab-range-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 620px;
+}
+
+.lab-range-table th {
+  text-align: left;
+  padding: 4px 8px 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.lab-range-table td {
+  padding: 3px 8px 3px 0;
+  vertical-align: middle;
+}
+
+.lab-range-table input[type='text'],
+.lab-range-table select {
+  width: 100%;
+  min-width: 90px;
+  min-height: var(--tap);
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px; /* stops iOS focus zoom */
+}
+
+.lab-range-table input:disabled,
+.lab-range-table select:disabled {
+  background: var(--bg);
+  color: var(--ink-soft);
+}
+
+.lab-range-updown {
+  white-space: nowrap;
+}
+
+.lab-range-small {
+  min-width: var(--tap);
+  padding: 8px 10px;
+}
+
+.lab-range-colorcell {
+  white-space: nowrap;
+}
+
+.lab-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+/* Advisory warnings: visible, never blocking */
+.lab-warn {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+  font-size: 15px;
+}
+
+.lab-warn ul {
+  margin: 6px 0 0;
+  padding-left: 20px;
+}
+
+/* Interpretation preview */
+.lab-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.lab-preview-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lab-preview-label {
+  font-weight: 600;
+  color: var(--ink-soft);
+  font-size: 15px;
+}
+
+.lab-preview input {
+  width: 140px;
+  min-height: var(--tap);
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.lab-preview-result {
+  flex: 1;
+  min-width: 220px;
+  font-size: 15px;
+}
+
+/* Screen-reader-only table headers */
+.sr-only-lab {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

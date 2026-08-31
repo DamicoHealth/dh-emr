@@ -36,6 +36,8 @@ import { buildRecord, newVisitFormState, returnPatientInfo, toFormState } from '
 import { clearDraft, describeDraft, draftHasContent, draftMatches, readDraft, saveDraft } from './draft'
 import { validateEncounter, type ValidationProblem } from './validate'
 import { useEncounterConfig } from './useEncounterConfig'
+import { appendPresetNotes, buildMedLines, dxPartsOf, toggleDxInText } from '../presets/presetsModel'
+import { usePresetPicks } from '../presets/usePresetPicks'
 import './encounter.css'
 
 export interface EncounterFormOwnProps {
@@ -63,6 +65,8 @@ export function EncounterForm({
   onClose,
 }: EncounterFormOwnProps) {
   const cfg = useEncounterConfig()
+  /** Dx quick-picks and Rx presets (org config, hiddenPresets applied). */
+  const picks = usePresetPicks()
   // A draft only applies to the exact form it was typed in - same edit target
   // AND same seed patient - or one patient's answers land on another's chart.
   const [recoveredDraft] = useState(() => {
@@ -607,12 +611,46 @@ export function EncounterForm({
       </>
     ),
     diagnosis: (
-      <Field label="Diagnosis">
-        <textarea rows={2} value={state.diagnosis} onChange={(e) => set('diagnosis', e.target.value)} />
-      </Field>
+      <>
+        <Field label="Diagnosis">
+          <textarea rows={2} value={state.diagnosis} onChange={(e) => set('diagnosis', e.target.value)} />
+        </Field>
+        {picks.dxPresets.length > 0 && (
+          // Same contract as the complaints pills: a tap APPENDS the diagnosis
+          // to the free text (never replaces what was typed), and tapping again
+          // removes only that exact entry. Selection is derived from the text
+          // itself, so it survives reopening a saved visit.
+          <PillGroup options={picks.dxPresets} selected={dxPartsOf(state.diagnosis)}
+            onToggle={(v) => edit((st) => ({ ...st, diagnosis: toggleDxInText(st.diagnosis, v) }))} />
+        )}
+      </>
     ),
     medications: (
       <>
+        {picks.rxPresets.length > 0 && (
+          <>
+            <div className="subhead">Prescription presets</div>
+            <div className="pill-group">
+              {picks.rxPresets.map((p) => (
+                // One-tap apply: APPENDS the bundle's lines as med rows (ids
+                // minted like "+ Add medication") and appends the preset's
+                // notes. Never removes or overwrites existing rows - the
+                // legacy toggle-off matched rows by drug and could yank a
+                // manually entered prescription; a stray extra row here is
+                // visible and has its own × button. Through edit(), so the
+                // discard guard sees an applied preset as typed work.
+                <button key={p.name} type="button" className="pill" title={p.rx}
+                  onClick={() =>
+                    edit((st) => ({
+                      ...st,
+                      medications: [...st.medications, ...buildMedLines(p, () => crypto.randomUUID())],
+                      treatmentNotes: appendPresetNotes(st.treatmentNotes, p.notes),
+                    }))
+                  }>{p.name}</button>
+              ))}
+            </div>
+          </>
+        )}
         {state.medications.map((m, i) => (
           <div className="med-line" key={m.id}>
             <select value={m.medId} onChange={(e) => {

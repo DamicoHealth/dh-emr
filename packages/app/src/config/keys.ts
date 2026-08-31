@@ -234,12 +234,16 @@ export async function loadLibrary(kv: KV): Promise<FormTemplateLibrary> {
 }
 
 /**
- * Save the library, mirroring templates[0].schema back to the legacy
- * `formSchema` key (only when it exists) on EVERY save, so an older client on
- * the same org still renders correctly. Skipping the mirror breaks them.
+ * Save the library, mirroring the first ENABLED template's schema back to the
+ * legacy `formSchema` key (only when it exists) on EVERY save, so an older
+ * client on the same org still renders correctly. Skipping the mirror breaks
+ * them. First ENABLED, not templates[0]: a legacy client has no concept of a
+ * disabled template, so mirroring a switched-off templates[0] would hand it a
+ * form the org deliberately turned off. When every template is disabled
+ * (which the builder refuses to produce) templates[0] is the fallback.
  */
 export async function saveLibrary(kv: KV, lib: FormTemplateLibrary): Promise<void> {
   await kv.set('formTemplates', lib)
-  const first = lib.templates[0]
+  const first = lib.templates.find((t) => t.enabled !== false) ?? lib.templates[0]
   if (first?.schema) await kv.set('formSchema', first.schema)
 }

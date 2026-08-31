@@ -136,6 +136,9 @@ export function getEffectiveSchema(raw: { sections?: RawSection[] } | null | und
     hidden: !!s.hidden,
     order: typeof s.order === 'number' ? s.order : 100 + i,
     fields: Array.isArray(s.fields) ? s.fields : [],
+    // Pass the stored collapsed-by-default preference through untouched;
+    // isCollapsibleSection (src/config/validate) decides what it may mean.
+    collapsed: s.collapsed,
   }))
   return {
     version: 1,

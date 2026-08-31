@@ -66,7 +66,16 @@ import {
   DEFAULT_REFERRAL_TYPES,
   DEFAULT_SITES,
 } from '../../config/defaults'
-import type { CustomLabTest, FormTemplate, FormularyEntry } from '../../config/types'
+import type { CustomLabTest, FormTemplate, FormularyEntry, LabRange } from '../../config/types'
+import { PresetEditors } from '../presets/PresetEditors'
+import TemplateBuilder from '../templates/TemplateBuilder'
+import { RangeEditor } from '../labs/RangeEditor'
+import {
+  UNSAVED_TEST_REASON,
+  saveTestRanges,
+  withRanges,
+  type SaveRangesResult,
+} from '../labs/rangesModel'
 import './settings.css'
 
 export interface SettingsScreenProps {
@@ -206,7 +215,15 @@ export default function SettingsScreen({ onRefresh, account, onSignOut }: Settin
   })
   const [formularyRows, setFormularyRows] = useState<FormularyEntry[]>([])
   const [labRows, setLabRows] = useState<CustomLabTest[]>([])
+  /** Ids of lab rows that exist in PERSISTED config (or the built-in panel a
+   *  never-customized org resolves to). Ranges can only be edited on these:
+   *  a staged-but-unsaved row is not in the stored base the range save
+   *  patches, so its Ranges control is disabled with the reason. */
+  const [savedLabIds, setSavedLabIds] = useState<Set<string>>(new Set())
+  /** The lab row whose reference ranges are being edited, or null. */
+  const [rangeTest, setRangeTest] = useState<CustomLabTest | null>(null)
   const [templates, setTemplates] = useState<FormTemplate[]>([])
+  const [templateBuilderOpen, setTemplateBuilderOpen] = useState(false)
 
   const restoreRef = useRef<HTMLInputElement>(null)
   const importRef = useRef<HTMLInputElement>(null)
@@ -262,6 +279,7 @@ export default function SettingsScreen({ onRefresh, account, onSignOut }: Settin
     setFormularyRows(resolveFormulary(formularyStored).map((r) => ({ ...r })))
     const labs = labsStored && labsStored.length ? labsStored : DEFAULT_LAB_TESTS
     setLabRows(labs.map((t) => ({ ...t })))
+    setSavedLabIds(new Set(labs.map((t) => t.id)))
     setTemplates(lib.templates)
   }, [])
 
@@ -622,6 +640,7 @@ export default function SettingsScreen({ onRefresh, account, onSignOut }: Settin
     try {
       await setLabTests(config, cleaned)
       setLabRows(cleaned.map((t) => ({ ...t })))
+      setSavedLabIds(new Set(cleaned.map((t) => t.id)))
       setMessage({
         tone: 'ok',
         text: `Saved ${cleaned.length} lab test${cleaned.length === 1 ? '' : 's'}. Reopen the visit form to see them.`,
@@ -632,6 +651,26 @@ export default function SettingsScreen({ onRefresh, account, onSignOut }: Settin
     } finally {
       setBusy(null)
     }
+  }
+
+  /**
+   * Persist one numeric test's reference ranges (from the RangeEditor).
+   * saveTestRanges re-reads the STORED list as its base, so staged table
+   * edits are not committed as a side effect and a config pull that landed
+   * while the editor was open is honored. The staged row is patched too, so
+   * a later "Save lab tests" does not write stale ranges back.
+   */
+  const saveRangesFor = async (
+    test: CustomLabTest,
+    ranges: LabRange[],
+  ): Promise<SaveRangesResult> => {
+    const r = await saveTestRanges(config, test, ranges)
+    if (r.ok) {
+      setLabRows((rows) => rows.map((t) => (t.id === test.id ? withRanges(t, ranges) : t)))
+      setMessage({ tone: 'ok', text: r.message })
+      onRefresh?.()
+    }
+    return r
   }
 
   // ---------------------------------------------------------------- render
@@ -1195,8 +1234,9 @@ export default function SettingsScreen({ onRefresh, account, onSignOut }: Settin
         <h3>Lab tests</h3>
         <p className="muted small">
           Lab tests offered on the visit form. Saving replaces the whole panel for your
-          organization. Reference ranges on numeric tests are kept as they are when you edit
-          here.
+          organization. On a numeric test, Ranges sets the bands that interpret a value as it is
+          entered; changing them affects new results only, and visits already saved keep the
+          interpretation recorded at the time.
         </p>
         {!isAdmin ? <p className="gate-note">{GATE_REASON}</p> : null}
         <div className="table-scroll">
@@ -1207,6 +1247,7 @@ export default function SettingsScreen({ onRefresh, account, onSignOut }: Settin
                 <th>Type</th>
                 <th>Unit</th>
                 <th>On by default</th>
+                <th>Ranges</th>
                 <th>
                   <span className="sr-only">Remove</span>
                 </th>
@@ -1280,6 +1321,23 @@ export default function SettingsScreen({ onRefresh, account, onSignOut }: Settin
                     />
                   </td>
                   <td>
+                    {row.type === 'numeric' ? (
+                      // Opens read-only on a standard device (like the template
+                      // editor); disabled only while the row itself is not in
+                      // the persisted list yet, with the reason on the control.
+                      <button
+                        type="button"
+                        className="btn btn-ghost"
+                        aria-label={`Lab test ${i + 1} reference ranges`}
+                        onClick={() => setRangeTest(row)}
+                        disabled={!savedLabIds.has(row.id)}
+                        title={!savedLabIds.has(row.id) ? UNSAVED_TEST_REASON : undefined}
+                      >
+                        Ranges{row.ranges?.length ? ` (${row.ranges.length})` : ''}
+                      </button>
+                    ) : null}
+                  </td>
+                  <td>
                     <button
                       type="button"
                       className="btn btn-ghost"
@@ -1324,11 +1382,24 @@ export default function SettingsScreen({ onRefresh, account, onSignOut }: Settin
         </div>
       </section>
 
+      {rangeTest ? (
+        <RangeEditor
+          test={rangeTest}
+          isAdmin={isAdmin}
+          onClose={() => setRangeTest(null)}
+          onSave={(ranges) => saveRangesFor(rangeTest, ranges)}
+        />
+      ) : null}
+
+      {/* Diagnosis quick-picks and prescription presets (src/ui/presets). */}
+      <PresetEditors isAdmin={isAdmin} onRefresh={onRefresh} />
+
       <section className="card">
         <h3>Form templates</h3>
         <p className="muted">
-          Template editor coming in this build cycle. The templates on this device are shown
-          read-only until then.
+          The visit form itself: which forms your organization offers, their sections, and your
+          own questions. These belong to your organization; a change reaches everyone on the next
+          sync.
         </p>
         <ul className="template-list">
           {templates.map((t) => (
@@ -1338,7 +1409,35 @@ export default function SettingsScreen({ onRefresh, account, onSignOut }: Settin
             </li>
           ))}
         </ul>
+        {!isAdmin ? (
+          <p className="gate-note">
+            The editor opens read-only: only an admin device can change form templates. This
+            device is set to standard.
+          </p>
+        ) : null}
+        <div className="btn-row">
+          <button
+            type="button"
+            className="btn"
+            onClick={() => setTemplateBuilderOpen(true)}
+            disabled={anyBusy}
+          >
+            Open the template editor
+          </button>
+        </div>
       </section>
+
+      {templateBuilderOpen ? (
+        <TemplateBuilder
+          isAdmin={isAdmin}
+          onClose={() => setTemplateBuilderOpen(false)}
+          onChanged={() => {
+            // Keep the read-only list above in step with the builder's saves.
+            void loadLibrary(config).then((lib) => setTemplates(lib.templates))
+            onRefresh?.()
+          }}
+        />
+      ) : null}
 
       <section className="card">
         <h3>Moving to a new device</h3>

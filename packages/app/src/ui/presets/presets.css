@@ -1,0 +1,89 @@
+/* Preset editors (settings screen). Reuses the settings card/btn styles;
+   these rules only lay out the preset rows and the inline Rx editor. */
+
+.preset-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.preset-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.preset-row-hidden .preset-name,
+.preset-row-hidden .preset-rx-label {
+  opacity: 0.5;
+}
+
+.preset-name {
+  flex: 1;
+  min-width: 150px;
+}
+
+.preset-rx-label {
+  flex: 1;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.preset-rx-name {
+  font-weight: 600;
+}
+
+.preset-editor {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px;
+  margin: 10px 0;
+  background: var(--bg);
+}
+
+.preset-editor h4 {
+  margin: 0 0 8px;
+}
+
+.preset-med-line {
+  display: grid;
+  grid-template-columns: minmax(150px, 1.4fr) 1fr 1fr 1fr auto;
+  gap: 6px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.preset-med-line input,
+.preset-med-line select {
+  min-width: 0;
+}
+
+@media (max-width: 700px) {
+  .preset-med-line {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.preset-line-check {
+  margin: 2px 0 0;
+  font-size: 12px;
+}
+
+.preset-line-ok {
+  color: var(--ok, var(--ink-soft));
+}
+
+.preset-line-warn {
+  color: var(--warn-ink);
+  background: var(--warn-bg);
+  border-radius: var(--radius);
+  padding: 4px 8px;
+}
+
+.preset-line-muted {
+  color: var(--ink-soft);
+}

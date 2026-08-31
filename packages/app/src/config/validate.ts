@@ -122,13 +122,17 @@ export const OPTIONAL_SECTIONS: ReadonlySet<string> = new Set([
  * Collapsed-by-default is allowed only for sections without required fields:
  * a collapsed section would hide the input Save demands. Built-ins follow
  * OPTIONAL_SECTIONS; a custom section is collapsible iff none of its fields
- * is required.
+ * is required AND its stored `collapsed` preference is not false (absent
+ * means collapsed, the historical behavior, so old schemas render unchanged).
+ * Required fields WIN over the stored flag - the flag is ignored here, not
+ * rewritten, mirroring how hidden:true is ignored for required sections.
  */
 export function isCollapsibleSection(
-  section: Pick<EffectiveSection, 'id' | 'builtin' | 'fields'>,
+  section: Pick<EffectiveSection, 'id' | 'builtin' | 'fields' | 'collapsed'>,
 ): boolean {
   if (section.builtin) return OPTIONAL_SECTIONS.has(section.id)
-  return !section.fields.some((f) => f.required)
+  if (section.fields.some((f) => f.required)) return false
+  return section.collapsed !== false
 }
 
 // ------------------------------------------------------- answer retention ---

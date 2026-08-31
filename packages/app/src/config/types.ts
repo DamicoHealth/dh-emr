@@ -64,6 +64,14 @@ export interface RawSection {
   hidden?: boolean
   order?: number
   fields?: CustomField[]
+  /**
+   * Custom sections only: whether the section starts collapsed on the visit
+   * form. Absent means collapsed (the historical behavior for custom sections
+   * without required fields), so old stored schemas render unchanged. A
+   * section with a required field ALWAYS starts open regardless of this flag:
+   * a collapsed section would hide the answer Save demands.
+   */
+  collapsed?: boolean
 }
 
 /** A section as RESOLVED for rendering. */
@@ -81,6 +89,8 @@ export interface EffectiveSection {
    * exclude it from the arrangeable list instead of offering a dead entry.
    */
   notOnForm?: boolean
+  /** Custom sections: the stored collapsed-by-default preference (see RawSection). */
+  collapsed?: boolean
 }
 
 // -------------------------------------------------------------- templates ---
