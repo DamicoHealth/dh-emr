@@ -98,11 +98,33 @@ Updated 2026-08-12 (end of day).
 - Settings prompt() flows replaced with inline forms; About carries the
   full not-certified/not-HIPAA statement.
 
+## Clinic mode: BUILT (2026-08-13, commit d0a7c76) - 362 tests green
+
+- src/auth: namespaced sessions, profile state machine with offline grace
+  (cached ACTIVE profile under settings key 'authProfile'; revocation
+  enforced server-side on reconnect - documented honest limit). Access
+  token rides every sync request via the provider hook in src/sync/keys.ts.
+- Shell gate applies ONLY when orgMode == 'clinic' AND cloud creds exist;
+  field mode is byte-identical (browser-verified). Tabs: Board (active
+  profile), Staff (admin), via tabsFor() in App.tsx.
+- src/domain/flow.ts + src/ui/board: today-scoped columns, unknown
+  stations route to offBoard (never vanish), moves via records.update so
+  sync_version bumps. src/ui/staff: approve/revoke/role/promote, orgMode
+  switch (direct authed config upsert - orgMode is deliberately NOT in
+  CONFIG_PUSH_KEYS), stations editor.
+- Kernel stamps user_id on NEW records from setCurrentUserId (published
+  by loadCurrentProfile, active accounts only); ensureFleetRow() runs
+  once per activation from the App gate effect.
+- NOT yet done: live E2E against a real Supabase project (needs one to
+  exist; the SQL itself is covered by verify.sql), PGlite SQL tests,
+  supabase-js bundle split (main chunk 528 kB, warning only).
+
 ## Next
 
-1. Clinic mode (auth screens, roles, patient-flow board) on the v4.1
-   schema.
+1. Live clinic-mode E2E once a Supabase project exists (Alec runs
+   SETUP.md; a scratch project is fine).
 2. Deploy step with Alec: GitHub repo + Pages + damicohealth.com DNS
    (see packages/site/DEPLOY.md), then guides written against the real
    UI. Needs the Damico Health pivot story for the hero copy.
-3. Device tests on real hardware before anything ships.
+3. Deferred editors (template builder UI, Rx/Dx presets, analytics,
+   lab ranges), service worker wiring, device tests on real hardware.
