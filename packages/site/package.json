@@ -1,0 +1,9 @@
+{
+  "name": "@dh/site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "damicohealth.com - static site for DH EMR. No build step; public/ is served as-is.",
+  "scripts": {
+    "preview": "python3 -m http.server 8080 --directory public"
+  }
+}

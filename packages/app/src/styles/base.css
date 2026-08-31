@@ -572,3 +572,14 @@ main {
     width: min(760px, 100%);
   }
 }
+
+/* Inline disclosure forms (Settings rename / cloud connect). */
+.inline-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+}

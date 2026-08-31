@@ -11,12 +11,30 @@ import { App } from './App'
 import { ErrorBoundary } from './ui/app/ErrorBoundary'
 import { setCurrentDeviceId } from './kernel'
 import { getDeviceId, syncEngine } from './sync'
+import { DemoBanner, bootDemo } from './demo'
+
+// Injected by vite.config define. Literal checks so production builds
+// (DH_DEMO unset) compile the demo branches away entirely.
+declare const __DH_DEMO__: boolean
 
 const container = document.getElementById('root')
 if (!container) throw new Error('Root container missing')
 const root = createRoot(container)
 
 async function start(): Promise<void> {
+  // Demo builds seed the fictional clinic BEFORE anything renders, so the
+  // app opens straight into a working clinic (no setup wizard, cloud paths
+  // neutered). Blocking is fine: the seed is small and idempotent.
+  if (__DH_DEMO__) {
+    root.render(<div className="boot">Setting up the demo clinic…</div>)
+    try {
+      await bootDemo()
+    } catch (e) {
+      // The shell still boots; a failed seed shows as an unconfigured app
+      // rather than a blank page.
+      console.error('[demo] seeding failed', e)
+    }
+  }
   // Publish the stored device identity so record saves and the first sync
   // cycle see it. A missing id just means an unregistered device.
   try {
@@ -34,6 +52,9 @@ async function start(): Promise<void> {
   root.render(
     <StrictMode>
       <ErrorBoundary>
+        {/* Above the shell, so the fictional-clinic notice is visible in
+            every boot state, not just the main app. */}
+        {__DH_DEMO__ ? <DemoBanner /> : null}
         <App />
       </ErrorBoundary>
     </StrictMode>,

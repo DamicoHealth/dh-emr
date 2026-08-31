@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["--workspace", "@dh/app", "exec", "vite", "preview", "--", "--port", "4173", "--strictPort"],
       "port": 4173
+    },
+    {
+      "name": "site-preview",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["packages/site/serve.mjs", "4180"],
+      "port": 4180
     }
   ]
 }

@@ -1,0 +1,326 @@
+/*
+ * damicohealth.com - single stylesheet, no build step.
+ * Matches the DH EMR app design family (packages/app/src/styles/tokens.css).
+ * Sunlight-legible, 4.5:1+ contrast everywhere, responsive from 320px.
+ *
+ * COLOR DISCIPLINE (same rules as the app):
+ *  - --brand-bright (#f68630) is DECORATIVE ONLY: fills and illustrations.
+ *    It is 2.51:1 against white and must NEVER carry text or sit under text.
+ *  - --brand (#b5560a) may carry text and is reserved for brand moments.
+ */
+
+:root {
+  --ink: #1a2330; /* 13.9:1 on white */
+  --ink-soft: #4a5568; /* 7.5:1 on white */
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --line: #d9dee6;
+  --primary: #0e6e64; /* 5.9:1 on white */
+  --primary-ink: #ffffff;
+  --brand: #b5560a; /* 4.9:1 on white, 4.6:1 on bg */
+  --brand-bright: #f68630; /* decorative fills only */
+  --warn-bg: #fff4e0;
+  --warn-ink: #6b4700; /* 7.6:1 on warn-bg */
+  --radius: 10px;
+  --shadow-1: 0 1px 2px rgba(26, 35, 48, 0.06), 0 1px 4px rgba(26, 35, 48, 0.06);
+  --sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+.wrap {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* Header */
+
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.site-header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+}
+
+.wordmark svg {
+  display: block;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+}
+
+.site-nav a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.35rem 0;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  text-decoration: underline;
+}
+
+/* Links in running text */
+
+main a {
+  color: var(--primary);
+}
+
+main a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Hero */
+
+.hero {
+  padding: 3rem 0 2.5rem;
+  text-align: left;
+}
+
+.kicker {
+  margin: 0 0 0.5rem;
+  color: var(--brand);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.75rem, 5.5vw, 2.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.lede {
+  margin: 0 0 1.5rem;
+  max-width: 42rem;
+  font-size: clamp(1.05rem, 2.5vw, 1.2rem);
+  color: var(--ink-soft);
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  min-height: 44px;
+  line-height: 1.4;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-ink);
+  border: 2px solid var(--primary);
+}
+
+.btn-primary:hover {
+  background: #0a5a52;
+  border-color: #0a5a52;
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.btn-secondary:hover {
+  background: #eef4f3;
+}
+
+/* Sections */
+
+section {
+  padding: 1.75rem 0;
+}
+
+section h2 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.35rem, 4vw, 1.7rem);
+  line-height: 1.2;
+}
+
+.section-lede {
+  margin: 0 0 1.25rem;
+  color: var(--ink-soft);
+  max-width: 42rem;
+}
+
+/* Cards */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  gap: 1rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+  padding: 1.25rem;
+}
+
+.card h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.1rem;
+}
+
+.card p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.card ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.2rem;
+  color: var(--ink-soft);
+}
+
+.card li {
+  margin: 0.3rem 0;
+}
+
+.mode-tag {
+  display: inline-block;
+  margin-bottom: 0.6rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: var(--primary);
+  color: var(--primary-ink);
+}
+
+/* Plain content pages (app placeholder, guides, 404) */
+
+.page {
+  padding: 3rem 0;
+  max-width: 42rem;
+}
+
+.page h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.6rem, 5vw, 2.25rem);
+  line-height: 1.2;
+}
+
+.page p {
+  color: var(--ink-soft);
+}
+
+.page ul {
+  color: var(--ink-soft);
+  padding-left: 1.2rem;
+}
+
+.page li {
+  margin: 0.35rem 0;
+}
+
+/* Compliance notice - on every page, visibly */
+
+.notice {
+  background: var(--warn-bg);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.notice p {
+  margin: 0;
+  padding: 0.85rem 0;
+  color: var(--warn-ink);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Footer */
+
+.site-footer {
+  background: var(--surface);
+  padding: 1.5rem 0 2rem;
+}
+
+.site-footer p {
+  margin: 0.35rem 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.site-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.site-footer a {
+  color: var(--primary);
+}

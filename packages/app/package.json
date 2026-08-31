@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
+    "build:demo": "DH_DEMO=1 DH_STORAGE_SUFFIX=-demo vite build --base=/demo/ --outDir=../site/public/demo --emptyOutDir",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",

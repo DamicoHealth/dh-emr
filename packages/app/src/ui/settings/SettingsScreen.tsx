@@ -248,16 +248,24 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
     loaded && isPlaceholderConfig(storedLists.sites, storedLists.providers)
 
   // ------------------------------------------------------------ device card
+  // Inline forms, not window.prompt: prompt() is unavailable in some
+  // webviews and PWAs, awkward on iPads, and it cannot show the key
+  // guidance while the person is pasting the key.
 
-  const doRename = async (): Promise<void> => {
-    const next = window.prompt('What should this device be called?', info.name || '')
-    if (next === null) return
+  const [renameOpen, setRenameOpen] = useState(false)
+  const [renameValue, setRenameValue] = useState('')
+  const [connectOpen, setConnectOpen] = useState(false)
+  const [connUrl, setConnUrl] = useState('')
+  const [connKey, setConnKey] = useState('')
+
+  const doRename = async (next: string): Promise<void> => {
     setBusy('rename')
     setMessage(null)
     try {
       const r = await renameDevice(next)
       await refreshInfo()
       setMessage({ tone: r.ok ? 'ok' : 'bad', text: r.message })
+      if (r.ok) setRenameOpen(false)
     } catch (e) {
       setMessage({ tone: 'bad', text: e instanceof Error ? e.message : String(e) })
     } finally {
@@ -267,14 +275,7 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
 
   // ------------------------------------------------------------- cloud card
 
-  const doConnect = async (): Promise<void> => {
-    const rawUrl = window.prompt('Supabase project URL (from your admin):', creds.url || 'https://')
-    if (rawUrl === null) return
-    const rawKey = window.prompt(
-      'Project key: the Publishable key, or the legacy anon key. NEVER a Secret or service_role key.',
-      '',
-    )
-    if (rawKey === null) return
+  const doConnect = async (rawUrl: string, rawKey: string): Promise<void> => {
     const norm = normalizeSupabaseUrl(rawUrl)
     const k = rawKey.trim()
     if (!norm.ok || !k) {
@@ -311,6 +312,8 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
         return
       }
       await refreshInfo()
+      setConnectOpen(false)
+      setConnKey('')
       setMessage({
         tone: 'ok',
         text: 'Connected and registered. Records on this device will upload on the next sync.',
@@ -550,39 +553,63 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
         <p className="muted small">
           Renaming keeps this device's identity: records it has already filed stay its own.
         </p>
-        <div className="btn-row">
-          <button
-            type="button"
-            className="btn btn-ghost"
-            onClick={() => {
-              void doRename()
-            }}
-            disabled={anyBusy}
-          >
-            {busy === 'rename' ? 'Saving…' : 'Rename this device'}
-          </button>
-        </div>
+        {renameOpen ? (
+          <div className="inline-form">
+            <label className="field">
+              <span className="field-label">Device name</span>
+              <input
+                className="input"
+                type="text"
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+                placeholder='For example "iPad 2 - triage"'
+              />
+            </label>
+            <div className="btn-row">
+              <button
+                type="button"
+                className="btn"
+                onClick={() => {
+                  void doRename(renameValue)
+                }}
+                disabled={anyBusy || !renameValue.trim()}
+              >
+                {busy === 'rename' ? 'Saving…' : 'Save name'}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => setRenameOpen(false)}
+                disabled={anyBusy}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="btn-row">
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => {
+                setRenameValue(info.name || '')
+                setRenameOpen(true)
+              }}
+              disabled={anyBusy}
+            >
+              Rename this device
+            </button>
+          </div>
+        )}
       </section>
 
       <section className="card">
         <h3>Cloud sync</h3>
         {offlineOnly ? (
-          <>
-            <p className="muted">
-              This device is offline only. Records stay here and are never sent anywhere. Take a
-              backup regularly so a lost or wiped device does not lose a clinic day.
-            </p>
-            <button
-              type="button"
-              className="btn"
-              onClick={() => {
-                void doConnect()
-              }}
-              disabled={anyBusy}
-            >
-              {busy === 'connect' ? 'Checking…' : 'Connect this device to a cloud'}
-            </button>
-          </>
+          <p className="muted">
+            This device is offline only. Records stay here and are never sent anywhere. Take a
+            backup regularly so a lost or wiped device does not lose a clinic day.
+          </p>
         ) : (
           <>
             <div className="kv-list">
@@ -605,18 +632,76 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
               >
                 {busy === 'sync' ? 'Syncing…' : 'Sync now'}
               </button>
+            </div>
+          </>
+        )}
+        {connectOpen ? (
+          <div className="inline-form">
+            <label className="field">
+              <span className="field-label">Project address (from your admin)</span>
+              <input
+                className="input"
+                type="url"
+                value={connUrl}
+                onChange={(e) => setConnUrl(e.target.value)}
+                placeholder="https://yourproject.supabase.co"
+                autoComplete="off"
+              />
+            </label>
+            <label className="field">
+              <span className="field-label">Project key</span>
+              <input
+                className="input"
+                type="text"
+                value={connKey}
+                onChange={(e) => setConnKey(e.target.value)}
+                placeholder="sb_publishable_..."
+                autoComplete="off"
+              />
+            </label>
+            <p className="muted small">
+              Use the Publishable key, or the legacy anon key. NEVER a Secret or service_role
+              key: those bypass every security rule and this app refuses them.
+            </p>
+            <div className="btn-row">
+              <button
+                type="button"
+                className="btn"
+                onClick={() => {
+                  void doConnect(connUrl, connKey)
+                }}
+                disabled={anyBusy || !connUrl.trim() || !connKey.trim()}
+              >
+                {busy === 'connect' ? 'Checking…' : 'Verify and connect'}
+              </button>
               <button
                 type="button"
                 className="btn btn-ghost"
                 onClick={() => {
-                  void doConnect()
+                  setConnectOpen(false)
+                  setConnKey('')
                 }}
                 disabled={anyBusy}
               >
-                {busy === 'connect' ? 'Checking…' : 'Change cloud project'}
+                Cancel
               </button>
             </div>
-          </>
+          </div>
+        ) : (
+          <div className="btn-row">
+            <button
+              type="button"
+              className={offlineOnly ? 'btn' : 'btn btn-ghost'}
+              onClick={() => {
+                setConnUrl(creds.url || '')
+                setConnKey('')
+                setConnectOpen(true)
+              }}
+              disabled={anyBusy}
+            >
+              {offlineOnly ? 'Connect this device to a cloud' : 'Change cloud project'}
+            </button>
+          </div>
         )}
       </section>
 
@@ -1074,9 +1159,9 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
           <Kv k="Version" v={APP_VERSION} />
         </div>
         <p className="muted small">
-          DH EMR is an offline-first field documentation tool for outreach clinics. It is not a
-          certified electronic health record system, and it must not be used where a certified
-          EHR is required.
+          DH EMR is an offline-first documentation tool for outreach clinics. It is not a
+          certified EHR and is not HIPAA-compliant, and it must not be used where a certified
+          EHR is required. It is intended for global-health use outside the US.
         </p>
       </section>
     </div>
