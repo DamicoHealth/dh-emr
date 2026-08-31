@@ -119,6 +119,20 @@ Updated 2026-08-12 (end of day).
   exist; the SQL itself is covered by verify.sql), PGlite SQL tests,
   supabase-js bundle split (main chunk 528 kB, warning only).
 
+## Customization editors: BUILT (commit 23a4dd4) - 445 tests green
+
+- src/ui/templates: full template CRUD with every section-6 guard;
+  synthesized-library detection lives in loadLibraryDetailed (raw-read
+  marker, BEFORE normalizeLibrary fabricates a default). Browser-verified
+  enabled in the demo (both seeded templates + custom sections render).
+- src/ui/presets + EncounterForm surgical edits: Dx pills + Rx one-tap
+  apply (append-only by design; legacy toggle-off could yank manual rows).
+  hiddenPresets materializes from defaultHiddenPresets(), never {}.
+- src/ui/labs/RangeEditor: ranges persist against a FRESH config read;
+  existing interpretation snapshots never rewritten (pinned by test).
+- collapsed-by-default now flows type -> sections -> validate -> form.
+- saveLibrary mirrors the first ENABLED template to formSchema.
+
 ## Next
 
 1. Live clinic-mode E2E once a Supabase project exists (Alec runs
@@ -126,5 +140,6 @@ Updated 2026-08-12 (end of day).
 2. Deploy step with Alec: GitHub repo + Pages + damicohealth.com DNS
    (see packages/site/DEPLOY.md), then guides written against the real
    UI. Needs the Damico Health pivot story for the hero copy.
-3. Deferred editors (template builder UI, Rx/Dx presets, analytics,
-   lab ranges), service worker wiring, device tests on real hardware.
+3. Remaining: analytics screen, service worker wiring (user-gated app /
+   auto demo), supabase-js bundle split (575 kB warning), device tests
+   on real hardware, PGlite SQL tests.
