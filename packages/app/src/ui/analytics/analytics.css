@@ -1,0 +1,359 @@
+/*
+ * Analytics screen styles. Self-contained: only base.css globals (.screen,
+ * .card, .btn, .field) are assumed; nothing from records.css.
+ *
+ * CHART COLOR DISCIPLINE (validated, do not eyeball changes):
+ *  - Exactly two series hues, fixed assignment, never cycled:
+ *      --an-s1 teal #0d8168, --an-s2 orange #b5560a (= --brand).
+ *    The pair passes the CVD checks (protan/deutan delta E 10.6, normal 21.7,
+ *    both >= 3:1 on white; validated with the dataviz palette validator).
+ *    --primary (#0e6e64) FAILS the chroma floor as a series hue (reads gray
+ *    next to another mark) - that is why --an-s1 is its own step of the same
+ *    teal family. Single-series bars always wear --an-s1.
+ *  - Text never wears a series color: labels, values, legends and axis text
+ *    stay on --ink / --ink-soft (4.5:1+). Identity comes from the swatch or
+ *    mark NEXT to the text.
+ *  - No red/green encodings: nothing on this screen means good/bad by color
+ *    alone; every value is written out in text.
+ */
+
+.an-screen {
+  --an-s1: #0d8168;
+  --an-s1-track: #d7ece8; /* light step of the same teal ramp (meter tracks) */
+  --an-s2: #b5560a;
+}
+
+/* ------------------------------------------------------------- filter row */
+
+.an-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.an-filters .field {
+  margin-bottom: 0;
+  min-width: 130px;
+  flex: 1 1 130px;
+}
+
+.an-filters .field > span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.an-filters .btn {
+  flex: 0 0 auto;
+}
+
+/* --------------------------------------------------------------- KPI row */
+
+.an-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.an-kpi {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+  padding: 12px 14px;
+}
+
+/* Proportional figures on purpose: tabular-nums looks loose at this size. */
+.an-kpi-n {
+  font-size: 27px;
+  font-weight: 650;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.an-kpi-l {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.an-kpi-s {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* ----------------------------------------------------------------- panels */
+
+.an-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0; /* .card carries its own margin-bottom */
+}
+
+@media (min-width: 900px) {
+  .an-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0 14px;
+    align-items: start;
+  }
+}
+
+.an-panel h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.an-panel-sub {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 2px 0 0;
+}
+
+.an-panel-head {
+  margin-bottom: 12px;
+}
+
+/* ---------------------------------------------------------------- legends */
+
+.an-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.an-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.an-legend i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex: none;
+}
+
+.an-legend i.line {
+  height: 3px;
+  border-radius: 2px;
+}
+
+/* ----------------------------------------------------- SVG chart wrapper */
+
+.an-chart {
+  position: relative; /* tooltip anchor */
+}
+
+.an-chart svg {
+  display: block;
+}
+
+.an-axis {
+  font-size: 11px;
+  fill: var(--ink-soft);
+}
+
+/* One tooltip, every series; pointer-events off so it never steals hover. */
+.an-tip {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow-2);
+  padding: 8px 10px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.an-tip-title {
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 2px;
+}
+
+.an-tip-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.an-tip-row i {
+  width: 10px;
+  height: 3px;
+  border-radius: 2px;
+  flex: none;
+}
+
+.an-tip-row strong {
+  font-weight: 650;
+}
+
+/* Values are never tooltip-gated: every chart has a data table twin. */
+.an-table {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.an-table summary {
+  cursor: pointer;
+  color: var(--primary);
+  font-weight: 600;
+  min-height: var(--tap);
+  display: flex;
+  align-items: center;
+}
+
+.an-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums; /* columns of numbers align */
+}
+
+.an-table th,
+.an-table td {
+  text-align: left;
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.an-table td.num,
+.an-table th.num {
+  text-align: right;
+}
+
+.an-table-scroll {
+  overflow-x: auto;
+}
+
+/* -------------------------------------------------------------- bar lists */
+
+.an-bars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.an-bar-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 38%) 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.an-bar-name {
+  font-size: 14px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.an-bar-val {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  min-width: 2ch;
+  text-align: right;
+}
+
+/* ----------------------------------------------------------------- meters */
+
+.an-meters {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.an-meter-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.an-meter-val {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.an-meter-val .muted {
+  font-weight: 400;
+}
+
+/* Track is a lighter step of the same teal ramp, never gray-on-gray. */
+.an-meter {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--an-s1-track);
+  overflow: hidden;
+}
+
+.an-meter-fill {
+  height: 100%;
+  background: var(--an-s1);
+  border-radius: 0 5px 5px 0; /* square at the baseline, rounded data end */
+}
+
+/* ----------------------------------------------------------- data quality */
+
+.an-dq-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.an-dq-n {
+  font-size: 24px;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+/* Text carries the meaning ("n of N visits"); the tone only underlines it. */
+.an-dq-n.warn {
+  color: var(--warn-ink);
+}
+
+.an-dq-l {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.an-dq-s {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* ------------------------------------------------------------ empty state */
+
+.an-empty {
+  padding: 36px 16px;
+  text-align: center;
+  color: var(--ink-soft);
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+
+.an-empty.small {
+  padding: 18px 12px;
+  border: none;
+  background: transparent;
+  text-align: left;
+}

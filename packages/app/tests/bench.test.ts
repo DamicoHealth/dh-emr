@@ -7,16 +7,17 @@
  *
  * Thresholds are deliberately generous - they only fail if something is
  * catastrophically slow, so this never becomes a flaky gate. Read the
- * numbers. The record-list/analytics helpers (groupByPatient,
- * computeAnalytics, generateCSV, the encounter serializer) are not built in
- * the rebuild yet, so their rows and their 2000ms/3000ms ceilings are absent
- * for now; the kernel ops below keep the corpus, the sizes and the one hard
- * durability check (a cold read of a 5,000-record store returns exactly
- * 5,000).
+ * numbers. computeAnalytics is back (single-pass, see src/lib/analytics)
+ * with its 3000ms-at-10k ceiling; the remaining record-list helpers
+ * (groupByPatient timing, generateCSV, the encounter serializer) still have
+ * no measured rows here. The kernel ops below keep the corpus, the sizes
+ * and the one hard durability check (a cold read of a 5,000-record store
+ * returns exactly 5,000).
  */
 import { beforeAll, describe, expect, it } from 'vitest'
 import { resetStorage } from './setup'
 import { records } from '../src/kernel'
+import { computeAnalytics, firstSeenByPatient } from '../src/lib/analytics'
 import type { PatientRecord } from '../src/types/record'
 
 const SIZES = [1000, 5000, 10000]
@@ -91,6 +92,12 @@ describe('scale bench', () => {
         const base = 'AMNA01011990'
         corpus.filter((r) => !r.deleted && (r.mrn || '').replace(/[A-Z]$/, '') === base)
       }, 20))
+      // Full Analytics-tab recompute, including the new-vs-return baseline.
+      const analyticsMs = ms(() => computeAnalytics(corpus, firstSeenByPatient(corpus)))
+      row('computeAnalytics (single pass)', n, analyticsMs)
+      // The only hard ceiling in this block: the single-pass rewrite exists
+      // because the legacy ~50-pass version froze old iPads at this size.
+      if (n === 10000) expect(analyticsMs).toBeLessThan(3000)
       const bytes = new Blob([JSON.stringify(corpus)]).size
       row('payload size', n, bytes / 1048576, 'MB')
       report.push('')

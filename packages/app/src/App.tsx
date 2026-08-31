@@ -29,8 +29,10 @@ import {
   subscribeOrgMode,
   type ActiveProfile,
 } from './auth'
+import AnalyticsScreen from './ui/analytics/AnalyticsScreen'
 import { ErrorBoundary } from './ui/app/ErrorBoundary'
 import { SyncChip } from './ui/app/SyncChip'
+import { UpdateBar } from './ui/app/UpdateBar'
 import PendingScreen from './ui/auth/PendingScreen'
 import RevokedScreen from './ui/auth/RevokedScreen'
 import SignInScreen from './ui/auth/SignInScreen'
@@ -105,7 +107,7 @@ async function evaluateGate(): Promise<Gate> {
 // Settings. tabsFor is the ONE place the list is decided.
 // ---------------------------------------------------------------------------
 
-type ScreenId = 'board' | 'visits' | 'staff' | 'settings'
+type ScreenId = 'board' | 'visits' | 'analytics' | 'staff' | 'settings'
 
 interface ScreenTab {
   kind: 'screen'
@@ -127,6 +129,8 @@ function tabsFor(profile: ActiveProfile | null): TabDef[] {
   tabs.push(
     { kind: 'screen', id: 'visits', label: 'Visits' },
     { kind: 'action', id: 'new-visit', label: 'New visit' },
+    // Both modes; after the Visits pair so New visit keeps its reach.
+    { kind: 'screen', id: 'analytics', label: 'Analytics' },
   )
   if (profile?.isAdmin) tabs.push({ kind: 'screen', id: 'staff', label: 'Staff' })
   tabs.push({ kind: 'screen', id: 'settings', label: 'Settings' })
@@ -158,6 +162,8 @@ function renderScreen(
       // refreshSignal, NEVER key: a remount would destroy a part-typed visit
       // every time another device synced.
       return <RecordsScreen deviceId={deviceId} refreshSignal={dataVersion} />
+    case 'analytics':
+      return <AnalyticsScreen refreshSignal={dataVersion} />
     case 'staff':
       if (!profile) return null
       return <StaffScreen profile={profile} onRefresh={bumpData} />
@@ -521,6 +527,10 @@ export function App() {
           connect to the internet when you can so your account can be confirmed.
         </div>
       ) : null}
+
+      {/* Mounting starts SW registration; the bar itself only renders in
+          clinical builds with a waiting worker, and never auto-reloads. */}
+      <UpdateBar />
 
       <main>
         {/* key resets a failed boundary when the user navigates away. */}
