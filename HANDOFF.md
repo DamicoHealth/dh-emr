@@ -82,10 +82,27 @@ Updated 2026-08-12 (end of day).
   Analytics screen, service worker / vite-plugin-pwa wiring (user-gated
   updates for the clinical app, auto for demo), PGlite SQL tests.
 
+## Demo + site: BUILT, LAWS VERIFIED LIVE (2026-08-13)
+
+- src/demo: seeder gated on DH_DEMO, deterministic (djb2 ids, no
+  Math.random/Date.now), SEED_VERSION idempotent, Reset Demo. All five
+  safety laws verified in the BUILT artifact: namespaced storage
+  (dh-emr-db-demo / dhemr-demo_ keys), foreign localStorage keys survive
+  reset, cloud guard refuses every connect path in-UI, fictional-only
+  banner with full disclaimer. Demo code grep-proven out of the clinical
+  bundle. build:demo emits into packages/site/public/demo (gitignored;
+  regenerate at deploy).
+- packages/site: static, zero deps, tokens matched to the app. Preview:
+  node packages/site/serve.mjs (or the site-preview launch config). Hero
+  copy structured for the pivot-story swap (HTML comment marks it).
+- Settings prompt() flows replaced with inline forms; About carries the
+  full not-certified/not-HIPAA statement.
+
 ## Next
 
 1. Clinic mode (auth screens, roles, patient-flow board) on the v4.1
    schema.
-2. Demo (DH_DEMO build, seeded fictional clinic, all 5 safety laws) and
-   website + guides (needs the pivot story from Alec).
+2. Deploy step with Alec: GitHub repo + Pages + damicohealth.com DNS
+   (see packages/site/DEPLOY.md), then guides written against the real
+   UI. Needs the Damico Health pivot story for the hero copy.
 3. Device tests on real hardware before anything ships.
