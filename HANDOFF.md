@@ -133,13 +133,24 @@ Updated 2026-08-12 (end of day).
 - collapsed-by-default now flows type -> sections -> validate -> form.
 - saveLibrary mirrors the first ENABLED template to formSchema.
 
+## Analytics + service workers: BUILT (commit d736000) - 498 tests green
+
+- src/lib/analytics.ts single-pass, metric definitions pinned by tests;
+  src/ui/analytics with refreshSignal convention; Analytics tab in BOTH
+  modes after the Visits pair.
+- SW: vite-plugin-pwa, registerType prompt (clinical) / autoUpdate
+  (demo); registration via src/sw/register.ts started by UpdateBar;
+  clinical reload happens ONLY through Update now; demo skipWaiting+
+  clientsClaim baked in. Verified in the built sw.js of both bundles.
+
 ## Next
 
-1. Live clinic-mode E2E once a Supabase project exists (Alec runs
+1. Guides (getting-started, user-guide, admin-guide) written against the
+   now-stable UI per the fact-check methodology (every named control
+   grepped against the rendering code).
+2. Live clinic-mode E2E once a Supabase project exists (Alec runs
    SETUP.md; a scratch project is fine).
-2. Deploy step with Alec: GitHub repo + Pages + damicohealth.com DNS
-   (see packages/site/DEPLOY.md), then guides written against the real
-   UI. Needs the Damico Health pivot story for the hero copy.
-3. Remaining: analytics screen, service worker wiring (user-gated app /
-   auto demo), supabase-js bundle split (575 kB warning), device tests
-   on real hardware, PGlite SQL tests.
+3. Deploy step with Alec: GitHub repo + Pages + damicohealth.com DNS
+   (packages/site/DEPLOY.md). Hero copy awaits the pivot story.
+4. Remaining: supabase-js bundle split (594 kB warning), device tests on
+   real hardware, PGlite SQL tests.
