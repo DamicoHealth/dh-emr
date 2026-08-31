@@ -51,6 +51,23 @@ export function getCurrentDeviceId(): string | null {
   return currentDeviceId
 }
 
+/**
+ * Signed-in clinic account id (auth.uid()), published by the auth layer on
+ * sign-in and cleared on sign-out. New records stamp it as their author;
+ * the server's insert policy REQUIRES it in clinic mode (user_id must equal
+ * auth.uid()), so leaving it unstamped makes every push fail as
+ * "NOT backed up". Field mode leaves it null and nothing changes.
+ */
+let currentUserId: string | null = null
+
+export function setCurrentUserId(id: string | null): void {
+  currentUserId = id
+}
+
+export function getCurrentUserId(): string | null {
+  return currentUserId
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -287,6 +304,12 @@ function save(record: PatientRecord): Promise<PatientRecord[]> {
       )
     } else {
       record.deviceId = resolvedDeviceId
+    }
+    // Author stamping: only when the record has no author yet. An existing
+    // user_id is NEVER rewritten here (the server's trigger enforces the
+    // same rule); devices with no signed-in account leave it absent.
+    if (record.user_id == null && currentUserId) {
+      record.user_id = currentUserId
     }
     let row: PatientRecord
     if (idx >= 0) {

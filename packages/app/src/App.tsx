@@ -10,7 +10,7 @@
  * setupComplete write would otherwise boot into the app with unverified
  * credentials and placeholder clinic lists.
  */
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   detectOtherTabs,
   getSetting,
@@ -21,13 +21,25 @@ import {
   storageEmergency,
   storageWarning,
 } from './kernel'
-import { getDeviceId, getDeviceRole, syncEngine } from './sync'
+import { ensureFleetRow, getDeviceId, getDeviceRole, syncEngine } from './sync'
+import {
+  authSession,
+  getOrgMode,
+  loadCurrentProfile,
+  subscribeOrgMode,
+  type ActiveProfile,
+} from './auth'
 import { ErrorBoundary } from './ui/app/ErrorBoundary'
 import { SyncChip } from './ui/app/SyncChip'
+import PendingScreen from './ui/auth/PendingScreen'
+import RevokedScreen from './ui/auth/RevokedScreen'
+import SignInScreen from './ui/auth/SignInScreen'
+import BoardScreen from './ui/board/BoardScreen'
 import EncounterForm from './ui/encounter/EncounterForm'
 import RecordsScreen from './ui/records/RecordsScreen'
 import SettingsScreen from './ui/settings/SettingsScreen'
 import SetupWizard from './ui/setup/SetupWizard'
+import StaffScreen from './ui/staff/StaffScreen'
 
 // ---------------------------------------------------------------------------
 // Boot state
@@ -51,11 +63,49 @@ async function loadReadyInfo(): Promise<{
 }
 
 // ---------------------------------------------------------------------------
-// Tabs. Data-driven so clinic mode can add a Board tab later: add an entry
-// here and a case in renderScreen, and the bar just renders it.
+// Clinic-mode account gate.
+//
+// Applies ONLY when the org is in clinic mode AND this device holds cloud
+// credentials: field mode and offline-only devices take the 'none' branch
+// and render exactly as before. When it applies, boot requires an account
+// decision: active (live or cached - offline never stops a clinic) opens
+// the shell, pending/revoked get their screens, signed out gets sign-in.
+// Revocation while offline is enforced server-side the moment the device
+// reconnects; the cached profile is an availability decision, not a
+// security hole the server does not already document.
 // ---------------------------------------------------------------------------
 
-type ScreenId = 'visits' | 'settings'
+type Gate =
+  | { kind: 'none' }
+  | { kind: 'checking' }
+  | { kind: 'signedOut' }
+  | { kind: 'pending'; displayName: string; offline: boolean }
+  | { kind: 'revoked'; displayName: string }
+  | { kind: 'active'; profile: ActiveProfile; stale: boolean }
+
+async function evaluateGate(): Promise<Gate> {
+  if (!syncEngine.hasCloud()) return { kind: 'none' }
+  if ((await getOrgMode()) !== 'clinic') return { kind: 'none' }
+  const p = await loadCurrentProfile()
+  switch (p.state) {
+    case 'signedOut':
+      return { kind: 'signedOut' }
+    case 'pending':
+      return { kind: 'pending', displayName: p.displayName, offline: p.offline }
+    case 'revoked':
+      return { kind: 'revoked', displayName: p.displayName }
+    case 'active':
+      return { kind: 'active', profile: p.profile, stale: p.stale }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Tabs. Data-driven: field mode gets exactly the original three; an active
+// clinic account adds Board first, and an active admin adds Staff before
+// Settings. tabsFor is the ONE place the list is decided.
+// ---------------------------------------------------------------------------
+
+type ScreenId = 'board' | 'visits' | 'staff' | 'settings'
 
 interface ScreenTab {
   kind: 'screen'
@@ -71,25 +121,62 @@ interface ActionTab {
 
 type TabDef = ScreenTab | ActionTab
 
-const TABS: TabDef[] = [
-  { kind: 'screen', id: 'visits', label: 'Visits' },
-  { kind: 'action', id: 'new-visit', label: 'New visit' },
-  { kind: 'screen', id: 'settings', label: 'Settings' },
-]
+function tabsFor(profile: ActiveProfile | null): TabDef[] {
+  const tabs: TabDef[] = []
+  if (profile) tabs.push({ kind: 'screen', id: 'board', label: 'Board' })
+  tabs.push(
+    { kind: 'screen', id: 'visits', label: 'Visits' },
+    { kind: 'action', id: 'new-visit', label: 'New visit' },
+  )
+  if (profile?.isAdmin) tabs.push({ kind: 'screen', id: 'staff', label: 'Staff' })
+  tabs.push({ kind: 'screen', id: 'settings', label: 'Settings' })
+  return tabs
+}
 
 function renderScreen(
   id: ScreenId,
   deviceId: string | null,
   dataVersion: number,
   bumpData: () => void,
+  profile: ActiveProfile | null,
+  onSignOut: () => Promise<void>,
 ) {
   switch (id) {
+    case 'board':
+      // Only reachable with an active clinic profile (tabsFor + the shown-tab
+      // guard); the null check keeps TypeScript and a race honest.
+      if (!profile) return null
+      return (
+        <BoardScreen
+          deviceId={deviceId}
+          refreshSignal={dataVersion}
+          profile={profile}
+          onRefresh={bumpData}
+        />
+      )
     case 'visits':
       // refreshSignal, NEVER key: a remount would destroy a part-typed visit
       // every time another device synced.
       return <RecordsScreen deviceId={deviceId} refreshSignal={dataVersion} />
+    case 'staff':
+      if (!profile) return null
+      return <StaffScreen profile={profile} onRefresh={bumpData} />
     case 'settings':
-      return <SettingsScreen onRefresh={bumpData} />
+      return (
+        <SettingsScreen
+          onRefresh={bumpData}
+          account={
+            profile
+              ? {
+                  displayName: profile.displayName,
+                  role: profile.role,
+                  isAdmin: profile.isAdmin,
+                }
+              : null
+          }
+          onSignOut={profile ? onSignOut : undefined}
+        />
+      )
   }
 }
 
@@ -111,9 +198,59 @@ export function App() {
   const [storageStop, setStorageStop] = useState<string | null>(null)
   const [storageAlert, setStorageAlert] = useState<string | null>(null)
   const [tabAlert, setTabAlert] = useState(false)
+  const [gate, setGate] = useState<Gate>({ kind: 'checking' })
 
   const bumpData = useCallback(() => setDataVersion((v) => v + 1), [])
   const ready = boot.state === 'ready'
+
+  // Clinic gate: re-evaluated on demand (sign-in, check-again) and on the
+  // subscriptions below. The sequence ref drops stale async results.
+  const gateSeq = useRef(0)
+  const refreshGate = useCallback(async (): Promise<void> => {
+    const n = ++gateSeq.current
+    const g = await evaluateGate()
+    if (n === gateSeq.current) setGate(g)
+  }, [])
+
+  const doSignOut = useCallback(async (): Promise<void> => {
+    await authSession.signOut()
+    await refreshGate()
+  }, [refreshGate])
+
+  // Gate lifecycle: the orgMode subscription fires once immediately (which
+  // performs the boot-time evaluation) and again when a config pull flips
+  // the mode; auth changes (sign-in/out elsewhere, token refresh outcomes)
+  // re-check too. Field mode resolves to 'none' from local reads only.
+  useEffect(() => {
+    if (!ready) return
+    const unsubMode = subscribeOrgMode(() => {
+      void refreshGate()
+    })
+    const unsubAuth = authSession.onAuthChange(() => {
+      void refreshGate()
+    })
+    return () => {
+      unsubMode()
+      unsubAuth()
+    }
+  }, [ready, refreshGate])
+
+  // Once a clinic account is active, make sure this device has a fleet row.
+  // A device that first connected while the org was already in clinic mode
+  // could never register through the shared key (that surface is closed),
+  // and the records policies reject pushes from unknown devices; the
+  // signed-in POST is the recovery. ignore-duplicates makes it a no-op for
+  // devices that already have their row. Best-effort once per activation.
+  const fleetChecked = useRef(false)
+  useEffect(() => {
+    if (gate.kind !== 'active') {
+      fleetChecked.current = false
+      return
+    }
+    if (fleetChecked.current) return
+    fleetChecked.current = true
+    void ensureFleetRow()
+  }, [gate])
 
   // Boot: gate on setupComplete ONLY (see module header).
   useEffect(() => {
@@ -261,7 +398,57 @@ export function App() {
     )
   }
 
+  // ---------------------------------------------------- clinic account gate
+
+  if (gate.kind === 'checking') {
+    return <div className="boot">Loading…</div>
+  }
+
+  if (gate.kind === 'signedOut') {
+    return (
+      <ErrorBoundary>
+        <SignInScreen
+          onSignedIn={() => {
+            void refreshGate()
+          }}
+        />
+      </ErrorBoundary>
+    )
+  }
+
+  if (gate.kind === 'pending') {
+    return (
+      <ErrorBoundary>
+        <PendingScreen
+          displayName={gate.displayName}
+          offline={gate.offline}
+          onCheckAgain={refreshGate}
+          onSignOut={doSignOut}
+        />
+      </ErrorBoundary>
+    )
+  }
+
+  if (gate.kind === 'revoked') {
+    return (
+      <ErrorBoundary>
+        <RevokedScreen
+          displayName={gate.displayName}
+          onCheckAgain={refreshGate}
+          onSignOut={doSignOut}
+        />
+      </ErrorBoundary>
+    )
+  }
+
   // --------------------------------------------------------------- ready
+
+  const profile = gate.kind === 'active' ? gate.profile : null
+  const tabs = tabsFor(profile)
+  // A demotion or sign-out can strand the tab state on a screen that no
+  // longer exists (Staff after losing admin); fall back to Visits.
+  const screenIds = new Set(tabs.filter((t) => t.kind === 'screen').map((t) => t.id))
+  const shownTab: ScreenId = screenIds.has(tab) ? tab : 'visits'
 
   return (
     <div className="app">
@@ -273,12 +460,12 @@ export function App() {
           <span className="brand-name">DH EMR</span>
         </div>
         <nav className="tabbar" aria-label="Main">
-          {TABS.map((t) =>
+          {tabs.map((t) =>
             t.kind === 'screen' ? (
               <button
                 key={t.id}
-                className={tab === t.id ? 'tab active' : 'tab'}
-                aria-current={tab === t.id ? 'page' : undefined}
+                className={shownTab === t.id ? 'tab active' : 'tab'}
+                aria-current={shownTab === t.id ? 'page' : undefined}
                 onClick={() => setTab(t.id)}
               >
                 {t.label}
@@ -327,10 +514,18 @@ export function App() {
         </div>
       ) : null}
 
+      {gate.kind === 'active' && gate.stale ? (
+        <div className="banner banner-warn" role="status">
+          <strong>Reconnect to confirm your account.</strong> This device has not been able to
+          check with your organization's server for over a week. Everything keeps working;
+          connect to the internet when you can so your account can be confirmed.
+        </div>
+      ) : null}
+
       <main>
-        {/* key={tab} resets a failed boundary when the user navigates away. */}
-        <ErrorBoundary key={tab}>
-          {renderScreen(tab, boot.deviceId, dataVersion, bumpData)}
+        {/* key resets a failed boundary when the user navigates away. */}
+        <ErrorBoundary key={shownTab}>
+          {renderScreen(shownTab, boot.deviceId, dataVersion, bumpData, profile, doSignOut)}
         </ErrorBoundary>
       </main>
 

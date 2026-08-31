@@ -70,17 +70,52 @@ export function normalizeSupabaseUrl(
   return { ok: true, url }
 }
 
+// ---------------------------------------------------------------- sessions
+
 /**
- * Headers for a Supabase REST call. Always `apikey`; the Authorization
- * header is added ONLY for the legacy anon JWT (see module header).
+ * Clinic mode: the signed-in user's access token rides as the Authorization
+ * bearer on every request, while the publishable key stays in `apikey`.
+ *
+ * The token is supplied through this provider hook rather than threaded
+ * through every call site: the auth layer (src/auth/session.ts) registers a
+ * provider when it manages a session, supabaseHeaders consults it per
+ * request, and the sync engine needs zero changes. When no provider is
+ * registered, or it returns null (no session), behavior is byte-identical
+ * to the field-mode rules above - which is exactly why the hook lives HERE:
+ * tests/apiKeys.test.ts forbids the word Bearer anywhere else in src/sync,
+ * so this file stays the one place an Authorization header is ever built.
+ */
+export type AccessTokenProvider = () => string | null
+
+let accessTokenProvider: AccessTokenProvider | null = null
+
+/** Register (or clear, with null) the session access-token source. */
+export function setAccessTokenProvider(provider: AccessTokenProvider | null): void {
+  accessTokenProvider = provider
+}
+
+/**
+ * Headers for a Supabase REST call. Always `apikey`. The Authorization
+ * bearer is, in order of precedence:
+ *   1. an explicit accessToken argument (clinic-feature calls that already
+ *      hold the session token),
+ *   2. the registered access-token provider (the signed-in session, so the
+ *      sync engine's requests carry it without knowing about auth),
+ *   3. the key itself, ONLY for the legacy anon JWT (see module header).
  * Caller-supplied extra headers pass through unchanged.
  */
 export function supabaseHeaders(
   key: string | null | undefined,
   extra?: Record<string, string>,
+  accessToken?: string | null,
 ): Record<string, string> {
   const k = key || ''
   const headers: Record<string, string> = { apikey: k, ...(extra || {}) }
-  if (k && !PREFIXED_KEY.test(k)) headers['Authorization'] = `Bearer ${k}`
+  const token = accessToken ?? (accessTokenProvider ? accessTokenProvider() : null)
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`
+  } else if (k && !PREFIXED_KEY.test(k)) {
+    headers['Authorization'] = `Bearer ${k}`
+  }
   return headers
 }

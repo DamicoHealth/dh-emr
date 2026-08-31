@@ -1,0 +1,83 @@
+/* Clinic-mode account screens: sign in, awaiting approval, revoked.
+   Full-viewport centered card over the app background; inputs and buttons
+   come from base.css (16px text, 44px targets). */
+
+.auth-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: var(--bg);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+  padding: 24px 20px;
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.auth-brand .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--primary);
+  color: var(--primary-ink);
+  font-weight: 700;
+}
+
+.auth-brand .brand-name {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.auth-card h2 {
+  margin: 0 0 8px;
+}
+
+.auth-card .field {
+  margin-top: 12px;
+}
+
+.auth-card .btn-row {
+  margin-top: 16px;
+}
+
+/* Same convention as the other screens' local css: base.css owns .alert
+   and .alert-bad; the info flavor is declared where it is used. */
+.auth-card .alert-info {
+  background: var(--ok-bg);
+  border-color: #b3d4bc;
+}
+
+.auth-card .alert {
+  margin-top: 12px;
+}
+
+.auth-switch {
+  margin-top: 16px;
+  border: 0;
+  background: none;
+  padding: 8px 0;
+  min-height: var(--tap);
+  color: var(--primary);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}

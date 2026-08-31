@@ -1,0 +1,187 @@
+/*
+ * Patient-flow board (clinic mode). Builds on the shell classes
+ * (.btn, .card, .alert, .panel, .empty); everything here is board-only.
+ *
+ * Layout law: on phones the stations stack; from 640px up the stations are
+ * columns and any overflow scrolls INSIDE .board (overflow-x below), never
+ * the page.
+ */
+
+.board-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.board-title {
+  margin: 0;
+  font-size: 20px;
+}
+
+/* Phones: stacked station sections. */
+.board {
+  display: block;
+  max-width: 100%;
+}
+
+.board-col {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+  margin-bottom: 12px;
+}
+
+.board-col-mine {
+  border-color: var(--primary);
+}
+
+.board-col-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 600;
+}
+
+.board-mine-tag {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--primary);
+}
+
+.board-count {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 1px 10px;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+}
+
+.board-cards {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.board-col-empty {
+  color: var(--ink-soft);
+  font-size: 13px;
+  text-align: center;
+  padding: 12px 0;
+}
+
+.board-expand {
+  width: 100%;
+  min-height: var(--tap);
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.board-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: var(--surface);
+}
+
+.b-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.b-name {
+  font-weight: 600;
+}
+
+.b-wait {
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.b-meta {
+  color: var(--ink-soft);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.b-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  align-items: stretch;
+}
+
+/* The single most common action on the board: one big tap. */
+.board-advance {
+  min-height: var(--tap);
+  flex: 1;
+}
+
+.board-pick {
+  min-height: var(--tap);
+  max-width: 40%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  padding: 0 8px;
+}
+
+/* Check-in panel rows. */
+.checkin-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checkin-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.checkin-row .board-advance {
+  flex: 0 0 auto;
+}
+
+/* Wide screens: columns, overflow scrolls inside the board container. */
+@media (min-width: 640px) {
+  .board {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(230px, 300px);
+    gap: 12px;
+    align-items: start;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .board-col {
+    margin-bottom: 0;
+  }
+
+  /* Collapsed done column stays narrow so patient columns get the room. */
+  .board-col-done {
+    min-width: 0;
+  }
+}

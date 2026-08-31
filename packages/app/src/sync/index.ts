@@ -12,6 +12,7 @@ export { mergeRecords, recordToSupabaseRow, supabaseRowToRecord } from './mappin
 export type { SupabaseRow } from './mapping'
 export {
   LEGACY_SHARED_DEVICE_IDS,
+  ensureFleetRow,
   getDeviceId,
   getDeviceName,
   getDeviceRole,

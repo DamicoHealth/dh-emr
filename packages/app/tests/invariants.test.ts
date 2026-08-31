@@ -7,7 +7,7 @@
  */
 import { beforeEach, describe, expect, it } from 'vitest'
 import { resetStorage } from './setup'
-import { dbName, records, settings, storagePrefix, storageSuffix } from '../src/kernel'
+import { dbName, records, setCurrentUserId, settings, storagePrefix, storageSuffix } from '../src/kernel'
 import { isUnsynced } from '../src/types/record'
 import type { PatientRecord } from '../src/types/record'
 
@@ -172,5 +172,38 @@ describe('storage namespacing', () => {
     expect(storageSuffix()).toBe('')
     expect(storagePrefix()).toBe('dhemr_')
     expect(dbName()).toBe('dh-emr-db')
+  })
+})
+
+describe('clinic-mode author stamping', () => {
+  beforeEach(async () => {
+    await resetStorage()
+    setCurrentUserId(null)
+  })
+
+  it('stamps user_id on a new record while a clinic account is active', async () => {
+    // The clinic insert policy REQUIRES user_id = auth.uid(); an unstamped
+    // record pushes as a rejection and surfaces as "NOT backed up".
+    setCurrentUserId('11111111-2222-4333-8444-555555555555')
+    await records.save(makeRecord({ givenName: 'Stamped', mrn: 'STMP01011990' }))
+    const all = await records.getAll()
+    expect(all[0]?.user_id).toBe('11111111-2222-4333-8444-555555555555')
+  })
+
+  it('never rewrites an existing author', async () => {
+    setCurrentUserId('11111111-2222-4333-8444-555555555555')
+    const saved = (await records.save(
+      makeRecord({ givenName: 'Original', mrn: 'ORIG01011990' }),
+    ))[0] as PatientRecord
+    setCurrentUserId('99999999-8888-4777-8666-555555555555')
+    await records.save({ ...saved, diagnosis: 'Edited' })
+    const all = await records.getAll()
+    expect(all[0]?.user_id).toBe('11111111-2222-4333-8444-555555555555')
+  })
+
+  it('leaves user_id absent with no signed-in account (field mode)', async () => {
+    await records.save(makeRecord({ givenName: 'Field', mrn: 'FLDM01011990' }))
+    const all = await records.getAll()
+    expect(all[0]?.user_id ?? null).toBeNull()
   })
 })

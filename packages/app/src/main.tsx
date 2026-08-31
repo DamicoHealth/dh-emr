@@ -11,6 +11,7 @@ import { App } from './App'
 import { ErrorBoundary } from './ui/app/ErrorBoundary'
 import { setCurrentDeviceId } from './kernel'
 import { getDeviceId, syncEngine } from './sync'
+import { authSession } from './auth'
 import { DemoBanner, bootDemo } from './demo'
 
 // Injected by vite.config define. Literal checks so production builds
@@ -43,6 +44,11 @@ async function start(): Promise<void> {
   } catch {
     /* unregistered */
   }
+  // Prime a persisted clinic session BEFORE the sync engine wakes, so the
+  // first sync cycle already carries the user's bearer token. Field mode
+  // and devices with no stored session skip this in one settings read;
+  // init never throws (offline boots must not break on auth plumbing).
+  await authSession.init()
   try {
     await syncEngine.init()
   } catch (e) {

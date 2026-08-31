@@ -8,9 +8,11 @@ export { MIRROR_LIMIT, dbName, storagePrefix, storageSuffix } from './namespace'
 export { DB_VERSION, KEYVAL_STORE, RECORDS_STORE } from './idb'
 export {
   getCurrentDeviceId,
+  getCurrentUserId,
   hardResetRecords,
   records,
   setCurrentDeviceId,
+  setCurrentUserId,
 } from './records'
 export { config, getSetting, setSetting, settings } from './settings'
 export { readStorageHealth, storageEmergency, storageWarning } from './health'

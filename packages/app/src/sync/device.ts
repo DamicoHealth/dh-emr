@@ -114,6 +114,47 @@ export async function registerDevice(name: string, ctx: DeviceContext = {}): Pro
 }
 
 /**
+ * Re-assert this device's fleet row in the cloud. Needed when the device
+ * first connected while the org was ALREADY in clinic mode: the shared-key
+ * registration POST was refused (anon device inserts close with the mode
+ * flip), and the records policies require an active fleet row, so the
+ * first signed-in sync would be rejected with no obvious cause. Called
+ * once a clinic account becomes active; supabaseHeaders then carries the
+ * session's access token, and resolution=ignore-duplicates makes an
+ * existing row a no-op (device ids are immutable server-side, so an
+ * accidental UPDATE path must never be attempted).
+ */
+export async function ensureFleetRow(ctx: DeviceContext = {}): Promise<boolean> {
+  const kv = ctxKv(ctx)
+  const transport = ctx.transport ?? defaultTransport
+  const id = await getDeviceId(kv)
+  if (!id) return false
+  const { url, key } = await ctxCreds(ctx)
+  if (!url || !key) return false
+  try {
+    const res = await transport(`${url}/rest/v1/devices`, {
+      method: 'POST',
+      headers: supabaseHeaders(key, {
+        'Content-Type': 'application/json',
+        Prefer: 'resolution=ignore-duplicates',
+      }),
+      body: JSON.stringify({
+        id,
+        name: (await getDeviceName(kv)) || 'Unnamed device',
+        role: 'standard',
+      }),
+    })
+    return res.ok
+  } catch (err) {
+    console.warn(
+      '[pwa-sync] fleet row check failed:',
+      err instanceof Error ? err.message : String(err),
+    )
+    return false
+  }
+}
+
+/**
  * Set the role locally and PATCH it to the fleet row. The cloud remains
  * authoritative: the server trigger may refuse the promotion, and the next
  * pullDeviceRole adopts whatever the cloud says.

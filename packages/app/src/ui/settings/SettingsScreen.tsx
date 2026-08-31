@@ -39,6 +39,7 @@ import {
 import { downloadBackup, restoreFromFile } from '../../lib/backup'
 import { importCloudFile } from '../../lib/importCloud'
 import {
+  DEFAULT_FLOW_STATIONS,
   getConfig,
   isPlaceholderConfig,
   loadLibrary,
@@ -47,6 +48,7 @@ import {
   resolveFormulary,
   resolveStringList,
   setComplaints,
+  setFlowStations,
   setFormulary,
   setLabTests,
   setProcedures,
@@ -54,6 +56,8 @@ import {
   setReferralTypes,
   setSites,
 } from '../../config/keys'
+import { getOrgMode, type OrgMode } from '../../auth'
+import { switchOrgMode } from '../staff/staffApi'
 import {
   DEFAULT_COMPLAINTS,
   DEFAULT_LAB_TESTS,
@@ -68,6 +72,10 @@ import './settings.css'
 export interface SettingsScreenProps {
   /** Called after an action that changed records or config (sync, restore, import, list edits). */
   onRefresh?: () => void
+  /** Clinic mode only: the signed-in account. Renders the Account card when set. */
+  account?: { displayName: string; role: string; isAdmin: boolean } | null
+  /** Clinic mode only: sign this account out of the device. */
+  onSignOut?: () => void | Promise<void>
 }
 
 const APP_VERSION = '0.1.0'
@@ -78,13 +86,23 @@ const GATE_REASON = 'Only an admin device can change this. This device is set to
 // Clinic list definitions
 // ---------------------------------------------------------------------------
 
-type ListKey = 'sites' | 'providers' | 'complaints' | 'procedures' | 'referralTypes'
+type ListKey =
+  | 'sites'
+  | 'providers'
+  | 'complaints'
+  | 'procedures'
+  | 'referralTypes'
+  | 'flowStations'
 
 interface ListDef {
   key: ListKey
   label: string
   noun: string
   saveLabel: string
+  /** Helper text under the textarea (the flow-stations rename warning). */
+  help?: string
+  /** Success-message tail; defaults to the visit-form hint. */
+  savedHint?: string
 }
 
 const LIST_DEFS: ListDef[] = [
@@ -98,6 +116,20 @@ const LIST_DEFS: ListDef[] = [
     noun: 'referral destination',
     saveLabel: 'Save referral destinations',
   },
+  {
+    key: 'flowStations',
+    label: 'Patient flow stations (clinic mode board)',
+    noun: 'station',
+    saveLabel: 'Save stations',
+    // The rename warning comes from src/config/keys.ts: station names are
+    // the identity visits point at, exactly like sites.
+    help:
+      'One station per line, in board order; the last station means done for the day. ' +
+      'Station names are how visits point at a station, so renaming one strands ' +
+      "today's visits under the old name. To rename mid-day, add the new name first " +
+      'and remove the old one after the day is done.',
+    savedHint: 'The board picks them up on its next refresh.',
+  },
 ]
 
 const LIST_WRITERS: Record<ListKey, (kv: KV, list: string[]) => Promise<void>> = {
@@ -106,6 +138,7 @@ const LIST_WRITERS: Record<ListKey, (kv: KV, list: string[]) => Promise<void>> =
   complaints: setComplaints,
   procedures: setProcedures,
   referralTypes: setReferralTypes,
+  flowStations: setFlowStations,
 }
 
 const LIST_DEFAULTS: Record<ListKey, readonly string[]> = {
@@ -114,6 +147,7 @@ const LIST_DEFAULTS: Record<ListKey, readonly string[]> = {
   complaints: DEFAULT_COMPLAINTS,
   procedures: DEFAULT_PROCEDURES,
   referralTypes: DEFAULT_REFERRAL_TYPES,
+  flowStations: DEFAULT_FLOW_STATIONS,
 }
 
 // ---------------------------------------------------------------------------
@@ -142,7 +176,7 @@ type Message = { tone: 'ok' | 'bad'; text: string } | null
 // Screen
 // ---------------------------------------------------------------------------
 
-export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
+export default function SettingsScreen({ onRefresh, account, onSignOut }: SettingsScreenProps) {
   const [loaded, setLoaded] = useState(false)
   const [info, setInfo] = useState<DeviceInfo>({
     deviceId: null,
@@ -163,7 +197,9 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
     complaints: '',
     procedures: '',
     referralTypes: '',
+    flowStations: '',
   })
+  const [orgMode, setOrgMode] = useState<OrgMode>('field')
   const [storedLists, setStoredLists] = useState<{ sites: string[]; providers: string[] }>({
     sites: [],
     providers: [],
@@ -188,17 +224,29 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
   }, [])
 
   const loadConfigState = useCallback(async () => {
-    const [sites, providers, complaints, procedures, referrals, formularyStored, labsStored, lib] =
-      await Promise.all([
-        getConfig(config, 'sites'),
-        getConfig(config, 'providers'),
-        getConfig(config, 'complaints'),
-        getConfig(config, 'procedures'),
-        getConfig(config, 'referralTypes'),
-        getConfig(config, 'formulary'),
-        getConfig(config, 'customLabTests'),
-        loadLibrary(config),
-      ])
+    const [
+      sites,
+      providers,
+      complaints,
+      procedures,
+      referrals,
+      stations,
+      formularyStored,
+      labsStored,
+      lib,
+      mode,
+    ] = await Promise.all([
+      getConfig(config, 'sites'),
+      getConfig(config, 'providers'),
+      getConfig(config, 'complaints'),
+      getConfig(config, 'procedures'),
+      getConfig(config, 'referralTypes'),
+      getConfig(config, 'flowStations'),
+      getConfig(config, 'formulary'),
+      getConfig(config, 'customLabTests'),
+      loadLibrary(config),
+      getOrgMode(config),
+    ])
     const resolvedSites = resolveStringList(sites, DEFAULT_SITES)
     const resolvedProviders = resolveStringList(providers, DEFAULT_PHYSICIANS)
     setDrafts({
@@ -207,7 +255,9 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
       complaints: resolveStringList(complaints, DEFAULT_COMPLAINTS).join('\n'),
       procedures: resolveStringList(procedures, DEFAULT_PROCEDURES).join('\n'),
       referralTypes: resolveStringList(referrals, DEFAULT_REFERRAL_TYPES).join('\n'),
+      flowStations: resolveStringList(stations, DEFAULT_FLOW_STATIONS).join('\n'),
     })
+    setOrgMode(mode)
     setStoredLists({ sites: resolvedSites, providers: resolvedProviders })
     setFormularyRows(resolveFormulary(formularyStored).map((r) => ({ ...r })))
     const labs = labsStored && labsStored.length ? labsStored : DEFAULT_LAB_TESTS
@@ -355,6 +405,74 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
     }
   }
 
+  // ------------------------------------------------------ organization card
+
+  /**
+   * The org-mode master switch. The write goes DIRECTLY through
+   * switchOrgMode (an authedRequest upsert to /rest/v1/config), never the
+   * background config push: the server's config rules trigger must vet the
+   * caller immediately and its refusals surface here verbatim. The local
+   * mirror only updates when the server accepted.
+   *
+   * Both directions confirm twice, loudly. Field -> clinic closes the
+   * shared-key surface and strands any unsynced field records; clinic ->
+   * field reopens the shared-key surface (the documented recovery path for
+   * stranded records, and still a real decision).
+   */
+  const doSwitchMode = async (next: OrgMode): Promise<void> => {
+    if (next === 'clinic') {
+      if (
+        !window.confirm(
+          'Switch this organization to clinic mode?\n\nSync every field device to zero pending records first. The moment the mode flips, devices that have not signed in cannot push.\n\nStaff will sign in with their own accounts, and an admin must approve each account before it can see anything.',
+        )
+      ) {
+        return
+      }
+      if (
+        !window.confirm(
+          'Last check before switching to clinic mode.\n\nHas EVERY field device synced to zero pending records? A visit still waiting on a device that never signs in is stranded until an admin switches the mode back to field.',
+        )
+      ) {
+        return
+      }
+    } else {
+      if (
+        !window.confirm(
+          'Switch this organization back to field mode?\n\nThis reopens the shared-key surface: every device holding the project address and key can read and write records again without signing in. Anyone who ever had the key gets that access back too.',
+        )
+      ) {
+        return
+      }
+      if (
+        !window.confirm(
+          'Last check before switching to field mode.\n\nUse this to drain records stranded on field devices, then switch back to clinic mode once they show zero pending. Switch now?',
+        )
+      ) {
+        return
+      }
+    }
+    setBusy('orgmode')
+    setMessage(null)
+    try {
+      await switchOrgMode(next)
+      setOrgMode(next)
+      setMessage({
+        tone: 'ok',
+        text:
+          next === 'clinic'
+            ? 'This organization is now in clinic mode. Devices see the change on their next sync and will ask staff to sign in.'
+            : 'This organization is now in field mode. The shared-key surface is open again; field devices can sync on their next connection.',
+      })
+      onRefresh?.()
+    } catch (e) {
+      // Server trigger refusals arrive VERBATIM, e.g. 'Only an administrator
+      // account can switch this organization to clinic mode.'
+      setMessage({ tone: 'bad', text: e instanceof Error ? e.message : String(e) })
+    } finally {
+      setBusy(null)
+    }
+  }
+
   // ----------------------------------------------------------- backup card
 
   const doBackup = async (): Promise<void> => {
@@ -458,7 +576,7 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
       if (def.key === 'providers') setStoredLists((s) => ({ ...s, providers: list }))
       setMessage({
         tone: 'ok',
-        text: `Saved ${list.length} ${def.noun}${list.length === 1 ? '' : 's'}. Reopen the visit form to see them.`,
+        text: `Saved ${list.length} ${def.noun}${list.length === 1 ? '' : 's'}. ${def.savedHint ?? 'Reopen the visit form to see them.'}`,
       })
       onRefresh?.()
     } catch (e) {
@@ -530,6 +648,13 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
   const projectLabel = creds.url
     ? (creds.url.replace(/^https?:\/\//, '').split('.')[0] ?? creds.url)
     : ''
+  // Organization card gating: in clinic mode the admin ACCOUNT decides; in
+  // field mode the admin DEVICE does (and the server still requires a
+  // signed-in admin account for the actual flip - its refusal shows here).
+  const orgAdmin = account ? account.isAdmin : isAdmin
+  const orgGateReason = account
+    ? 'Only an administrator account can change the organization mode.'
+    : GATE_REASON
 
   return (
     <div className="screen settings">
@@ -540,6 +665,40 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
         >
           {message.text}
         </div>
+      ) : null}
+
+      {account ? (
+        <section className="card">
+          <h3>Account</h3>
+          <div className="kv-list">
+            <Kv k="Name" v={account.displayName || 'Not set'} />
+            <Kv k="Role" v={account.role} />
+            <Kv k="Admin" v={account.isAdmin ? 'Yes' : 'No'} />
+          </div>
+          <p className="muted small">
+            Records saved on this device stay here when you sign out - nothing is deleted. But
+            signing back in needs a working connection, so do not sign out on a device that is
+            offline mid-clinic.
+          </p>
+          <div className="btn-row">
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    'Sign out of this device?\n\nRecords stay safely on the device. Signing back in needs a working internet connection, so avoid this while offline mid-clinic.',
+                  )
+                ) {
+                  void onSignOut?.()
+                }
+              }}
+              disabled={anyBusy}
+            >
+              Sign out
+            </button>
+          </div>
+        </section>
       ) : null}
 
       <section className="card">
@@ -705,6 +864,52 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
         )}
       </section>
 
+      {!offlineOnly ? (
+        <section className="card">
+          <h3>Organization</h3>
+          <div className="kv-list">
+            <Kv k="Mode" v={orgMode === 'clinic' ? 'Clinic' : 'Field'} />
+          </div>
+          <p className="muted">
+            {orgMode === 'clinic'
+              ? 'Clinic mode: every staff member signs in with their own account, an admin approves each account, and visits carry who recorded them.'
+              : 'Field mode: devices share the project key and work offline-first. Anyone holding the key can read and write, so the key is the whole fence.'}
+          </p>
+          {!orgAdmin ? <p className="gate-note">{orgGateReason}</p> : null}
+          {orgMode === 'field' ? (
+            <p className="muted small">
+              Switching to clinic mode needs a signed-in administrator account, and the server
+              refuses the switch from anyone else. Sync every field device to zero pending
+              records first: the moment the mode flips, devices that have not signed in cannot
+              push.
+            </p>
+          ) : (
+            <p className="muted small">
+              Switching back to field mode reopens the shared-key surface. It is the recovery
+              path when records are stranded on field devices: switch back, let them sync, then
+              return to clinic mode.
+            </p>
+          )}
+          <div className="btn-row">
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => {
+                void doSwitchMode(orgMode === 'clinic' ? 'field' : 'clinic')
+              }}
+              disabled={!orgAdmin || anyBusy}
+              title={!orgAdmin ? orgGateReason : undefined}
+            >
+              {busy === 'orgmode'
+                ? 'Switching…'
+                : orgMode === 'clinic'
+                  ? 'Switch to field mode'
+                  : 'Switch to clinic mode'}
+            </button>
+          </div>
+        </section>
+      ) : null}
+
       <section className="card">
         <h3>Backup and restore</h3>
         <p className="muted">
@@ -823,6 +1028,7 @@ export default function SettingsScreen({ onRefresh }: SettingsScreenProps) {
                 title={!isAdmin ? GATE_REASON : undefined}
               />
             </label>
+            {def.help ? <p className="muted small">{def.help}</p> : null}
             <div className="btn-row">
               <button
                 type="button"
