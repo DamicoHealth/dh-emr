@@ -387,7 +387,7 @@ describe('section editor', () => {
       'Procedures',
       'Referral',
       'Imaging',
-      'Surgical Encounter',
+      'Surgery',
       'Notes',
       'Community Screening',
       'Triage Extras',

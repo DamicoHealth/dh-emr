@@ -65,7 +65,7 @@ export const BUILTIN_SECTIONS: {
   { id: 'referral', title: 'Referral' },
   { id: 'physician', title: 'Provider', notOnForm: true },
   { id: 'imaging', title: 'Imaging' },
-  { id: 'surgery', title: 'Surgical Encounter' },
+  { id: 'surgery', title: 'Surgery' },
   { id: 'notes', title: 'Notes' },
 ]
 

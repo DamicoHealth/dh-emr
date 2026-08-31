@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DH EMR admin guide</title>
+  <meta name="description" content="The DH EMR admin guide: standing up your own cloud project, choosing field or clinic mode, customizing forms, formulary and lab tests, managing staff and devices, backups, and honest limits.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e6e64'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%23ffffff' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../site.css">
+  <style>
+    /* Guide-only additions. Everything else comes from site.css. */
+    .guide { max-width: 46rem; }
+    .guide h2 {
+      margin: 2.5rem 0 0.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--line);
+      font-size: clamp(1.25rem, 4vw, 1.5rem);
+      line-height: 1.25;
+    }
+    .guide h3 {
+      margin: 1.75rem 0 0.4rem;
+      font-size: 1.1rem;
+    }
+    .guide p, .guide li { color: var(--ink); }
+    .guide .soft { color: var(--ink-soft); }
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-1);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .toc p { margin: 0 0 0.4rem; font-weight: 700; }
+    .toc ol { margin: 0; padding-left: 1.3rem; }
+    .toc li { margin: 0.25rem 0; }
+    .toc a { text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .confirm {
+      margin: 1rem 0;
+      padding: 0.85rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius);
+    }
+    .confirm .lead {
+      margin: 0 0 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .confirm p { margin: 0.4rem 0; }
+    .callout {
+      margin: 1rem 0;
+      padding: 0.85rem 1.1rem;
+      background: var(--warn-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--warn-ink);
+    }
+    .callout p { margin: 0.4rem 0; color: var(--warn-ink); }
+    .callout strong { color: var(--warn-ink); }
+    .ph { font-style: italic; color: var(--ink-soft); }
+    .guide code {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0.05rem 0.35rem;
+      font-size: 0.92em;
+    }
+    .backlink { margin-top: 2.5rem; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="../">
+      <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#0e6e64"/>
+        <path d="M32 17v30M17 32h30" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+      </svg>
+      DH EMR
+    </a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="./">Guides</a>
+      <a href="../demo/">Demo</a>
+      <a href="../app/">App</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="page guide">
+      <p class="kicker">DH EMR guides</p>
+      <h1>Admin guide</h1>
+      <p class="soft">This guide is for the person who runs DH EMR for an organization: the org lead. It covers everything only an admin can do. For everyday charting, read the <a href="user-guide.html">user guide</a>. For setting up a single device for the first time, read <a href="getting-started.html">Getting started</a>.</p>
+
+      <div class="toc">
+        <p>On this page</p>
+        <ol>
+          <li><a href="#what-admins-do">What an admin can do</a></li>
+          <li><a href="#cloud-setup">Standing up your cloud project</a></li>
+          <li><a href="#choosing-mode">Field mode or clinic mode</a></li>
+          <li><a href="#clinic-lists">Clinic lists</a></li>
+          <li><a href="#form-templates">Form templates</a></li>
+          <li><a href="#formulary">Formulary</a></li>
+          <li><a href="#lab-tests">Lab tests and reference ranges</a></li>
+          <li><a href="#presets">Diagnosis quick-picks and prescription presets</a></li>
+          <li><a href="#staff">Staff accounts (clinic mode)</a></li>
+          <li><a href="#devices">Your device fleet</a></li>
+          <li><a href="#backups">Backups and restore</a></li>
+          <li><a href="#demo">The demo</a></li>
+          <li><a href="#limits">Honest limits</a></li>
+        </ol>
+      </div>
+
+      <h2 id="what-admins-do">1. What an admin can do</h2>
+      <p>DH EMR has two kinds of admin, depending on your organization's mode:</p>
+      <ul>
+        <li><strong>Field mode: the admin is a device.</strong> The setup wizard asks "What is this device allowed to do?" with two choices: "Enter and view records (most devices)" and "Also change the form and clinic settings for everyone". Most devices should be standard. Keep one or two admin devices with the people who run the clinic.</li>
+        <li><strong>Clinic mode: the admin is an account.</strong> The first admin account is created during cloud setup (see below). After that, admins make other admins on the Staff tab.</li>
+      </ul>
+      <p>Only an admin can change:</p>
+      <ul>
+        <li>Clinic lists: sites, clinicians, complaints, procedures, referral destinations, and the patient flow stations</li>
+        <li>The formulary and the lab test panel, including reference ranges</li>
+        <li>Diagnosis quick-picks and prescription presets</li>
+        <li>Form templates, in the template editor</li>
+        <li>The organization's mode (clinic mode: administrator accounts only)</li>
+        <li>Staff accounts (clinic mode, on the Staff tab)</li>
+      </ul>
+      <p>On a standard device, none of this is hidden. The controls are visible but turned off, and the reason is written right there: "Only an admin device can change this. This device is set to standard." The template editor opens read-only with the same reason. This is deliberate: a clinician can always see what exists and knows who to ask.</p>
+      <p>There is no button in the app to change a device's admin role after setup. On a cloud-connected organization, the role stored in the cloud's device list is what counts: change a device's role there (the <code>devices</code> table in your Supabase project) and the device adopts it on its next sync. On an offline-only device, the choice made in the wizard stands, so choose carefully.</p>
+
+      <h2 id="cloud-setup">2. Standing up your cloud project</h2>
+      <p>Your records live on your devices and, if you want sync, in a Supabase project that your organization owns. Damico Health hosts nothing and sees nothing.</p>
+      <p>The full step-by-step lives in <strong>SETUP.md</strong>, in the <code>supabase</code> folder of the DH EMR source code, next to <code>setup.sql</code> and <code>verify.sql</code>. It takes about fifteen minutes and needs no command line. In short:</p>
+      <ol>
+        <li><strong>Create the project.</strong> On supabase.com, create a new project. Pick the region closest to the clinic. Store the database password in a password manager; it is rarely needed again.</li>
+        <li><strong>Run the schema.</strong> Open the SQL Editor, paste the entire contents of <code>setup.sql</code>, and run it. It is safe to run twice; re-running is the documented upgrade path.</li>
+        <li><strong>Verify.</strong> Paste and run <code>verify.sql</code>. Every row of its output must say PASS. It changes nothing; it ends by rolling itself back.</li>
+        <li><strong>Get the app credentials.</strong> The Project URL is under Project Settings, then Data API. The publishable key (<code>sb_publishable_...</code>) is under Project Settings, then API Keys. Those two values are what every device enters.</li>
+      </ol>
+      <div class="callout">
+        <p><strong>The key rule.</strong> Devices get the Publishable key, or the legacy anon key, and nothing else. Never put the <code>sb_secret_...</code> key or a legacy <code>service_role</code> key on any device, in any chat, or in the app. It bypasses every security rule. The app refuses keys that look like it, on purpose: "Use the Publishable key, or the legacy anon key. NEVER a Secret or service_role key: those bypass every security rule and this app refuses them."</p>
+      </div>
+      <p><strong>Field mode organizations are done here.</strong> Enter the URL and key on each device (in the setup wizard, or under Settings in the Cloud sync card), save one test visit, tap the sync chip, and check that one row appears in the project's Table Editor under <code>records</code>. Then delete the test visit in the app, not in the dashboard: deleting in the app marks the record deleted everywhere, and rows are never hard-deleted by design.</p>
+      <p><strong>Clinic mode needs a few more steps</strong>, all in SETUP.md section 4:</p>
+      <ul>
+        <li>Enable the Email sign-in provider, and turn OFF "Confirm email". Without your own mail server, confirmation emails to staff mostly never arrive and accounts strand half-created. Admin approval inside the app replaces what confirmation was for.</li>
+        <li>Create the org lead's account from the dashboard (create the user directly with a password; do not use "Send invitation", which relies on the same restricted mailer).</li>
+        <li>Make that first account the administrator with the one SQL line printed in SETUP.md section 4. This is deliberate: signing up never grants any access by itself, because anyone in the world who obtains the project URL and publishable key can sign up. The first admin must be minted by hand.</li>
+        <li>Do not rely on email password resets. If a password is lost, the fix is a fresh account; SETUP.md has the recovery playbook.</li>
+      </ul>
+      <p><strong>If your organization runs seasonal missions</strong>, read the free-tier pausing section of SETUP.md. Supabase pauses free projects after about a week of no traffic, and a project paused long enough can stop being restorable. Either pay for the project, or open the dashboard monthly, and always keep device backups. The backup file is the true archive; the cloud is a convenience copy for the devices, not the organization's only copy.</p>
+
+      <h2 id="choosing-mode">3. Field mode or clinic mode</h2>
+      <p>The app describes the two modes like this, in the Organization card under Settings:</p>
+      <ul>
+        <li>"Clinic mode: every staff member signs in with their own account, an admin approves each account, and visits carry who recorded them."</li>
+        <li>"Field mode: devices share the project key and work offline-first. Anyone holding the key can read and write, so the key is the whole fence."</li>
+      </ul>
+      <p>Choose honestly, based on what each gives up:</p>
+      <ul>
+        <li><strong>Field mode gives up accountability and access control.</strong> The database cannot tell devices apart. Anyone holding the key can read every record. Revoking a device stops an honest device, not a determined person who still has the key. If someone leaves on bad terms, the key they carry still works. Clinic mode is the fix.</li>
+        <li><strong>Clinic mode gives up some offline independence.</strong> Signing in needs a working connection, and a device that cannot reach the server for over a week shows a banner: "Reconnect to confirm your account." Everything keeps working in the meantime, but the account must be confirmed eventually. Every new account also waits for an admin to approve it before it can see anything.</li>
+      </ul>
+      <p>If your team is one connected clinic with several staff, use clinic mode. If your devices spend days or weeks with no signal and change hands within a small trusted team, field mode is the honest choice.</p>
+
+      <h3>Switching modes: the drain rule</h3>
+      <p>The mode is switched in the Organization card under Settings, with "Switch to clinic mode" or "Switch to field mode". The server only accepts a switch to clinic mode from a signed-in administrator account, so the first-ever switch is done during cloud setup (SETUP.md section 4). The app asks twice before any switch, because the rule that matters is easy to skip:</p>
+      <div class="confirm">
+        <p class="lead">Switching to clinic mode, the app asks</p>
+        <p>"Switch this organization to clinic mode?</p>
+        <p>Sync every field device to zero pending records first. The moment the mode flips, devices that have not signed in cannot push.</p>
+        <p>Staff will sign in with their own accounts, and an admin must approve each account before it can see anything."</p>
+      </div>
+      <div class="confirm">
+        <p class="lead">Then a last check</p>
+        <p>"Last check before switching to clinic mode.</p>
+        <p>Has EVERY field device synced to zero pending records? A visit still waiting on a device that never signs in is stranded until an admin switches the mode back to field."</p>
+      </div>
+      <p>That is the drain rule: before flipping to clinic mode, bring every field device online, tap its sync chip, and confirm the Cloud sync card says "Nothing pending". A visit stranded on an unsynced device is not lost, but it cannot upload until an admin switches back to field mode, lets it drain, and switches forward again. Switching back warns just as loudly:</p>
+      <div class="confirm">
+        <p class="lead">Switching back to field mode, the app asks</p>
+        <p>"Switch this organization back to field mode?</p>
+        <p>This reopens the shared-key surface: every device holding the project address and key can read and write records again without signing in. Anyone who ever had the key gets that access back too."</p>
+      </div>
+
+      <h2 id="clinic-lists">4. Clinic lists</h2>
+      <p>The Clinic lists card under Settings fills the pick lists on the visit form. There are six lists, each a text box with its own save button: "Clinic or site names", "Clinicians", "Complaints", "Procedures", "Referral destinations", and "Patient flow stations (clinic mode board)".</p>
+      <p>The format is the same everywhere: <strong>one entry per line, and commas belong inside an entry</strong>. "Grace N., clinical officer" is one clinician, not two. On a cloud device, your organization's lists replace the local ones on the next sync, so edit them on an admin device and let sync carry them to everyone.</p>
+      <p>Two lists can never be empty. The app refuses with "You need at least one site. An empty list would block every save." and the same for clinicians. The other lists cannot be saved empty either.</p>
+      <p>Until real sites and clinicians are set, every visit is filed under the placeholders "Site A" and "Physician A", and the Settings screen shows a red warning: "This device is still filing records under placeholder names." Fix this before the first real clinic day; placeholder names are no use in a report.</p>
+      <p><strong>Flow stations deserve extra care.</strong> The station list drives the clinic mode board, one station per line, in board order; the last station means done for the day. The app's own helper text explains the trap: station names are how visits point at a station, so renaming one strands today's visits under the old name. To rename mid-day, add the new name first and remove the old one after the day is done.</p>
+
+      <h2 id="form-templates">5. Form templates</h2>
+      <p>The visit form itself is a template your organization owns: which forms are offered, their sections, and your own questions. Open the editor from the Form templates card under Settings, with "Open the template editor". The editor's own note applies to everything in it: "These belong to your organization. A change here reaches everyone on the next sync."</p>
+      <p>On a brand-new device that has not synced yet, the editor refuses to open for writing: "Your organization's form has not synced to this device yet. Editing is turned off until it arrives, because saving now would replace your organization's real form with an empty one." Sync the device, then come back. That guard protects the whole team; do not work around it.</p>
+
+      <h3>The Forms card</h3>
+      <p>Each form has an editable name box, an "On" checkbox, and three buttons: "Sections", "Duplicate", and "Delete".</p>
+      <ul>
+        <li><strong>Create:</strong> type a name in the "New form name" box and tap "Add form".</li>
+        <li><strong>Duplicate:</strong> makes a copy named "<span class="ph">name</span> (copy)". Duplicating first is the safe way to experiment with a working form.</li>
+        <li><strong>Rename:</strong> edit the name box directly. Every visit keeps the name of the form it was filed under, so old visits are not affected.</li>
+        <li><strong>Turn on or off:</strong> the "On" checkbox decides whether the form is offered for new visits. With more than one form on, the visit form shows a "Form template" selector.</li>
+        <li><strong>Delete:</strong> the app confirms, and the confirm says exactly what deleting keeps:</li>
+      </ul>
+      <div class="confirm">
+        <p class="lead">The delete confirm</p>
+        <p>"Delete the "<span class="ph">name</span>" form?</p>
+        <p>Visits already filed under it keep their answers and their template name. The form just stops being offered for new visits."</p>
+      </div>
+      <p>The editor never lets you strand the team without a visit form. It refuses to delete the last form ("At least one form must remain. Add another form before deleting this one.") and refuses to turn off the last enabled one ("At least one form must stay on, or there is no visit form to open. Turn another form on first."). If deleting a form would leave nothing on, the editor turns another form on for you and says so.</p>
+
+      <h3>Sections</h3>
+      <p>Tap "Sections" on a form to work on its layout. You can reorder sections with the up and down arrows, rename them in place, and hide the ones your clinic does not use with "Hide" and "Show". A renamed built-in section gets a "Reset name" button to go back to its original title. Two sections can never be hidden: Visit and Patient carry a disabled "Always shown" button, because every visit needs them.</p>
+      <p>"Add a section" creates your own section, and "Questions" opens its question list. Custom sections can be set to start collapsed on the visit form, unless they contain a required question; a collapsed section would hide an answer that Save demands, so the app locks that checkbox and says why.</p>
+      <p>Deleting a custom section confirms with the same promise as forms: "Answers already saved on existing records are kept, but will no longer appear on the form."</p>
+      <p>One thing is deliberately not in the template editor: the lists the built-in sections offer, like medications and lab tests, are edited on the Settings screen, not here.</p>
+
+      <h3>Questions</h3>
+      <p>Inside a custom section, each question has a label, a type, and a "Required" checkbox. The types are: Short text, Long text, Single choice, Multiple choice, Number, Scale (0-N), Yes / No, and Date. Choice questions get a "Choices" editor, one choice per line; scale questions get "Lowest" and "Highest" bounds.</p>
+      <p>Under every question the editor shows its field id, with the note "The field id is permanent; saved answers stay linked to it." That is why removing a question is safe for old records: "Answers already saved on existing records are kept, but this question will no longer appear."</p>
+
+      <h2 id="formulary">6. Formulary</h2>
+      <p>The Formulary card under Settings holds the medications offered on the visit form: a table of Medication, Dose, Unit, Category, and Controlled, with "Add medication" and "Save formulary" buttons.</p>
+      <div class="callout">
+        <p><strong>One rule matters more than the rest.</strong> The card's own intro states it: "Edit carefully: saved prescriptions keep pointing at the same entry, so never reuse a row for a different drug - add a new row instead." Editing a row to become a different drug silently changes what old prescriptions appear to say. Add new rows; remove rows you no longer stock.</p>
+      </div>
+      <p>The formulary cannot be saved empty. After a save, changes appear when the visit form is next opened.</p>
+
+      <h2 id="lab-tests">7. Lab tests and reference ranges</h2>
+      <p>The Lab tests card defines the lab panel on the visit form: a table of Test, Type, Unit, On by default, and Ranges. A test's type is "Positive / negative" (POS and NEG buttons on the form) or "Number" (a number box with the unit as its placeholder). Saving replaces the whole panel for your organization, and the list cannot be saved empty.</p>
+      <p>Numeric tests get a "Ranges" button that opens the reference range editor. On a row that has not been saved yet the button is off, with the reason: "Save lab tests first, then set the reference ranges for this test."</p>
+
+      <h3>Reference ranges: new results only</h3>
+      <p>Ranges interpret a numeric value as it is entered, with a label and an optional color: Green (normal), Amber (caution), Red (critical), or Gray (neutral). The editor states the rule that governs everything here, and it is worth quoting in full:</p>
+      <div class="confirm">
+        <p class="lead">The editor's standing notice</p>
+        <p>"Changing ranges affects new results only.</p>
+        <p>Visits already saved keep the interpretation that was recorded at the time; editing ranges never rewrites a recorded result. Only new results entered after this change use the new ranges."</p>
+      </div>
+      <p>Matching works top to bottom, first match wins. A value equal to "From (at least)" is inside the range; a value equal to "Up to (below)" is not, it belongs to the next range up. The editor warns about overlaps, gaps, and impossible ranges before you save, but still lets you save; read the warnings. Use the "Try a value" box at the bottom to see exactly what a new result would record before saving.</p>
+
+      <h2 id="presets">8. Diagnosis quick-picks and prescription presets</h2>
+      <p>Both live in their own cards under Settings, and both belong to the organization: a change reaches everyone on the next sync.</p>
+      <p><strong>Diagnosis quick-picks</strong> are the tap-to-add buttons under the Diagnosis box on the visit form; each tap appends to the diagnosis text. <strong>Prescription presets</strong> are one-tap bundles in the Medications section; applying one adds its medication lines and its treatment notes to the visit. Applying a preset only ever adds; it never removes rows a clinician already entered.</p>
+      <p>In both editors you can reorder entries, edit them, and choose between two very different actions:</p>
+      <ul>
+        <li><strong>Hide</strong> keeps the entry in your list but takes its button off the visit form. The tooltip says it plainly: "Hidden entries stay in the list but do not appear on the visit form." Hiding is reversible with "Show".</li>
+        <li><strong>Remove</strong> deletes the entry from the list. Saved visits are never touched: "Diagnoses already saved on visits keep their text - only the quick-pick button goes away", and for presets, "Prescriptions already saved on visits are kept, and the formulary is not changed - only the one-tap preset goes away."</li>
+      </ul>
+      <p>DH EMR ships with built-in defaults in both lists. You can remove them too, and the confirm adds a warning: "This is a built-in preset, so once saved it stays removed for your organization after sync." If you only want a cleaner form, hide instead of removing; the app even says so when you try to save an empty list: "The diagnosis quick-picks cannot be saved empty. Hide entries instead if you do not want them on the visit form."</p>
+      <p>When building a prescription preset, the editor checks every medication line and tells you what it will record. A drug that is not in your formulary is allowed, but flagged: "Not in the formulary - prescriptions from this line record no dispensing quantity." Fix the formulary first if you want quantities.</p>
+
+      <h2 id="staff">9. Staff accounts (clinic mode)</h2>
+      <p>In clinic mode, admins get a Staff tab. Its card says what it does: "Approve new accounts, set station roles, and revoke access. A new account can see nothing until it is approved here. Changes are enforced by the server: a device that is offline keeps its last confirmed access and is cut off the moment it reconnects."</p>
+      <p>Staff create their own accounts from the sign-in screen on any device connected to your organization. This is safe because signing up grants nothing: every new account starts pending, sees no data, and waits on your list. There is no rush to approve.</p>
+      <p>For each account you can:</p>
+      <ul>
+        <li><strong>Set a station role:</strong> reception, nurse, provider, or pharmacy. On the flow board, the signed-in role's matching station is tagged "your station".</li>
+        <li><strong>Approve</strong> a pending account, after which it can sign in and work.</li>
+        <li><strong>Revoke</strong> an active account. The confirm is honest about timing and data: "They are locked out the next time their device talks to the server. Nothing they recorded is deleted, and you can restore them here later."</li>
+        <li><strong>Restore</strong> a revoked account.</li>
+        <li><strong>Make admin</strong> or <strong>Remove admin</strong>. The confirm spells out what that means: "Admins approve and revoke accounts, edit the organization's lists and formulary, and can switch the organization's mode."</li>
+      </ul>
+      <p><strong>The last-admin rule:</strong> the app and the server both refuse to let the only administrator revoke or demote themselves: "You are the only administrator. Make someone else an admin first." Keep at least two admins so a lost password never locks the organization.</p>
+      <p>Revoking never deletes anything: visits an account recorded stay in the organization. And if you do lock yourselves out entirely, or the sole admin forgets their password, the recovery steps live in SETUP.md's recovery playbook, using the project dashboard and SQL editor. Password reset emails are not reliable on most clinic projects; the sign-in screen itself tells staff: "Forgot your password? Your administrator can set up a fresh account for you - password reset emails are not reliable on most clinic projects."</p>
+
+      <h2 id="devices">10. Your device fleet</h2>
+      <p>A device registers itself with your cloud the first time it connects: in the setup wizard's cloud path, or later under Settings with "Connect this device to a cloud". Its name, role, and last sync time land in your project's <code>devices</code> table.</p>
+      <ul>
+        <li><strong>Renaming is safe.</strong> The This device card's "Rename this device" changes only the label. The card says why that matters: "Renaming keeps this device's identity: records it has already filed stay its own." A rename never re-registers, never mints a new identity, and never orphans records.</li>
+        <li><strong>Review the fleet regularly.</strong> SETUP.md's operator quick reference has a one-query fleet listing for the SQL editor: recognize every row; revoke strangers.</li>
+        <li><strong>Revoking a lost or stolen device</strong> is done from the SQL editor, with the one-line update in SETUP.md. Records the device already pushed are kept. The app can never un-revoke a device; that also lives only in the SQL editor, on purpose.</li>
+        <li><strong>Changing a device's role</strong> (standard to admin, or back) is done in the cloud's <code>devices</code> table; the device adopts the cloud's role on its next sync.</li>
+      </ul>
+      <p>To replace a device, follow the Moving to a new device card under Settings: download a backup on the old device, connect the new device to the same cloud project, restore the backup, and check the record count matches before wiping the old device.</p>
+      <div class="callout">
+        <p><strong>Honest limit:</strong> revoking a device does nothing to the data already on a lost device, and that data is not encrypted at rest. Treat a lost device as a disclosure, not just an access problem.</p>
+      </div>
+
+      <h2 id="backups">11. Backups and restore</h2>
+      <p>The Backup and restore card under Settings explains what a backup is: "A backup is a single file holding every record on this device plus your form and preset settings. It never contains your cloud key or device identity. Take one at the end of each clinic day - it is the safety net if a device is lost, wiped, or replaced." As the admin, make that habit stick: one tap on "Download backup", one file somewhere safe.</p>
+      <p><strong>Restoring merges; it never wipes.</strong> The card's own footer is the rule: "Restoring merges: nothing already on this device is lost, and where the same record exists in both the more recently saved version wins." So a restore cannot undo newer work.</p>
+      <p><strong>Settings restore is separate and opt-in.</strong> After confirming the records restore, the app asks a second question:</p>
+      <div class="confirm">
+        <p class="lead">The settings restore confirm</p>
+        <p>"Also restore the settings from this file?</p>
+        <p>That replaces this device's form layout, sites, providers and formulary with the ones in the backup. If this is an admin device those settings go out to the whole team on the next sync.</p>
+        <p>Choose Cancel to restore records only. That is almost always what you want."</p>
+      </div>
+      <p>Take that last line seriously, especially on an admin device: restoring old settings from a months-old backup and syncing would roll the whole organization's forms back. Tap Cancel unless you are deliberately restoring configuration.</p>
+      <p>If you are moving records across from an old cloud project, use the separate Moving from another cloud project card with "Import records from a file". Export from the old project as JSON, not CSV; CSV flattens lab results and medication lists into text that cannot be read back reliably.</p>
+
+      <h2 id="demo">12. The demo</h2>
+      <p>The <a href="../demo/">demo</a> is a fictional clinic with sample patients, running entirely in the browser. Its banner states the laws: "A fictional clinic with sample patients. Everything stays in this browser and never syncs anywhere." It refuses every cloud connection on purpose, so nothing done in the demo can ever touch your organization's records or settings.</p>
+      <p>That makes it the right place to rehearse. Try the template editor, build a preset, break things freely. "Reset Demo" in the banner puts the original sample patients back.</p>
+
+      <h2 id="limits">13. Honest limits</h2>
+      <ul>
+        <li><strong>Field mode's key is the whole fence.</strong> Every device shares one key, the database cannot tell devices apart, and anyone holding the key can read everything. Revocation stops an honest revoked device, not a determined person who has the key. Clinic mode, with per-user accounts, is the fix.</li>
+        <li><strong>An admin can reopen that fence.</strong> Switching a clinic mode organization back to field mode reopens the shared-key surface for everyone who ever had the key. It exists as the recovery path for stranded field records, and the app confirms it loudly.</li>
+        <li><strong>A lost device keeps its data.</strong> Revoking does nothing to records already on the device, and they are not encrypted at rest.</li>
+        <li><strong>DH EMR is not a certified EHR and is not HIPAA-compliant.</strong> It must not be used where a certified EHR is required. It is intended for global-health use outside the US.</li>
+      </ul>
+
+      <p class="backlink"><a href="./">Back to all guides</a></p>
+    </div>
+  </div>
+</main>
+
+<div class="notice">
+  <div class="wrap">
+    <p>DH EMR is not a certified EHR and is not HIPAA-compliant. It is intended for global-health use outside the US.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <a href="../">Home</a>
+      <a href="./">Guides</a>
+      <a href="../demo/">Demo</a>
+      <a href="../app/">App</a>
+    </nav>
+    <p>Damico Health - free, open tools for global-health clinics.</p>
+  </div>
+</footer>
+
+</body>
+</html>
