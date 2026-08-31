@@ -143,14 +143,26 @@ Updated 2026-08-12 (end of day).
   clinical reload happens ONLY through Update now; demo skipWaiting+
   clientsClaim baked in. Verified in the built sw.js of both bundles.
 
-## Next
+## Guides: WRITTEN AND FACT-CHECKED (commit 25e15f9)
 
-1. Guides (getting-started, user-guide, admin-guide) written against the
-   now-stable UI per the fact-check methodology (every named control
-   grepped against the rendering code).
-2. Live clinic-mode E2E once a Supabase project exists (Alec runs
-   SETUP.md; a scratch project is fine).
-3. Deploy step with Alec: GitHub repo + Pages + damicohealth.com DNS
+- packages/site/public/guides/: getting-started, user-guide, admin-guide
+  + hub. ~240 quoted UI strings verified verbatim against src; the
+  inventory that fed the writers is regenerable (the methodology, not
+  the artifact, is what matters). Section default renamed Surgery.
+
+## EVERYTHING BUILDABLE WITHOUT ALEC IS NOW BUILT.
+
+## Next (each needs Alec)
+
+1. Live clinic-mode E2E: Alec creates a Supabase project per
+   supabase/SETUP.md (a scratch one is fine), then drive both modes
+   against real Postgres.
+2. Deploy: GitHub repo + Pages + damicohealth.com DNS
    (packages/site/DEPLOY.md). Hero copy awaits the pivot story.
-4. Remaining: supabase-js bundle split (594 kB warning), device tests on
-   real hardware, PGlite SQL tests.
+3. Device tests on real hardware (DEVICE-TEST checklist to be written
+   from the old repo's when hardware is scheduled).
+
+## Nice-to-have backlog (no blocker)
+
+- supabase-js bundle split (594 kB warning, cosmetic), PGlite SQL tests,
+  Capacitor/native wrapper if ever wanted.
