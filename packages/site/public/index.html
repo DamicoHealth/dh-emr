@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DH EMR - free clinic records software for global health</title>
-  <meta name="description" content="DH EMR by Damico Health: two free products for global-health clinics. DH EMR Clinic runs a connected clinic with staff accounts and a live patient-flow board. DH EMR Field enters paper charts offline after clinic. Your forms, your formulary, your lab panel, your sites - without touching code.">
+  <meta name="description" content="DH EMR by Damico Health: two free apps for global-health clinics. DH EMR Clinic runs a connected clinic with staff roles and a live patient-flow board. DH EMR Field enters paper charts offline, with no accounts. Your forms, your formulary, your lab tests, your own cloud.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e6e64'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%23ffffff' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="site.css">
 </head>
@@ -28,34 +28,179 @@
 </header>
 
 <main>
+  <!-- Icon sprite: icons drawn more than once on the page live here and are reused with <use>. -->
+  <svg class="lp-sprite" aria-hidden="true" focusable="false">
+    <symbol id="lp-i-scribble" viewBox="0 0 120 14"><path d="M2 9c4-6 8-6 12-1s8 5 12-1 8-6 12 0 7 6 12 0 8-6 12-1 7 5 12 0 8-6 12-1 7 6 12 0 8-6 12-1 7 5 11 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="lp-i-tablet" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M3 17h18"/><circle cx="12" cy="19" r=".9" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="lp-i-phone" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M10.5 5h3"/></symbol>
+    <symbol id="lp-i-laptop" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/></symbol>
+    <symbol id="lp-i-cloud" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.2 11.2 3.5 3.5 0 0 0 7 18z"/></symbol>
+    <symbol id="lp-i-cloud-off" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.2 11.2 3.5 3.5 0 0 0 7 18zM4 4l16 16"/></symbol>
+    <symbol id="lp-i-sync" viewBox="0 0 24 24"><path d="M4 9h13l-3-3M20 15H7l3 3"/></symbol>
+    <symbol id="lp-i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  </svg>
+
   <!--
-    HERO COPY SLOT. Alec's Damico Health story replaces the kicker, h1 and
-    lede below when it lands. Keep the structure exactly: p.kicker, h1,
-    p.lede. The two product panels that follow do not depend on this copy.
+    HERO COPY SLOT: p.kicker, h1 and p.lede are the copy. The device
+    mockups beside them are CSS only (site.css, lp- classes) and do not
+    depend on the copy. The two-word h1 only reads because the lede
+    explains it: when new hero copy lands, keep a lede that says what the
+    two apps are.
   -->
-  <section class="hero">
-    <div class="wrap">
-      <p class="kicker">DH EMR by Damico Health</p>
-      <h1>Free clinic records software for global health</h1>
-      <p class="lede">Two products, one shared core. DH EMR Clinic runs a connected clinic with staff accounts and a live patient-flow board. DH EMR Field enters paper charts after clinic, offline, with no accounts at all. Both are free, and your records stay yours.</p>
+  <section class="lp-hero" aria-labelledby="hero-heading">
+    <div class="wrap lp-hero-grid">
+      <div class="lp-hero-copy">
+        <p class="kicker">DH EMR by Damico Health</p>
+        <h1 id="hero-heading"><span class="lp-on">Connected.</span> <span class="lp-off">Offline.</span></h1>
+        <p class="lede">Two free apps for global-health clinics: one runs a live clinic, one types up paper charts afterwards.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="demo/clinic/">Try the Clinic demo</a>
+          <a class="btn btn-secondary" href="demo/field/">Try the Field demo</a>
+        </div>
+        <p class="lp-hero-note">Free. No account with us. Records stay on your devices and in your own cloud.</p>
+      </div>
+
+      <div class="lp-hero-visual">
+        <div class="lp-devices" aria-hidden="true">
+          <div class="lp-tablet">
+            <div class="lp-screen">
+              <div class="lp-appbar">
+                <span class="lp-appbar-brand"><i></i>DH EMR Clinic</span>
+                <span class="lp-appbar-tabs"><span>Provider</span><b>Board</b><span>Visits</span><span>New visit</span><span>Analytics</span></span>
+                <span class="lp-live">Live</span>
+                <span class="lp-appbar-user">Dr. L. Okot <span class="lp-role">Provider</span></span>
+              </div>
+              <div class="lp-boardhead"><b>Patient flow</b><span>06/10/2026</span><span class="lp-newbtn">+ New patient</span></div>
+              <div class="lp-board">
+                <div class="lp-col">
+                  <div class="lp-colhead"><span>Check-in</span><i>2</i></div>
+                  <div class="lp-cards">
+                    <div class="lp-card"><div class="lp-card-top"><b>Joseph Okello</b><span class="lp-wait">4 min</span></div><span class="lp-card-no">No. JOOK03111978</span><span class="lp-card-btns"><span class="lp-open">Open</span><span class="lp-next">Next: Triage</span></span></div>
+                    <div class="lp-card"><div class="lp-card-top"><b>Florence Namukasa</b><span class="lp-wait">2 min</span></div><span class="lp-card-no">No. FLNA14022001</span><span class="lp-card-btns"><span class="lp-open">Open</span><span class="lp-next">Next: Triage</span></span></div>
+                  </div>
+                </div>
+                <div class="lp-col">
+                  <div class="lp-colhead"><span>Triage</span><i>2</i></div>
+                  <div class="lp-cards">
+                    <div class="lp-card"><div class="lp-card-top"><b>Daniel Kirya</b><span class="lp-wait">9 min</span></div><span class="lp-card-no">No. DAKI08011963</span><span class="lp-card-btns"><span class="lp-open">Open</span><span class="lp-next">Next: Provider</span></span></div>
+                    <div class="lp-card"><div class="lp-card-top"><b>Esther Nabirye</b><span class="lp-wait">4 min</span></div><span class="lp-card-no">No. ESNA25032007</span><span class="lp-card-btns"><span class="lp-open">Open</span><span class="lp-next">Next: Provider</span></span></div>
+                  </div>
+                </div>
+                <div class="lp-col lp-col-mine">
+                  <div class="lp-colhead"><span>Provider</span><i>1</i><span class="lp-mine-tag">Your station</span></div>
+                  <div class="lp-cards">
+                    <div class="lp-card"><div class="lp-card-top"><b>Grace Auma</b><span class="lp-wait">11 min</span></div><span class="lp-card-no">No. GRAU20021996</span><span class="lp-card-btns"><span class="lp-open">Open</span><span class="lp-next">Next: Lab</span></span></div>
+                  </div>
+                </div>
+                <div class="lp-col">
+                  <div class="lp-colhead"><span>Lab</span><i>2</i></div>
+                  <div class="lp-cards">
+                    <div class="lp-card"><div class="lp-card-top"><b>Amara Nakato</b><span class="lp-wait">20 min</span></div><span class="lp-card-no">No. AMNA12041991</span><span class="lp-card-btns"><span class="lp-open">Open</span><span class="lp-next">Next: Pharmacy</span></span></div>
+                    <div class="lp-card"><div class="lp-card-top"><b>Peter Ssemakula</b><span class="lp-wait">15 min</span></div><span class="lp-card-no">No. PESS09071990</span><span class="lp-card-btns"><span class="lp-open">Open</span><span class="lp-next">Next: Pharmacy</span></span></div>
+                  </div>
+                </div>
+                <div class="lp-col">
+                  <div class="lp-colhead"><span>Pharmacy</span><i>1</i></div>
+                  <div class="lp-cards">
+                    <div class="lp-card"><div class="lp-card-top"><b>Miriam Adeke</b><span class="lp-wait">3 min</span></div><span class="lp-card-no">No. MIAD30091985</span><span class="lp-card-btns"><span class="lp-open">Open</span><span class="lp-next">Next: Done</span></span></div>
+                  </div>
+                </div>
+                <div class="lp-col lp-col-done">
+                  <div class="lp-colhead"><span>Done</span></div>
+                  <div class="lp-cards"><span class="lp-show">Show 4 done</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="lp-phone">
+            <div class="lp-screen">
+              <div class="lp-appbar"><span class="lp-appbar-brand"><i></i>DH EMR Field</span><span class="lp-chip-off">Offline only</span></div>
+              <div class="lp-phead"><b>Visits</b></div>
+              <div class="lp-search">Search name, patient number, concern, diagnosis...</div>
+              <div class="lp-visits">
+                <div class="lp-visit"><b>Amara Nakato</b><span>Kabale Community Clinic &middot; 02/10/2026</span><span>F &middot; 35 &middot; No. AMNA12041991</span><span class="lp-dx">URTI</span></div>
+                <div class="lp-visit"><b>Joseph Okello</b><span>Rukungiri Outreach &middot; 15/09/2026</span><span>M &middot; 47 &middot; No. JOOK03111978</span><span class="lp-dx">Hypertension, uncontrolled</span></div>
+                <div class="lp-visit"><b>Grace Auma</b><span>Mobile Unit A &middot; 27/09/2026</span><span>F &middot; 30 &middot; No. GRAU20021996</span><span class="lp-dx">Normal antenatal visit</span></div>
+              </div>
+              <div class="lp-tabbar"><b>Visits</b><span>New visit</span><span>Analytics</span><span>Settings</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="lp-devices-caption">The DH EMR Clinic patient-flow board on a tablet<span class="lp-caption-field"> and the DH EMR Field visits list on a phone</span>, with fictional patients.</p>
+      </div>
     </div>
   </section>
 
-  <section class="products" aria-labelledby="products-heading">
+  <section class="lp-field" aria-labelledby="field-story-heading">
+    <div class="wrap">
+      <p class="kicker">DH EMR Field</p>
+      <h2 id="field-story-heading">Paper by day. Records after clinic.</h2>
+      <p class="lp-section-lede">Chart on paper while the patient is in front of you. Type each chart in when the day is done: no signal needed, no accounts, the device is the identity.</p>
+
+      <div class="lp-field-visual" aria-hidden="true">
+        <div class="lp-paper">
+          <div class="lp-paper-head"><span>Visit form</span><span>Kabale Community Clinic</span></div>
+          <div class="lp-prow"><span>Name</span><svg class="lp-ink" viewBox="0 0 120 14" preserveAspectRatio="none"><use href="#lp-i-scribble"/></svg></div>
+          <div class="lp-prow"><span>Date of birth</span><svg class="lp-ink" viewBox="0 0 120 14" preserveAspectRatio="none"><use href="#lp-i-scribble"/></svg></div>
+          <div class="lp-prow"><span>Vitals</span><svg class="lp-ink" viewBox="0 0 120 14" preserveAspectRatio="none"><use href="#lp-i-scribble"/></svg></div>
+          <div class="lp-prow"><span>Complaint</span><svg class="lp-ink" viewBox="0 0 120 14" preserveAspectRatio="none"><use href="#lp-i-scribble"/></svg></div>
+          <div class="lp-prow"><span>Diagnosis</span><svg class="lp-ink" viewBox="0 0 120 14" preserveAspectRatio="none"><use href="#lp-i-scribble"/></svg></div>
+          <div class="lp-prow"><span>Treatment</span><svg class="lp-ink" viewBox="0 0 120 14" preserveAspectRatio="none"><use href="#lp-i-scribble"/></svg></div>
+          <div class="lp-prow"><span>Provider</span><svg class="lp-ink" viewBox="0 0 120 14" preserveAspectRatio="none"><use href="#lp-i-scribble"/></svg></div>
+        </div>
+
+        <div class="lp-arrow">
+          <svg viewBox="0 0 24 24"><use href="#lp-i-arrow"/></svg>
+          <span>typed in after clinic</span>
+        </div>
+
+        <div class="lp-phone">
+          <div class="lp-screen">
+            <div class="lp-appbar"><span class="lp-appbar-brand"><i></i>DH EMR Field</span><span class="lp-chip-off">Offline only</span></div>
+            <div class="lp-form">
+              <p class="lp-form-title">New visit</p>
+              <p class="lp-form-sub">Patient number generates from name + date of birth</p>
+              <div class="lp-fgrid">
+                <div class="lp-fld"><span>Given name</span><b>Amara</b></div>
+                <div class="lp-fld"><span>Family name</span><b>Nakato</b></div>
+                <div class="lp-fld"><span>Date of birth</span><b>12/04/1991</b></div>
+                <div class="lp-fld lp-fld-auto"><span>Patient number</span><b>AMNA12041991</b></div>
+              </div>
+              <div class="lp-fld"><span>Vitals</span><b>Temp 36.9 &middot; BP 126/80 &middot; Weight 60</b></div>
+              <div class="lp-fld"><span>Diagnosis</span><b>URTI</b></div>
+              <div class="lp-fld lp-fld-med"><span>Medication</span><b>Paracetamol 500mg &middot; 1g &middot; q8h &middot; 5d<span class="lp-qty">30 tabs</span></b></div>
+              <div class="lp-form-actions"><span class="lp-mbtn">Save &amp; next patient</span><span class="lp-mbtn lp-mbtn-ghost">Save</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="lp-devices-caption">A paper visit form typed into DH EMR Field after clinic: the patient number is built from name and date of birth, and the quantity to dispense is worked out from the dose line.</p>
+    </div>
+  </section>
+
+  <section class="lp-products" aria-labelledby="products-heading">
     <div class="wrap">
       <h2 id="products-heading" class="visually-hidden">The two products</h2>
-      <div class="product-grid">
+      <div class="lp-product-grid">
 
-        <article class="product product-clinic" id="clinic" aria-labelledby="clinic-heading">
+        <article class="product product-clinic lp-product" id="clinic" aria-labelledby="clinic-heading">
           <span class="product-tag tag-clinic">Connected</span>
           <h2 id="clinic-heading">DH EMR Clinic</h2>
-          <p class="for">For a clinic with internet all day and a team that works from the same records at the same time.</p>
-          <ul>
-            <li>Staff accounts with roles: Reception, Triage, Provider, Lab, Pharmacy and Admin.</li>
-            <li>A live patient-flow board: who is waiting, who is being seen, who is done.</li>
-            <li>Every device sees the same visit within seconds of a change.</li>
-            <li>New devices join by opening a link or scanning a QR code from the admin.</li>
-            <li>Needs a constant internet connection.</li>
+          <p class="for">For a clinic with internet all day.</p>
+          <ol class="lp-flow" aria-label="Board stations, in order">
+            <li><span>Check-in</span></li>
+            <li><span>Triage</span></li>
+            <li class="lp-flow-now"><span>Provider</span></li>
+            <li><span>Lab</span></li>
+            <li><span>Pharmacy</span></li>
+            <li><span>Done</span></li>
+          </ol>
+          <ul class="lp-bullets">
+            <li>Staff accounts: Reception, Triage, Provider, Lab, Pharmacy, Admin</li>
+            <li>Each role lands on its own queue, the Board one tap away</li>
+            <li>Live board, every device updated within seconds</li>
+            <li>Staff join by link or QR code</li>
+            <li>Needs internet all day</li>
           </ul>
           <div class="product-actions">
             <a class="btn btn-primary" href="demo/clinic/">Try the demo</a>
@@ -64,16 +209,21 @@
           </div>
         </article>
 
-        <article class="product product-field" id="field" aria-labelledby="field-heading">
+        <article class="product product-field lp-product" id="field" aria-labelledby="field-heading">
           <span class="product-tag tag-field">Offline</span>
           <h2 id="field-heading">DH EMR Field</h2>
-          <p class="for">For outreach teams that chart on paper during clinic and enter the visits afterwards, with little or no signal.</p>
-          <ul>
-            <li>Works fully offline. Nothing needs a connection.</li>
-            <li>No accounts and no sign-in. The device is the identity.</li>
-            <li>Use one device on its own, or connect several devices to one cloud project with a shared key so records sync whenever there is signal.</li>
-            <li>Backup and restore from Settings, so a clinic day is never lost.</li>
-            <li>Also the backup app for a Clinic organization when its backend is down.</li>
+          <p class="for">For paper charts typed in after clinic.</p>
+          <ol class="lp-steps" aria-label="How Field works">
+            <li><span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg>Paper chart</span></li>
+            <li><span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#lp-i-phone"/></svg>Typed in after clinic</span></li>
+            <li><span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#lp-i-cloud"/></svg>Backup file or your cloud</span></li>
+          </ol>
+          <ul class="lp-bullets">
+            <li>Works fully offline</li>
+            <li>No accounts: the device is the identity</li>
+            <li>Optional sync to your own cloud, shared key</li>
+            <li>Backup and restore from Settings</li>
+            <li>Also the backup app for a Clinic organization</li>
           </ul>
           <div class="product-actions">
             <a class="btn btn-primary" href="demo/field/">Try the demo</a>
@@ -83,85 +233,160 @@
         </article>
 
       </div>
-    </div>
-  </section>
-
-  <section id="which" aria-labelledby="which-heading">
-    <div class="wrap">
-      <h2 id="which-heading">Which one is for us?</h2>
-      <p class="section-lede">Pick by how your clinic day actually runs. There is no switching between the two products, and records do not move from one to the other.</p>
-      <div class="card-grid">
-        <div class="card">
-          <h3>Choose Clinic when</h3>
-          <ul>
-            <li>Internet is on all day, every day.</li>
-            <li>The record is open while the patient is in front of you.</li>
-            <li>More than one person works on the same visit on the same day: reception, triage, the provider, the lab, the pharmacy.</li>
-            <li>You want to see who is waiting from any device in the building.</li>
-            <li>Each staff member should sign in as themselves.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Choose Field when</h3>
-          <ul>
-            <li>Visits are written on paper charts and typed in after clinic.</li>
-            <li>Signal is absent, slow or occasional.</li>
-            <li>One device, or a few, and nobody wants to manage accounts.</li>
-            <li>Your team moves between sites.</li>
-            <li>You already run Clinic and need a way to keep working when the backend is down.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="plain-note">
-        <h3>Honest limits</h3>
-        <ul>
-          <li>Records entered in Field stay in Field. There is no import into Clinic today.</li>
-          <li>Clinic is built for a constant connection. When the backend is down, the team charts on paper and enters the visits in Field.</li>
-          <li>Both apps can be installed on the same device. They keep separate records.</li>
-          <li>Clinic roles are a workflow layer, not a security wall. Any approved staff account can read the organization's records.</li>
+      <div class="lp-fineprint">
+        <p class="lp-fineprint-label" id="fineprint-label">Good to know</p>
+        <ul aria-labelledby="fineprint-label">
+          <li>Field visits do not import into Clinic.</li>
+          <li>Both apps can live on one device.</li>
+          <li>Internet down? Chart on paper, enter in Field.</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <section id="customize" aria-labelledby="customize-heading">
+  <section class="lp-caps" aria-labelledby="caps-heading">
     <div class="wrap">
-      <h2 id="customize-heading">Your clinic, not ours</h2>
-      <p class="section-lede">Both products share the same customization. Set it up once in Settings and every device in the organization follows. No code, no developer.</p>
-      <div class="card-grid">
-        <div class="card">
-          <h3>Your forms</h3>
-          <p>Form templates built from the sections your visits actually need: vitals, history, exam, plan, or whatever your workflow is.</p>
+      <p class="kicker">In both apps</p>
+      <h2 id="caps-heading">Your clinic, not ours</h2>
+      <p class="lp-section-lede">Set it up once in Settings and every device follows. No code, no developer.</p>
+      <div class="lp-cap-grid">
+
+        <div class="lp-cap">
+          <div class="lp-cap-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></svg></div>
+          <h3>Patients</h3>
+          <ul>
+            <li>Patient number from name and date of birth</li>
+            <li>Returning patients found and carried forward</li>
+            <li>Search by name, number, concern or diagnosis</li>
+          </ul>
         </div>
-        <div class="card">
-          <h3>Your formulary</h3>
-          <p>Your medication list with doses and units. The quantity to dispense is worked out on the visit form as the prescription is written.</p>
+
+        <div class="lp-cap">
+          <div class="lp-cap-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8.5 10h7M8.5 14h7M8.5 18h4"/></svg></div>
+          <h3>Visit form</h3>
+          <ul>
+            <li>Your sections and your own questions</li>
+            <li>Several forms, each visit filed under one</li>
+            <li>Diagnosis quick-picks, one tap</li>
+          </ul>
         </div>
-        <div class="card">
-          <h3>Your lab panel</h3>
-          <p>Your lab tests and your reference ranges, so results are flagged the way your clinicians expect.</p>
+
+        <div class="lp-cap">
+          <div class="lp-cap-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3h6M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/><path d="M7.5 15h9"/></svg></div>
+          <h3>Labs</h3>
+          <ul>
+            <li>Your lab tests, your reference ranges</li>
+            <li>Positive/negative or numeric results</li>
+            <li>Results labelled against your ranges, positives in red</li>
+          </ul>
         </div>
-        <div class="card">
-          <h3>Your sites and lists</h3>
-          <p>Site names, clinicians, complaints, procedures and referral destinations. Patient numbers are generated on the device, with no server needed.</p>
+
+        <div class="lp-cap">
+          <div class="lp-cap-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g transform="rotate(-45 12 12)"><rect x="2.5" y="8.5" width="19" height="7" rx="3.5"/><path d="M12 8.5v7"/></g></svg></div>
+          <h3>Medications</h3>
+          <ul>
+            <li>Your formulary with doses and units</li>
+            <li>Dispensing quantity worked out as you prescribe</li>
+            <li>Prescription presets, one tap</li>
+          </ul>
         </div>
-        <div class="card">
-          <h3>Your quick-picks</h3>
-          <p>Diagnosis quick-picks and prescription presets for the things you see every day, applied with one tap.</p>
+
+        <div class="lp-cap">
+          <div class="lp-cap-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20h16M7 16v-5M12 16V7M17 16v-9"/></svg></div>
+          <h3>Reports</h3>
+          <ul>
+            <li>Analytics on the device</li>
+            <li>Visits over time, top diagnoses, top medications</li>
+            <li>Data-quality check before a donor report</li>
+          </ul>
         </div>
-        <div class="card">
-          <h3>Your reports</h3>
-          <p>Analytics on the device: visits over time, top diagnoses, top medications, visits by site and provider, and a data-quality check before a donor report.</p>
+
+        <div class="lp-cap">
+          <div class="lp-cap-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21s-6-5.3-6-10a6 6 0 0 1 12 0c0 4.7-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg></div>
+          <h3>Sites and lists</h3>
+          <ul>
+            <li>Site names, clinicians, complaints, procedures, referral destinations</li>
+            <li>Patient numbers generated on the device, no server needed</li>
+            <li>Changed on an admin device, every device follows on its next sync</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-own" aria-labelledby="own-heading">
+    <div class="wrap lp-own-grid">
+      <div class="lp-own-copy">
+        <p class="kicker">Your data</p>
+        <h2 id="own-heading">Records belong to the organization</h2>
+        <ul class="lp-bullets">
+          <li>Records live on your devices</li>
+          <li>Sync, if you want it, to a Supabase project you own</li>
+          <li>Damico Health hosts nothing and sees nothing</li>
+          <li>No account with us, no subscription</li>
+          <li>One full backup file, any time</li>
+        </ul>
+      </div>
+      <div class="lp-diagram" aria-hidden="true">
+        <div class="lp-node">
+          <span class="lp-node-icons"><svg viewBox="0 0 24 24"><use href="#lp-i-tablet"/></svg><svg viewBox="0 0 24 24"><use href="#lp-i-phone"/></svg><svg viewBox="0 0 24 24"><use href="#lp-i-laptop"/></svg></span>
+          <b>Your devices</b>
+          <small>records live here</small>
+        </div>
+        <div class="lp-link">
+          <svg viewBox="0 0 24 24"><use href="#lp-i-sync"/></svg>
+          <span>sync, optional</span>
+        </div>
+        <div class="lp-node lp-node-cloud">
+          <svg viewBox="0 0 24 24"><use href="#lp-i-cloud"/></svg>
+          <b>Your Supabase project</b>
+          <small>in your own account</small>
+        </div>
+        <div class="lp-node lp-node-none">
+          <svg viewBox="0 0 24 24"><use href="#lp-i-cloud-off"/></svg>
+          <b>Damico Health</b>
+          <small>no server, no copy of your records</small>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="ownership" aria-labelledby="ownership-heading">
+  <section class="lp-runs" aria-labelledby="runs-heading">
     <div class="wrap">
-      <h2 id="ownership-heading">Records belong to the organization</h2>
-      <p class="section-lede">Your records live on your devices and, if you choose, in your own Supabase project that you control. Damico Health hosts nothing and sees nothing: no central server, no account with us, no subscription. Free means free.</p>
-      <p class="section-lede">DH EMR is built and maintained by Alec Damico, an emergency medicine physician, through the nonprofit Damico Health. The <a href="guides/">guides</a> cover setup, day-to-day use and administration for each product.</p>
+      <p class="kicker">Where it runs</p>
+      <h2 id="runs-heading">The devices you already have</h2>
+      <div class="lp-run-grid">
+        <div class="lp-run">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#lp-i-tablet"/></svg>
+          <h3>Tablet</h3>
+          <p>Add it to the home screen. Opens like an app.</p>
+        </div>
+        <div class="lp-run">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#lp-i-phone"/></svg>
+          <h3>Phone</h3>
+          <p>Same app, laid out for a phone.</p>
+        </div>
+        <div class="lp-run">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#lp-i-laptop"/></svg>
+          <h3>Laptop</h3>
+          <p>Any modern browser.</p>
+        </div>
+      </div>
+      <p class="lp-runs-note">A web app: open it in the browser, then add it to the home screen.</p>
+    </div>
+  </section>
+
+  <section class="lp-cta" aria-labelledby="cta-heading">
+    <div class="wrap">
+      <p class="kicker">Try a clinic day</p>
+      <h2 id="cta-heading">Open a demo now</h2>
+      <p>Fictional patients, in your browser. Nothing syncs anywhere.</p>
+      <div class="cta-row">
+        <a class="btn lp-btn-light" href="demo/clinic/">Clinic demo</a>
+        <a class="btn lp-btn-ghost" href="demo/field/">Field demo</a>
+        <a class="lp-cta-link" href="guides/">Read the guides</a>
+      </div>
     </div>
   </section>
 </main>

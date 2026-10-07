@@ -484,3 +484,1529 @@ section h2 {
 .site-footer a {
   color: var(--primary);
 }
+
+/* ------------------------------------------------------------ guide kit */
+/* Scannable guide pages: contents, numbered steps, callouts, tables. */
+
+.page .guide-toc {
+  margin: 0 0 28px;
+  padding: 14px 18px;
+  border: 1px solid var(--line, #d9dee6);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.page .guide-toc p {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft, #4a5568);
+}
+
+.page .guide-toc ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  columns: 2;
+  column-gap: 24px;
+}
+
+.page .guide-toc li {
+  margin: 0 0 6px;
+  break-inside: avoid;
+}
+
+.page ol.steps {
+  counter-reset: step;
+  list-style: none;
+  margin: 12px 0 20px;
+  padding: 0;
+}
+
+.page ol.steps > li {
+  position: relative;
+  margin: 0 0 12px;
+  padding-left: 46px;
+  min-height: 32px;
+}
+
+.page ol.steps > li::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--primary, #0e6e64);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.page ol.steps > li > p {
+  margin: 0 0 4px;
+}
+
+.page .callout {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-left: 4px solid var(--primary, #0e6e64);
+  border-radius: 10px;
+  background: #eef6f5;
+}
+
+.page .callout.warn {
+  border-left-color: var(--brand, #b5560a);
+  background: var(--warn-bg, #fff4e0);
+}
+
+.page .callout p {
+  margin: 0;
+}
+
+.page .callout p + p {
+  margin-top: 6px;
+}
+
+.page table.guide-table {
+  width: 100%;
+  margin: 12px 0 22px;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.page table.guide-table th,
+.page table.guide-table td {
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line, #d9dee6);
+}
+
+.page table.guide-table th {
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-soft, #4a5568);
+}
+
+.page .what-you-see {
+  margin: 4px 0 0;
+  color: var(--ink-soft, #4a5568);
+  font-size: 15px;
+}
+
+@media (max-width: 640px) {
+  .page .guide-toc ul {
+    columns: 1;
+  }
+  .page table.guide-table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+/* Guide prose helpers (the guides already use these class names). */
+.page .muted {
+  color: var(--ink-soft, #4a5568);
+}
+
+.page .ui {
+  display: inline-block;
+  padding: 0 6px;
+  border: 1px solid var(--line, #d9dee6);
+  border-radius: 6px;
+  background: #fff;
+  font-weight: 600;
+  font-size: 0.94em;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------- landing page kit */
+
+/* =====================================================================
+   Landing page (index.html only). Every class here is prefixed lp- so
+   nothing reaches the guide pages, which share this file. The landing
+   also reuses the tokens above plus .wrap, .kicker, .lede, .cta-row,
+   .btn*, .product, .product-tag and .product-actions.
+   Mockups are CSS and inline SVG only: no images, no scripts. Repeated
+   icons live in the <svg class="lp-sprite"> at the top of main.
+   ===================================================================== */
+
+.lp-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Hero: copy on the left, two device mockups on the right */
+
+.lp-hero {
+  padding: 2.5rem 0 3rem;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.lp-hero .wrap {
+  max-width: 66rem;
+}
+
+.lp-hero-grid {
+  display: grid;
+  gap: 2.25rem;
+  align-items: center;
+}
+
+.lp-hero-copy {
+  min-width: 0;
+}
+
+/* Kicker guard: --brand is 4.6:1 on --bg but under 4.5:1 on a tinted
+   surface such as --primary-soft. --primary clears 4.5:1 on all of them,
+   so the hero kicker is teal whatever background the hero ends up with. */
+.lp-hero .kicker {
+  color: var(--primary);
+}
+
+.lp-hero h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(2.4rem, 8vw, 3.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+/* The two words echo the product tags: Connected is teal, Offline is the
+   brand ink (#b5560a, 4.9:1 on white; never --brand-bright for text). */
+.lp-on {
+  color: var(--primary);
+}
+
+.lp-off {
+  color: var(--brand);
+}
+
+.lp-hero .lede {
+  margin-bottom: 1.25rem;
+}
+
+.lp-hero-note {
+  margin: 0.9rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+@media (min-width: 720px) {
+  .lp-hero {
+    padding: 3.5rem 0 4rem;
+  }
+
+  .lp-hero-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 2.5rem;
+  }
+}
+
+/* Device mockups. Everything inside a device is sized in em from the
+   device's own font-size, which follows the container width (cqw), so the
+   whole mockup scales as one piece. The px line before each clamp is the
+   fallback for browsers without container units. */
+
+.lp-hero-visual {
+  container-type: inline-size;
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.lp-devices {
+  position: relative;
+  padding: 0 0 8%;
+}
+
+.lp-tablet,
+.lp-phone {
+  background: #1a2330;
+  box-shadow:
+    0 1.6em 3em -1.2em rgba(26, 35, 48, 0.45),
+    0 0.5em 1.2em -0.5em rgba(26, 35, 48, 0.25),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  font-size: 9px;
+}
+
+/* 78% + 24% leaves a 2% overlap that stays inside the tablet's bezel, so
+   every station, Done included, stays visible beside the phone. */
+.lp-tablet {
+  width: 78%;
+  aspect-ratio: 4 / 3;
+  border-radius: 1.5em;
+  padding: 0.9em;
+  font-size: clamp(6px, 1.75cqw, 10.5px);
+}
+
+.lp-devices .lp-phone {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 24%;
+  aspect-ratio: 9 / 16.5;
+  border-radius: 1.9em;
+  padding: 0.6em;
+  font-size: clamp(5.5px, 1.5cqw, 8.8px);
+}
+
+.lp-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  border-radius: 0.8em;
+  color: var(--ink);
+  line-height: 1.3;
+  text-align: left;
+}
+
+.lp-phone .lp-screen {
+  border-radius: 1.4em;
+}
+
+/* The visible text equivalent of the aria-hidden devices */
+
+.lp-devices-caption {
+  margin: 0.9rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* App bar shared by both screens */
+
+.lp-appbar {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  padding: 0.55em 0.8em;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9em;
+}
+
+.lp-appbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.lp-appbar-brand i {
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 0.3em;
+  background: var(--primary);
+}
+
+.lp-appbar-tabs {
+  display: flex;
+  gap: 0.9em;
+  margin-left: 0.4em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.lp-appbar-tabs b {
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 0.15em;
+}
+
+/* The sync chip: "Live" in Clinic, "Offline only" on a Field device set
+   up on its own. */
+.lp-live,
+.lp-chip-off {
+  margin-left: auto;
+  padding: 0.1em 0.55em;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+.lp-live {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.lp-chip-off {
+  background: #eceff3;
+  color: var(--ink-soft);
+}
+
+.lp-appbar-user {
+  white-space: nowrap;
+  color: var(--ink-soft);
+}
+
+.lp-role {
+  display: inline-block;
+  margin-left: 0.3em;
+  padding: 0.1em 0.55em;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--primary-ink);
+  font-weight: 700;
+  font-size: 0.85em;
+}
+
+/* Clinic tablet: the patient-flow board */
+
+.lp-boardhead {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  padding: 0.6em 0.8em 0.2em;
+}
+
+.lp-boardhead b {
+  font-size: 1.15em;
+}
+
+.lp-boardhead span {
+  color: var(--ink-soft);
+  font-size: 0.9em;
+}
+
+.lp-boardhead .lp-newbtn {
+  margin-left: auto;
+  padding: 0.25em 0.6em;
+  border-radius: 0.4em;
+  background: var(--primary);
+  color: var(--primary-ink);
+  font-weight: 700;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+.lp-board {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 0.7fr);
+  gap: 0.45em;
+  padding: 0.4em 0.8em 0.8em;
+  flex: 1;
+  min-height: 0;
+}
+
+.lp-col {
+  background: #eceff3;
+  border-radius: 0.5em;
+  padding: 0.35em;
+  min-width: 0;
+}
+
+.lp-col-mine {
+  background: var(--primary-soft);
+  box-shadow: inset 0 0 0 1px rgba(14, 110, 100, 0.35);
+}
+
+.lp-colhead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.15em 0.3em;
+  padding: 0.1em 0.2em 0.35em;
+  font-weight: 700;
+  font-size: 0.9em;
+}
+
+.lp-colhead i {
+  min-width: 1.5em;
+  padding: 0 0.35em;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-style: normal;
+  font-size: 0.85em;
+  text-align: center;
+}
+
+.lp-mine-tag {
+  flex-basis: 100%;
+  color: var(--primary);
+  font-size: 0.78em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.lp-cards {
+  min-width: 0;
+}
+
+/* A board card as the guide describes it: name and wait chip, "No." and
+   the patient number, then Open and Next: station. */
+.lp-card {
+  margin-bottom: 0.35em;
+  padding: 0.4em 0.45em;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.45em;
+}
+
+.lp-card:last-child {
+  margin-bottom: 0;
+}
+
+.lp-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.3em;
+}
+
+.lp-card-top b {
+  font-size: 0.95em;
+  line-height: 1.2;
+}
+
+.lp-wait {
+  flex: none;
+  padding: 0.05em 0.4em;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.75em;
+  white-space: nowrap;
+}
+
+.lp-card-no {
+  display: block;
+  margin-top: 0.15em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72em;
+  color: var(--ink-soft);
+}
+
+.lp-card-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em;
+  margin-top: 0.4em;
+}
+
+.lp-open,
+.lp-next {
+  flex: 1 1 auto;
+  padding: 0.25em 0.4em;
+  border-radius: 0.4em;
+  font-weight: 700;
+  font-size: 0.8em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.lp-open {
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.lp-next {
+  background: var(--primary);
+  color: var(--primary-ink);
+}
+
+.lp-show {
+  display: block;
+  padding: 0.2em;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.75em;
+  text-decoration: underline;
+}
+
+/* Field phone: the Visits list */
+
+.lp-phead {
+  padding: 0.6em 0.8em 0.3em;
+}
+
+.lp-phead b {
+  font-size: 1.2em;
+}
+
+.lp-search {
+  margin: 0 0.7em 0.5em;
+  padding: 0.4em 0.6em;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.5em;
+  color: var(--ink-soft);
+  font-size: 0.85em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The list takes whatever height is left and clips like a scrolled list,
+   so the tab bar below it is always drawn whatever the phone's size. */
+.lp-visits {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.lp-visit {
+  margin: 0 0.7em 0.45em;
+  padding: 0.5em 0.6em;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.5em;
+}
+
+.lp-visit b {
+  display: block;
+}
+
+.lp-visit span {
+  display: block;
+  margin-top: 0.1em;
+  font-size: 0.78em;
+  color: var(--ink-soft);
+}
+
+.lp-visit .lp-dx {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.lp-tabbar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: auto;
+  padding: 0.45em 0.2em 0.6em;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  font-size: 0.72em;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.lp-tabbar b {
+  color: var(--primary);
+}
+
+/* Narrow hero column (phones, and the two-column hero on small tablets):
+   the board restacks into six station rows at 11px, one row per station
+   with its cards side by side, so nothing is cropped and nothing scrolls
+   sideways. The Field phone is left out here (the Field band below has
+   its own, full size) and the caption drops its Field clause with it. */
+
+@container (max-width: 30rem) {
+  .lp-tablet {
+    width: 100%;
+    aspect-ratio: auto;
+    font-size: 11px;
+  }
+
+  .lp-devices {
+    padding-bottom: 0;
+  }
+
+  .lp-devices .lp-phone,
+  .lp-caption-field,
+  .lp-appbar-user,
+  .lp-appbar-tabs span:nth-child(n + 3),
+  .lp-wait,
+  .lp-card-btns {
+    display: none;
+  }
+
+  .lp-board {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.4em;
+  }
+
+  .lp-col {
+    display: grid;
+    grid-template-columns: 6.5em minmax(0, 1fr);
+    align-items: center;
+    gap: 0.4em;
+    min-height: 3.6em;
+    padding: 0.35em 0.45em;
+  }
+
+  .lp-colhead {
+    padding: 0;
+  }
+
+  .lp-cards {
+    display: flex;
+    gap: 0.35em;
+  }
+
+  .lp-card {
+    flex: 0 0 calc(50% - 0.175em);
+    margin: 0;
+    min-width: 0;
+    padding: 0.35em 0.45em;
+    overflow: hidden;
+  }
+
+  .lp-card-top {
+    display: block;
+  }
+
+  .lp-card-top b,
+  .lp-card-no {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lp-show {
+    padding: 0;
+  }
+}
+
+/* The same narrow layout for browsers without container queries, keyed
+   to the viewport widths where the hero column is under 30rem: a single
+   column up to 519px, and the two-column hero between 720px and 902px. */
+
+@supports not (container-type: inline-size) {
+  @media (max-width: 519px), (min-width: 720px) and (max-width: 902px) {
+    .lp-tablet {
+      width: 100%;
+      aspect-ratio: auto;
+      font-size: 11px;
+    }
+
+    .lp-devices {
+      padding-bottom: 0;
+    }
+
+    .lp-devices .lp-phone,
+    .lp-caption-field,
+    .lp-appbar-user,
+    .lp-appbar-tabs span:nth-child(n + 3),
+    .lp-wait,
+    .lp-card-btns {
+      display: none;
+    }
+
+    .lp-board {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.4em;
+    }
+
+    .lp-col {
+      display: grid;
+      grid-template-columns: 6.5em minmax(0, 1fr);
+      align-items: center;
+      gap: 0.4em;
+      min-height: 3.6em;
+      padding: 0.35em 0.45em;
+    }
+
+    .lp-colhead {
+      padding: 0;
+    }
+
+    .lp-cards {
+      display: flex;
+      gap: 0.35em;
+    }
+
+    .lp-card {
+      flex: 0 0 calc(50% - 0.175em);
+      margin: 0;
+      min-width: 0;
+      padding: 0.35em 0.45em;
+      overflow: hidden;
+    }
+
+    .lp-card-top {
+      display: block;
+    }
+
+    .lp-card-top b,
+    .lp-card-no {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lp-show {
+      padding: 0;
+    }
+  }
+}
+
+/* Field story band: paper chart, arrow, phone with the structured visit */
+
+.lp-field {
+  padding: 3rem 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.lp-field .lp-section-lede {
+  margin-bottom: 0;
+}
+
+.lp-field-visual {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.lp-paper {
+  position: relative;
+  width: min(100%, 22rem);
+  margin: 0 auto;
+  padding: 1rem 1.1rem 1.1rem 1.6rem;
+  background: #fffdf6;
+  border: 1px solid #e3d9c2;
+  border-radius: 3px;
+  box-shadow: 0 16px 32px -20px rgba(26, 35, 48, 0.5);
+  transform: rotate(-1.5deg);
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+/* the printed margin line */
+.lp-paper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 1.1rem;
+  width: 1px;
+  background: #ecc2bb;
+}
+
+.lp-paper-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.2rem 0.6rem;
+  margin-bottom: 0.5rem;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lp-prow {
+  display: grid;
+  grid-template-columns: 5.4rem minmax(0, 1fr);
+  align-items: end;
+  gap: 0.4rem;
+  padding: 0.45rem 0 0.1rem;
+  border-bottom: 1px solid #d8cfb6;
+}
+
+/* the handwriting: one scribble path, stretched to a different width on
+   each line */
+.lp-ink {
+  display: block;
+  width: 80%;
+  height: 0.9rem;
+  color: #2c3e6b;
+}
+
+.lp-prow:nth-of-type(1) .lp-ink { width: 88%; }
+.lp-prow:nth-of-type(2) .lp-ink { width: 55%; }
+.lp-prow:nth-of-type(3) .lp-ink { width: 70%; }
+.lp-prow:nth-of-type(4) .lp-ink { width: 95%; }
+.lp-prow:nth-of-type(5) .lp-ink { width: 62%; }
+.lp-prow:nth-of-type(6) .lp-ink { width: 92%; }
+.lp-prow:nth-of-type(7) .lp-ink { width: 48%; }
+
+.lp-arrow {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* --brand-bright is a decorative stroke here, never text */
+.lp-arrow svg {
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--brand-bright);
+}
+
+.lp-field .lp-phone {
+  width: min(100%, 17.5rem);
+  margin: 0 auto;
+  border-radius: 1.5rem;
+  padding: 0.5rem;
+  font-size: 12px;
+}
+
+.lp-field .lp-phone .lp-screen {
+  border-radius: 1.05rem;
+}
+
+.lp-form {
+  display: grid;
+  gap: 0.5em;
+  padding: 0.7em 0.8em 0.85em;
+  color: var(--ink-soft);
+}
+
+.lp-form p {
+  margin: 0;
+}
+
+.lp-form-title {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 1.25em;
+}
+
+.lp-form-sub {
+  margin-top: -0.3em;
+  font-size: 0.82em;
+}
+
+.lp-fgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45em;
+}
+
+.lp-fld {
+  display: grid;
+  gap: 0.15em;
+  min-width: 0;
+}
+
+.lp-fld span {
+  font-size: 0.75em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.lp-fld b {
+  padding: 0.3em 0.45em;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 0.4em;
+  color: var(--ink);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lp-fld-auto b {
+  background: var(--primary-soft);
+  border-color: #c3dcd7;
+  color: var(--primary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.lp-fld-med b {
+  white-space: normal;
+}
+
+.lp-qty {
+  display: inline-block;
+  margin-left: 0.3em;
+  padding: 0 0.5em;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--primary-ink);
+  font-size: 0.8em;
+  line-height: 1.6;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.lp-form-actions {
+  display: flex;
+  gap: 0.4em;
+  margin-top: 0.2em;
+}
+
+.lp-mbtn {
+  flex: 1;
+  padding: 0.45em 0.5em;
+  border: 1.5px solid var(--primary);
+  border-radius: 0.5em;
+  background: var(--primary);
+  color: var(--primary-ink);
+  font-weight: 700;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.lp-mbtn-ghost {
+  flex: 0 0 auto;
+  padding-left: 0.9em;
+  padding-right: 0.9em;
+  background: var(--surface);
+  color: var(--primary);
+}
+
+@media (max-width: 44.99rem) {
+  .lp-field-visual {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .lp-arrow svg {
+    transform: rotate(90deg);
+  }
+
+  .lp-paper {
+    transform: rotate(-1deg);
+  }
+}
+
+/* Product band: two products, equal weight */
+
+.lp-products {
+  padding: 3rem 0 2.5rem;
+  background: var(--bg);
+}
+
+.lp-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  gap: 1.25rem;
+}
+
+.lp-product .for {
+  margin-bottom: 0.9rem;
+}
+
+/* Station strip (Clinic) and three-step strip (Field). The margin reset
+   keeps the shared .product li rule from adding space between pills. */
+
+.lp-flow,
+.lp-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-flow li,
+.lp-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.lp-flow li + li::before,
+.lp-steps li + li::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: 0.15rem;
+  border-top: 2px solid #9aa5b4;
+  border-right: 2px solid #9aa5b4;
+  transform: rotate(45deg);
+}
+
+.lp-flow span,
+.lp-steps span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.lp-flow-now span {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-ink);
+}
+
+/* --brand-bright is a decorative border here, never under text */
+.lp-steps span {
+  background: #fff7ee;
+  border-color: var(--brand-bright);
+}
+
+.lp-steps svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Diamond bullet lists (product cards and the ownership band). Written
+   with the parent too, so it outranks the shared .product ul rule. */
+
+.lp-bullets,
+.product .lp-bullets {
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+  color: var(--ink);
+}
+
+.lp-bullets li,
+.product .lp-bullets li {
+  position: relative;
+  margin: 0;
+  padding: 0.3rem 0 0.3rem 1.4rem;
+}
+
+.lp-bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0.15rem;
+  top: 0.78rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 2px;
+  background: var(--primary);
+  transform: rotate(45deg);
+}
+
+.product-field .lp-bullets li::before {
+  background: var(--brand-bright);
+}
+
+/* "Good to know": a label beside a short list, the label outside the list */
+
+.lp-fineprint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.5rem;
+  margin: 1.25rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.lp-fineprint-label {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.lp-fineprint ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-fineprint li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.lp-fineprint li::before {
+  content: "";
+  flex: none;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+/* Capability grid: six categories with inline SVG icons */
+
+.lp-caps {
+  padding: 3rem 0;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.lp-section-lede {
+  margin: 0 0 1.5rem;
+  max-width: 42rem;
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+}
+
+.lp-cap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(15.5rem, 100%), 1fr));
+  gap: 1rem;
+}
+
+.lp-cap {
+  padding: 1.15rem 1.2rem 1.1rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.lp-cap-icon {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-bottom: 0.75rem;
+  border-radius: 0.7rem;
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.lp-cap-icon svg,
+.lp-run svg,
+.lp-arrow svg,
+.lp-node svg,
+.lp-link svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lp-cap-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.lp-cap h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+}
+
+.lp-cap ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lp-cap li {
+  position: relative;
+  padding: 0.25rem 0 0.25rem 1.1rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.lp-cap li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.8rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+/* Your data: the ownership diagram beside its text equivalent */
+
+.lp-own {
+  padding: 3rem 0;
+  background: var(--bg);
+}
+
+.lp-own-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: center;
+}
+
+.lp-own .lp-bullets {
+  margin: 0.75rem 0 0;
+  font-size: 1.05rem;
+}
+
+.lp-diagram {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.lp-node {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.2rem;
+  padding: 1rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+  text-align: center;
+}
+
+.lp-node svg {
+  width: 1.9rem;
+  height: 1.9rem;
+  color: var(--primary);
+}
+
+.lp-node-icons {
+  display: inline-flex;
+  gap: 0.3rem;
+}
+
+.lp-node small {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.lp-node-cloud {
+  border-color: var(--primary);
+}
+
+.lp-node-none {
+  grid-column: 1 / -1;
+  grid-auto-flow: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem 0.6rem;
+  padding: 0.65rem 0.75rem;
+  background: transparent;
+  border-style: dashed;
+  box-shadow: none;
+  color: var(--ink-soft);
+}
+
+.lp-node-none svg {
+  color: var(--ink-soft);
+}
+
+.lp-link {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.15rem;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+/* --brand-bright is a decorative stroke here, never text */
+.lp-link svg {
+  width: 2rem;
+  height: 2rem;
+  color: var(--brand-bright);
+}
+
+@media (max-width: 44.99rem) {
+  .lp-own-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .lp-diagram {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lp-link svg {
+    transform: rotate(90deg);
+  }
+
+  .lp-node-none {
+    grid-auto-flow: row;
+  }
+}
+
+/* Where it runs */
+
+.lp-runs {
+  padding: 3rem 0;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+
+.lp-runs h2 {
+  margin-bottom: 1.25rem;
+}
+
+.lp-run-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr));
+  gap: 1rem;
+}
+
+.lp-run {
+  padding: 1.4rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.lp-run svg {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 0.5rem;
+  color: var(--primary);
+}
+
+.lp-run h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+}
+
+.lp-run p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.lp-runs-note {
+  margin: 1.25rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* Final call to action: the only dark band on the page */
+
+.lp-cta {
+  padding: 3.5rem 0;
+  background: linear-gradient(135deg, #0e6e64 0%, #0a4f48 100%);
+  color: #ffffff;
+  text-align: center;
+}
+
+.lp-cta .kicker {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.lp-cta h2 {
+  margin: 0 0 0.5rem;
+  color: #ffffff;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+}
+
+.lp-cta p:not(.kicker) {
+  margin: 0 auto 1.5rem;
+  max-width: 36rem;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1.05rem;
+}
+
+.lp-cta .cta-row {
+  justify-content: center;
+  align-items: center;
+}
+
+.lp-btn-light {
+  background: #ffffff;
+  color: var(--primary);
+  border: 2px solid #ffffff;
+}
+
+.lp-btn-light:hover {
+  background: #e6f2f0;
+  border-color: #e6f2f0;
+}
+
+.lp-btn-ghost {
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+}
+
+.lp-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: #ffffff;
+}
+
+.lp-cta a.lp-cta-link {
+  display: inline-block;
+  padding: 0.7rem 0.5rem;
+  min-height: 44px;
+  line-height: 1.4;
+  color: #ffffff;
+  font-weight: 700;
+  text-underline-offset: 0.15em;
+}
+
+.lp-cta :focus-visible {
+  outline-color: #ffffff;
+}
+
+/* Spacing on phones */
+
+@media (max-width: 719px) {
+  .lp-field,
+  .lp-products,
+  .lp-caps,
+  .lp-own,
+  .lp-runs {
+    padding: 2.25rem 0;
+  }
+
+  .lp-cta {
+    padding: 2.75rem 0;
+  }
+}
+
+/* Motion only for people who have not asked for less of it */
+
+@media (prefers-reduced-motion: no-preference) {
+  .lp-cap,
+  .lp-run {
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+
+  .lp-cap:hover,
+  .lp-run:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px -8px rgba(26, 35, 48, 0.3);
+  }
+}
+
+/* The two-word headline may wrap between its words, never inside one
+   (at tablet widths the copy column is narrow and "Connected." broke). */
+.lp-hero h1 {
+  overflow-wrap: normal;
+  word-break: keep-all;
+  hyphens: none;
+  font-size: clamp(2.1rem, 5.6vw, 3.6rem);
+}
+.lp-hero h1 .lp-on,
+.lp-hero h1 .lp-off {
+  display: inline-block;
+}
