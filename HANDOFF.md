@@ -374,8 +374,8 @@ the session scratchpad (pre-split-snapshot.tgz).
 1. Live clinic-mode E2E: Alec creates a Supabase project per
    supabase/SETUP.md (a scratch one is fine), then drive both modes
    against real Postgres.
-2. Deploy: IN PROGRESS, see "Public release" at the bottom. Hero copy
-   awaits the pivot story.
+2. Deploy: DONE, live at https://damicohealth.com (see "Public release"
+   at the bottom). Hero copy awaits the pivot story.
 3. Device tests on real hardware (DEVICE-TEST checklist to be written
    from the old repo's when hardware is scheduled).
 
@@ -448,7 +448,7 @@ with enabledByDefault === false (tests/labVisibility.test.ts).
   wire it (hide the test on the form unless enabled) or remove the column.
   Deferred so as not to collide with the Phase 2 agents editing core.
 
-## Public release (2026-10-06, in progress)
+## Public release (2026-10-06 .. 2026-10-07): LIVE
 
 State of the release sequence, in order:
 
@@ -469,14 +469,24 @@ State of the release sequence, in order:
    slow-storage test mode (packages/core/tests/slowIo.ts, DH_SLOW_IO=1,
    `npm run test:slow`) that reproduces this class deterministically; the
    workflow now runs test:all then test:slow before building.
-5. AFTER GREEN: move the custom domain. The old site repo
-   DamicoHealth/damicohealth-com currently owns damicohealth.com (legacy
-   Pages build). Remove it there (Settings -> Pages, or
-   gh api -X PUT repos/DamicoHealth/damicohealth-com/pages -F cname=null),
-   then attach it here:
-   gh api -X PUT repos/DamicoHealth/dh-emr/pages -f cname=damicohealth.com -f build_type=workflow
-   DNS already points at GitHub Pages for the old repo, so no DNS change
-   is expected. Verify https://damicohealth.com/, /field/, /clinic/,
-   /demo/field/, /demo/clinic/, /guides/field/, /guides/clinic/.
-6. Then: redirect the old repo's app URL (if any) to /field/; enforce
-   HTTPS once the certificate is issued for the new site.
+5. DONE 2026-10-07: third run green (build + deploy). Domain moved:
+   cname cleared on DamicoHealth/damicohealth-com (its Pages site now
+   sits unused at its github.io URL), cname=damicohealth.com set on
+   dh-emr (build_type workflow). DNS was already the GitHub Pages A
+   records + www CNAME to damicohealth.github.io; HTTPS enforced
+   immediately. LIVE AND VERIFIED: all 24 public paths 200 (landing,
+   both apps, both demos, guide hubs and every guide page, manifests,
+   workers, robots, css), custom 404, hashed assets resolve, www ->
+   apex 301. Real-browser pass in the built-in browser: landing hero,
+   Field wizard, Clinic cloud step, Field demo seeded list, Clinic demo
+   board + "You are simulating" panel, zero console errors.
+6. FOUND LIVE, FIXED (commit 4334950, fourth deploy): the production
+   apps registered no service worker until the main shell mounted
+   (registration lived in UpdateBar), so a device opened once online and
+   set up later had nothing cached. Both shells now register in every
+   boot state; boot-gate tests in field and clinic fail with it reverted.
+   Post-setup registration confirmed on the live origin (scope /field/,
+   workbox precache present).
+7. Old repo DamicoHealth/damicohealth-com: nothing points at it now. Its
+   old app URL (if anyone bookmarked one) is not redirected; archive or
+   add a redirect page there when convenient.
