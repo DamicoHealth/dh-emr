@@ -123,9 +123,13 @@ describe('Visits tab in role mode', () => {
     // query awaits the body; the rest can read synchronously.
     // Medications editable; Patient and Diagnosis read-only; Vitals hidden.
     expect(inert(await within(form).findByLabelText('Treatment notes'))).toBe(false)
-    expect(inert(within(form).getByLabelText('Diagnosis'))).toBe(true)
-    expect(inert(within(form).getByLabelText(/^Given name/))).toBe(true)
+    // Read-only sections start collapsed to a summary; opened, the form is disabled.
     expect(within(form).getAllByText('View only')).toHaveLength(2)
+    expect(within(form).queryByLabelText('Diagnosis')).toBeNull()
+    fireEvent.click(within(form).getByRole('button', { name: /^Diagnosis/ }))
+    expect(inert(within(form).getByLabelText('Diagnosis'))).toBe(true)
+    fireEvent.click(within(form).getByRole('button', { name: /^Patient/ }))
+    expect(inert(within(form).getByLabelText(/^Given name/))).toBe(true)
     expect(within(form).queryByLabelText(/Temperature/)).toBeNull()
   })
 

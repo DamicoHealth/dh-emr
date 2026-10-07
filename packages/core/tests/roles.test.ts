@@ -30,6 +30,7 @@ import {
   canRegisterVisit,
   canSeeAnalytics,
   defaultSectionMode,
+  labResultsLocked,
   materializeRoles,
   normalizeRole,
   roleGridFor,
@@ -258,9 +259,15 @@ describe('role resolver: shipped defaults', () => {
     expect(m['s_custom']).toBe('hidden')
   })
 
-  it('provider edits everything', () => {
+  it('provider edits the clinical sections and every custom section, and views Patient and Vitals', () => {
     const m = modesFor('provider')
-    for (const id of [...BUILTIN_ON_FORM, 's_custom']) expect(m[id], id).toBe('edit')
+    // Reception's and triage's work, done before the provider opens the visit
+    // (Alec, first live review: "the whole chart, with vitals to be put in").
+    expect(m['patient']).toBe('view')
+    expect(m['vitals']).toBe('view')
+    for (const id of [...BUILTIN_ON_FORM.filter((x) => x !== 'patient' && x !== 'vitals'), 's_custom']) {
+      expect(m[id], id).toBe('edit')
+    }
   })
 
   it('lab edits labs and views patient + chief concern only', () => {
@@ -305,7 +312,7 @@ describe('role resolver: shipped defaults', () => {
       const d = DEFAULT_ROLE_ACCESS[r]
       for (const id of BUILTIN_ON_FORM) {
         const expected: SectionMode =
-          d.edit === 'all' || d.edit.includes(id)
+          (d.edit === 'all' || d.edit.includes(id)) && !d.editExcept?.includes(id)
             ? 'edit'
             : d.view === 'all' || d.view.includes(id)
               ? 'view'
@@ -451,14 +458,26 @@ describe('role resolver: per-section overrides', () => {
 // ---------------------------------------------------------------------------
 
 describe('workspace routing', () => {
-  it('lab and pharmacy land on their own screens, everyone else on the board', () => {
+  it('lab and pharmacy land on their own screens, triage and the provider on their station queue, reception on the board', () => {
     expect(workspaceForRole('lab')).toBe('lab')
     expect(workspaceForRole('pharmacy')).toBe('pharmacy')
     expect(workspaceForRole('reception')).toBe('board')
-    expect(workspaceForRole('triage')).toBe('board')
-    expect(workspaceForRole('provider')).toBe('board')
-    expect(workspaceForRole('nurse')).toBe('board')
-    expect(workspaceForRole('whatever')).toBe('board')
+    expect(workspaceForRole('triage')).toBe('station')
+    expect(workspaceForRole('provider')).toBe('station')
+    expect(workspaceForRole('nurse')).toBe('station')
+    expect(workspaceForRole('whatever')).toBe('station') // unknown roles resolve to provider
+  })
+
+  it('lab results are locked for every non-lab role exactly when the board has a Lab station', () => {
+    const withLab = ['Check-in', 'Triage', 'Provider', 'Lab', 'Pharmacy', 'Done']
+    const noLab = ['Check-in', 'Triage', 'Provider', 'Pharmacy', 'Done']
+    expect(labResultsLocked('provider', false, withLab)).toBe(true)
+    expect(labResultsLocked('triage', false, withLab)).toBe(true)
+    expect(labResultsLocked('lab', false, withLab)).toBe(false)
+    expect(labResultsLocked('provider', true, withLab)).toBe(false) // admins are never locked
+    expect(labResultsLocked('provider', false, noLab)).toBe(false) // triage runs the rapid tests
+    expect(labResultsLocked('provider', false, ['Check-in', ' lab ', 'Done'])).toBe(true) // name match: trimmed, any case
+    expect(labResultsLocked('provider', false, [])).toBe(false)
   })
 
   it('analytics is for providers and admins; registration for reception, providers and admins', () => {
@@ -610,12 +629,23 @@ describe('visit form in role mode', () => {
     renderForm(rec, 'pharmacy')
     const notes = await screen.findByLabelText('Treatment notes')
     expect(inert(notes)).toBe(false)
-    // Read-only sections: the native disabled fieldset, with the chip.
-    expect(inert(screen.getByLabelText(/^Given name/))).toBe(true)
-    expect(inert(screen.getByLabelText('Diagnosis'))).toBe(true)
-    expect(inert(screen.getByLabelText(/^Patient number/))).toBe(true)
+    // Read-only sections start COLLAPSED to what was recorded: no inputs to
+    // scroll past, the chip, the facts (Alec's "scroll through all this other
+    // content" review of the live demo).
+    expect(screen.queryByLabelText(/^Given name/)).toBeNull()
+    expect(screen.queryByLabelText('Diagnosis')).toBeNull()
     expect(screen.getAllByText('View only')).toHaveLength(2)
-    expect(screen.getByRole('region', { name: 'Patient (view only)' })).toBeTruthy()
+    const patient = screen.getByRole('region', { name: 'Patient (view only)' })
+    expect(within(patient).getByText('Test Patient')).toBeTruthy()
+    expect(within(patient).getByText('TEPA01011990')).toBeTruthy()
+    const dx = screen.getByRole('region', { name: 'Diagnosis (view only)' })
+    expect(within(dx).getByText('Malaria')).toBeTruthy()
+    // Opening one shows the full form, natively disabled.
+    fireEvent.click(within(patient).getByRole('button', { name: /^Patient/ }))
+    expect(inert(screen.getByLabelText(/^Given name/))).toBe(true)
+    expect(inert(screen.getByLabelText(/^Patient number/))).toBe(true)
+    fireEvent.click(within(dx).getByRole('button', { name: /^Diagnosis/ }))
+    expect(inert(screen.getByLabelText('Diagnosis'))).toBe(true)
     // Hidden for the role: not in the DOM at all.
     expect(screen.queryByLabelText(/Temperature/)).toBeNull()
     expect(screen.queryByLabelText('Allergies')).toBeNull()
@@ -787,7 +817,12 @@ describe('lab workspace logic', () => {
     const order = (await within(dialog).findByLabelText('Ordered: Malaria RDT')) as HTMLInputElement
     expect(order.checked).toBe(true)
     expect(inert(order)).toBe(false)
+    // Read-only sections are collapsed summaries; opened, their inputs are disabled.
+    const concern = within(dialog).getByRole('region', { name: 'Chief Concern (view only)' })
+    expect(within(concern).getByText('Fever')).toBeTruthy()
+    fireEvent.click(within(dialog).getByRole('button', { name: /^Patient/ }))
     expect(inert(within(dialog).getByLabelText(/^Given name/))).toBe(true)
+    fireEvent.click(within(concern).getByRole('button', { name: /^Chief Concern/ }))
     expect(inert(within(dialog).getByLabelText('Chief concern'))).toBe(true)
     expect(within(dialog).queryByLabelText(/Temperature/)).toBeNull()
     expect(within(dialog).queryByLabelText('Diagnosis')).toBeNull()
@@ -911,6 +946,7 @@ describe('pharmacy workspace logic', () => {
     const dialog = await screen.findByRole('dialog', { name: 'Edit visit' })
     expect(within(dialog).getByText(/Pharmacy sections/)).toBeTruthy()
     expect(inert(await within(dialog).findByLabelText('Treatment notes'))).toBe(false)
+    fireEvent.click(within(dialog).getByRole('button', { name: /^Diagnosis/ }))
     expect(inert(within(dialog).getByLabelText('Diagnosis'))).toBe(true)
     expect(within(dialog).queryByLabelText(/Temperature/)).toBeNull()
   })
@@ -955,6 +991,7 @@ describe('board home column', () => {
     const dialog = await screen.findByRole('dialog', { name: 'Edit visit' })
     expect(within(dialog).getByText(/Reception sections/)).toBeTruthy()
     expect(inert(await within(dialog).findByLabelText(/^Given name/))).toBe(false)
+    fireEvent.click(within(dialog).getByRole('button', { name: /^Vitals/ }))
     expect(inert(within(dialog).getByLabelText(/Temperature/))).toBe(true)
   })
 
@@ -1025,5 +1062,75 @@ describe('template builder role grid', () => {
     expect(box.disabled).toBe(true)
     fireEvent.click(box)
     expect((await readLib())?.templates[0]?.schema.sections).toEqual([])
+  })
+})
+
+describe("the provider's view (Alec's first live review, 2026-10-07)", () => {
+  const pendingRdt = { 'Malaria RDT': { ordered: true, type: 'toggle' as const, result: '' } }
+
+  it('opens a visit with Patient and Vitals collapsed to summaries and the clinical sections editable', async () => {
+    const rec = await seed(makeRecord({ id: 'pv1', labs: pendingRdt }))
+    renderForm(rec, 'provider')
+    expect(inert(await screen.findByLabelText('Diagnosis'))).toBe(false)
+    expect(inert(screen.getByLabelText('Treatment notes'))).toBe(false)
+    expect(screen.getByText(/Provider sections/)).toBeTruthy()
+    // Patient and Vitals: no inputs until opened, the recorded values at a glance.
+    expect(screen.queryByLabelText(/^Given name/)).toBeNull()
+    expect(screen.queryByLabelText(/Temperature/)).toBeNull()
+    expect(screen.getAllByText('View only')).toHaveLength(2)
+    const vitals = screen.getByRole('region', { name: 'Vitals (view only)' })
+    expect(within(vitals).getByText('37.2 °C')).toBeTruthy()
+    expect(within(vitals).getByText('120/80')).toBeTruthy()
+    expect(within(vitals).getByText('60 kg')).toBeTruthy()
+    const patient = screen.getByRole('region', { name: 'Patient (view only)' })
+    expect(within(patient).getByText('Test Patient')).toBeTruthy()
+    // Still reachable: opening Vitals shows the form, disabled.
+    fireEvent.click(within(vitals).getByRole('button', { name: /^Vitals/ }))
+    expect(inert(screen.getByLabelText(/Temperature/))).toBe(true)
+  })
+
+  it('orders tests but reads results, because the board has a Lab station', async () => {
+    const rec = await seed(makeRecord({ id: 'pv2', labs: pendingRdt }))
+    renderForm(rec, 'provider')
+    const order = (await screen.findByLabelText('Ordered: Malaria RDT')) as HTMLInputElement
+    expect(order.checked).toBe(true)
+    expect(inert(order)).toBe(false)
+    expect(screen.getByText('Awaiting result')).toBeTruthy()
+    expect(screen.queryByText('POS')).toBeNull()
+    expect(screen.queryByLabelText('Lab comments')).toBeNull()
+  })
+
+  it('a resulted test reads as its result for the provider', async () => {
+    const rec = await seed(
+      makeRecord({
+        id: 'pv3',
+        labs: {
+          'Malaria RDT': { ordered: true, type: 'toggle', result: 'POS' },
+          Hemoglobin: { ordered: true, type: 'numeric', value: '9.1', unit: 'g/dL', interpretation: 'low' },
+        },
+      }),
+    )
+    renderForm(rec, 'provider')
+    await screen.findByLabelText('Ordered: Malaria RDT')
+    expect(screen.getByText('POS')).toBeTruthy()
+    expect(screen.getByText('9.1 g/dL (low)')).toBeTruthy()
+    expect(screen.queryByText('NEG')).toBeNull() // no toggle to tap
+  })
+
+  it('with no Lab station on the board, whoever edits Labs enters results', async () => {
+    await config.set('flowStations', ['Check-in', 'Triage', 'Provider', 'Pharmacy', 'Done'])
+    const rec = await seed(makeRecord({ id: 'pv4', labs: pendingRdt }))
+    renderForm(rec, 'provider')
+    await screen.findByLabelText('Ordered: Malaria RDT')
+    expect((await screen.findAllByText('POS')).length).toBeGreaterThan(0) // a result toggle per test
+    expect(screen.getByLabelText('Lab comments')).toBeTruthy()
+  })
+
+  it('an admin is never locked out of results', async () => {
+    const rec = await seed(makeRecord({ id: 'pv5', labs: pendingRdt }))
+    renderForm(rec, 'provider', true)
+    await screen.findByLabelText(/Temperature/) // admins edit everything, no summaries
+    expect(screen.getAllByText('POS').length).toBeGreaterThan(0)
+    expect(screen.getByLabelText('Lab comments')).toBeTruthy()
   })
 })

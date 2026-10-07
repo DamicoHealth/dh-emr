@@ -1,0 +1,27 @@
+/* Station queue (StationScreen.tsx). The list itself is lab.css's .ws-* kit. */
+
+.ws-wait {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--surface-2, #eef2f1);
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.ws-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+}
+
+@media (min-width: 600px) {
+  .ws-actions {
+    flex-direction: row;
+    align-items: center;
+  }
+}

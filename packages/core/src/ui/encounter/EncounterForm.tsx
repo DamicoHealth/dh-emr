@@ -17,7 +17,8 @@ import { UA_OPTIONS, UA_PARAMS } from '../../config/defaults/lists'
 import { interpretLab } from '../../config/labInterpret'
 import { loadLibrary } from '../../config/keys'
 import { activeCustomFieldIds, getEffectiveSchema } from '../../config/sections'
-import { ROLE_LABELS, normalizeRole, type RoleSection } from '../../config/roles'
+import { ROLE_LABELS, labResultsLocked, normalizeRole, type RoleSection } from '../../config/roles'
+import { labResult, summarizeSection, type SummaryLine } from './sectionSummary'
 import { isCollapsibleSection } from '../../config/validate'
 import type { EffectiveSection, FormTemplate } from '../../config/types'
 import {
@@ -328,6 +329,10 @@ export function EncounterForm({
    * detaches from the saved record and the next patient is a new visit.
    */
   const roleMode = typeof role === 'string' && role.trim() !== ''
+  // Lab results belong to the Lab station when the board has one: everyone
+  // else orders tests and reads results (src/config/roles.ts).
+  const resultsLocked = roleMode && labResultsLocked(role ?? '', isAdmin, cfg.stations)
+  const summaryCtx = { formulary: cfg.formulary, age }
   const visibleSections = useMemo<RoleSection[]>(
     () =>
       roleMode
@@ -648,8 +653,10 @@ export function EncounterForm({
                     </label>
                   )}
                 </div>
-                {pending && <div className="lab-pending-note">Awaiting result</div>}
-                {t.type === 'toggle' ? (
+                {pending && !resultsLocked && <div className="lab-pending-note">Awaiting result</div>}
+                {resultsLocked ? (
+                  ordered ? <div className="lab-result-ro">{labResult(cur) || 'Awaiting result'}</div> : null
+                ) : t.type === 'toggle' ? (
                   <ToggleGroup
                     value={cur?.kind === 'toggle' && ordered ? cur.result : ''}
                     options={['POS', 'NEG']}
@@ -686,18 +693,28 @@ export function EncounterForm({
             )
           })}
         </div>
-        <Field label="Lab comments">
-          <input value={state.labComments} onChange={(e) => set('labComments', e.target.value)} />
-        </Field>
-        <div className="subhead">Urinalysis</div>
-        <div className="ua-grid">
-          {UA_PARAMS.map((pp) => (
-            <Field key={pp} label={pp} control="group">
-              <ToggleGroup value={state.urinalysis[pp] || ''} options={UA_OPTIONS[pp] || []} small
-                onChange={(v) => edit((st) => ({ ...st, urinalysis: { ...st.urinalysis, [pp]: v } }))} />
+        {resultsLocked ? (
+          <SummaryList
+            lines={summarizeSection({ id: 'labs', builtin: true, fields: [] }, state, summaryCtx).filter(
+              (l) => l.label === 'Urinalysis' || l.label === 'Lab comments',
+            )}
+          />
+        ) : (
+          <>
+            <Field label="Lab comments">
+              <input value={state.labComments} onChange={(e) => set('labComments', e.target.value)} />
             </Field>
-          ))}
-        </div>
+            <div className="subhead">Urinalysis</div>
+            <div className="ua-grid">
+              {UA_PARAMS.map((pp) => (
+                <Field key={pp} label={pp} control="group">
+                  <ToggleGroup value={state.urinalysis[pp] || ''} options={UA_OPTIONS[pp] || []} small
+                    onChange={(v) => edit((st) => ({ ...st, urinalysis: { ...st.urinalysis, [pp]: v } }))} />
+                </Field>
+              ))}
+            </div>
+          </>
+        )}
       </>
     ),
     diagnosis: (
@@ -946,7 +963,8 @@ export function EncounterForm({
               // A collapsed section hides its inputs, so a required answer would
               // be unreachable while Save silently refused.
               return (
-                <Section key={sec.id} title={sec.title} collapsible={isCollapsibleSection(sec)} mode={sec.mode}>
+                <Section key={sec.id} title={sec.title} collapsible={isCollapsibleSection(sec)} mode={sec.mode}
+                  summary={sec.mode === 'view' ? summarizeSection(sec, state, summaryCtx) : undefined}>
                   {sec.fields.map((f) => (
                     <FieldControl key={f.id} field={f}
                       invalid={missingCustomIds.has(f.id)}
@@ -959,7 +977,8 @@ export function EncounterForm({
             const body = builtinBody[sec.id]
             if (!body) return null // built-in with no rendered body
             return (
-              <Section key={sec.id} title={sec.title} collapsible={isCollapsibleSection(sec)} mode={sec.mode}>
+              <Section key={sec.id} title={sec.title} collapsible={isCollapsibleSection(sec)} mode={sec.mode}
+                summary={sec.mode === 'view' ? summarizeSection(sec, state, summaryCtx) : undefined}>
                 {body}
               </Section>
             )
@@ -996,37 +1015,61 @@ function updateMed(
 }
 
 /**
- * One card of the form. `mode: 'view'` (role mode) renders the body inside
- * a disabled fieldset: every input, select, toggle and pill in it is
- * natively disabled, nothing in it can reach `set`/`edit`, and the chip in
- * the header says so. The header button stays live so a collapsed
- * view-only section can still be opened to read.
+ * One card of the form. `mode: 'view'` (role mode) starts COLLAPSED to a
+ * compact summary of what was recorded (sectionSummary.ts): a pharmacist
+ * reads "Diagnosis: Malaria" in one line instead of scrolling a greyed-out
+ * form. Tapping the header opens the full body inside a disabled fieldset:
+ * every input, select, toggle and pill in it is natively disabled, nothing
+ * in it can reach `set`/`edit`, and the chip in the header says so.
  */
-function Section({ title, children, collapsible, mode = 'edit' }: {
+function Section({ title, children, collapsible, mode = 'edit', summary }: {
   title: string
   children: ReactNode
   collapsible?: boolean
   mode?: 'edit' | 'view'
+  /** Role mode, view-only: the lines shown while collapsed. */
+  summary?: SummaryLine[]
 }) {
-  const [open, setOpen] = useState(!collapsible)
   const view = mode === 'view'
+  const toggles = view || !!collapsible
+  const [open, setOpen] = useState(!toggles)
   return (
     <section className={`card form-section${view ? ' is-view' : ''}`}
       aria-label={view ? `${title} (view only)` : undefined}>
-      <button className="section-head" onClick={() => collapsible && setOpen((o) => !o)}
-        aria-expanded={open} disabled={!collapsible}>
+      <button className="section-head" onClick={() => toggles && setOpen((o) => !o)}
+        aria-expanded={open} disabled={!toggles}>
         <h4>
           {title}
           {view && <span className="section-chip">View only</span>}
         </h4>
-        {collapsible && <span className="chev">{open ? '−' : '+'}</span>}
+        {toggles && <span className="chev">{open ? '−' : '+'}</span>}
       </button>
+      {view && !open && (
+        <div className="section-summary-wrap">
+          <SummaryList lines={summary ?? []} empty="Nothing recorded yet." />
+        </div>
+      )}
       {open && (
         <div className="section-body">
           {view ? <fieldset disabled className="form-readonly">{children}</fieldset> : children}
         </div>
       )}
     </section>
+  )
+}
+
+/** label: value lines (a view-only section's summary, locked lab results). */
+function SummaryList({ lines, empty }: { lines: SummaryLine[]; empty?: string }) {
+  if (!lines.length) return empty ? <p className="muted small section-summary-empty">{empty}</p> : null
+  return (
+    <dl className="section-summary">
+      {lines.map((l, i) => (
+        <div key={`${l.label}-${i}`}>
+          <dt>{l.label}</dt>
+          <dd>{l.value}</dd>
+        </div>
+      ))}
+    </dl>
   )
 }
 

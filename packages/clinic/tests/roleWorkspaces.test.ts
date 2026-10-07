@@ -17,7 +17,7 @@
  */
 import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { resetStorage } from '../../core/tests/setup'
 
 vi.mock('@dh/core/ui/encounter/EncounterForm', () => ({
@@ -118,16 +118,16 @@ describe('tab sets per role (pure)', () => {
     expect(landingFor(profile('reception'))).toBe('board')
   })
 
-  it('triage: Board, Visits, Settings (no registration, no analytics)', () => {
-    expect(labels(profile('triage'))).toEqual(['Board', 'Visits', 'Settings'])
-    expect(landingFor(profile('triage'))).toBe('board')
+  it('triage: the Triage queue first, then Board, Visits, Settings (no registration, no analytics)', () => {
+    expect(labels(profile('triage'))).toEqual(['Triage', 'Board', 'Visits', 'Settings'])
+    expect(landingFor(profile('triage'))).toBe('station')
     // The pre-split nurse role is triage.
-    expect(labels(profile('nurse'))).toEqual(['Board', 'Visits', 'Settings'])
+    expect(labels(profile('nurse'))).toEqual(['Triage', 'Board', 'Visits', 'Settings'])
   })
 
-  it('provider: Board, Visits, New visit, Analytics, Settings', () => {
-    expect(labels(profile('provider'))).toEqual(['Board', 'Visits', 'New visit', 'Analytics', 'Settings'])
-    expect(landingFor(profile('provider'))).toBe('board')
+  it('provider: the Provider queue first, then Board, Visits, New visit, Analytics, Settings', () => {
+    expect(labels(profile('provider'))).toEqual(['Provider', 'Board', 'Visits', 'New visit', 'Analytics', 'Settings'])
+    expect(landingFor(profile('provider'))).toBe('station')
   })
 
   it('lab: Lab workspace first, then Visits and Settings; no Board', () => {
@@ -169,6 +169,17 @@ describe('tab sets per role (pure)', () => {
       'Settings',
     ])
     expect(landingFor(profile('pharmacy', true))).toBe('pharmacy')
+    // An admin who is a provider runs the clinic from the Board and keeps the queue next to it.
+    expect(labels(profile('provider', true))).toEqual([
+      'Board',
+      'Provider',
+      'Visits',
+      'New visit',
+      'Analytics',
+      'Staff',
+      'Settings',
+    ])
+    expect(landingFor(profile('provider', true))).toBe('board')
     // A non-admin lab or pharmacy account has no Board tab at all.
     expect(labels(profile('lab'))).not.toContain('Board')
   })
@@ -195,14 +206,19 @@ describe('landing per role (rendered shell)', () => {
     await screen.findByText('No visits are waiting on lab results')
   })
 
-  it('a provider lands on the Board with Analytics available', async () => {
+  it('a provider lands on the Provider queue, with the Board, Analytics and New visit available', async () => {
     authState.role = 'provider'
     render(h(App))
-    await screen.findByText('BOARD STUB')
-    expect(screen.getByRole('button', { name: 'Board' }).getAttribute('aria-current')).toBe('page')
+    await screen.findByRole('heading', { name: 'Provider' })
+    expect(screen.getByRole('button', { name: 'Provider' }).getAttribute('aria-current')).toBe('page')
+    expect(screen.queryByText('BOARD STUB')).toBeNull()
     expect(screen.getByRole('button', { name: 'Analytics' })).toBeTruthy()
     expect(screen.getByRole('button', { name: 'New visit' })).toBeTruthy()
     expect(screen.queryByRole('button', { name: 'Staff' })).toBeNull()
+    await screen.findByText('No one is waiting at Provider')
+    // The Board is one tap away, for pulling someone forward.
+    fireEvent.click(screen.getByRole('button', { name: 'Board' }))
+    await screen.findByText('BOARD STUB')
   })
 
   it('an admin gets Staff in addition to the role\'s workspace', async () => {

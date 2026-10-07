@@ -522,3 +522,41 @@ State of the release sequence, in order:
    file exists in the repo, so the terms claim copyright only). Old guide
    directory URLs (/guides/getting-started/ etc. and /guides/release-notes/)
    now have redirect stubs. Privacy and Terms are in every footer.
+
+## Clinic role views reworked (2026-10-07, after Alec's first live review)
+
+Alec, in the live Clinic demo: the provider opening a visit from the
+Provider column got "the whole chart, with vitals to be put in, labs to be
+put in" (measured: 12 sections, 40 inputs, 4630 px of scroll); the lab's
+list was right but the chart made them scroll past everything else; the
+provider should land on "the people waiting to be seen" and pull forward
+from the overall board.
+
+- Provider defaults (config/roles.ts DEFAULT_ROLE_ACCESS): edit everything
+  EXCEPT Patient and Vitals (reception's and triage's work), via the new
+  `editExcept` carve-out. An org whose providers take vitals flips the role
+  grid in the template builder.
+- Lab results lock (labResultsLocked): when the board has a Lab station,
+  every non-lab role orders tests and READS results; result controls, lab
+  comments and urinalysis render read-only for them. No Lab station: results
+  open to whoever edits Labs. Admins never locked. The form's config hook
+  now carries the station list for this.
+- View-only sections collapse to a summary (ui/encounter/sectionSummary.ts,
+  pure) of what was recorded; the header opens the full disabled form.
+  Nothing to scroll past: the lab's chart went from the full form to
+  ~1470 px; the provider's to 28 inputs / 3680 px (the Antenatal custom
+  section and the lab order grid are the rest).
+- Station queue (ui/board/StationScreen.tsx): triage and the provider land
+  on the visits waiting at their own column, longest-waiting first, with
+  Open (role view), Next: <station>, the upstream count, and "Open the
+  Board". workspaceForRole -> 'station'; Clinic tabs: Provider/Triage, then
+  Board. Admins land on the Board and keep the queue tab. Demo seat copy
+  updated.
+- Tests: 775 green (core 655, field 31, clinic 89) in normal and slow mode:
+  roles (defaults table, lock rule, provider view in the browser-less
+  form), sectionSummary (pure), stationScreen, clinic roleWorkspaces and
+  clinicDemo landings; the read-only pins now open the section first.
+  Verified in the built Clinic demo in the built-in browser.
+- Follow-ups: the guides still describe the provider landing on the Board
+  and view-only sections as disabled forms (rewrite in progress); the lab
+  grid could list ordered tests first for the lab role.

@@ -61,15 +61,23 @@ export type SectionMode = 'edit' | 'view' | 'hidden'
 /**
  * Shipped defaults, by role: the section ids the role edits and the ones it
  * only views. Everything else is hidden from that role. Section ids are the
- * built-in ids from BUILTIN_SECTIONS; 'all' covers custom sections too.
+ * built-in ids from BUILTIN_SECTIONS; 'all' covers custom sections too, and
+ * `editExcept` carves view-only sections out of an 'all' edit list.
+ *
+ * The provider edits the clinical sections and every custom section, and
+ * VIEWS Patient and Vitals: in a clinic those are reception's and triage's
+ * work, already done by the time the provider opens the visit. Alec's first
+ * review of the live demo was the provider getting "the whole chart, with
+ * vitals to be put in"; an org whose providers do take vitals flips that
+ * one checkbox in the template builder's role grid.
  */
 export const DEFAULT_ROLE_ACCESS: Record<
   Role,
-  { edit: readonly string[] | 'all'; view: readonly string[] | 'all' }
+  { edit: readonly string[] | 'all'; editExcept?: readonly string[]; view: readonly string[] | 'all' }
 > = {
   reception: { edit: ['encounter', 'patient'], view: 'all' },
   triage: { edit: ['vitals', 'history', 'chiefConcern', 'labs'], view: ['patient'] },
-  provider: { edit: 'all', view: 'all' },
+  provider: { edit: 'all', editExcept: ['patient', 'vitals'], view: 'all' },
   lab: { edit: ['labs'], view: ['patient', 'chiefConcern'] },
   pharmacy: { edit: ['medications'], view: ['patient', 'diagnosis'] },
 }
@@ -82,7 +90,7 @@ function listHas(list: readonly string[] | 'all' | undefined, x: string): boolea
 /** The shipped default mode of one section for one role (no override, no admin). */
 export function defaultSectionMode(sectionId: string, role: Role): SectionMode {
   const d = DEFAULT_ROLE_ACCESS[role]
-  if (listHas(d.edit, sectionId)) return 'edit'
+  if (listHas(d.edit, sectionId) && !d.editExcept?.includes(sectionId)) return 'edit'
   if (listHas(d.view, sectionId)) return 'view'
   return 'hidden'
 }
@@ -179,14 +187,36 @@ export function toggleGridCell(
 
 // ----------------------------------------------------------- workspaces ---
 
-/** Which screen an account lands on. Lab and pharmacy have their own; everyone else lives on the board. */
-export type Workspace = 'board' | 'lab' | 'pharmacy'
+/**
+ * Which screen an account lands on. Lab and pharmacy have their own
+ * screens; triage and the provider land on their STATION queue (the visits
+ * waiting at their own board column, src/ui/board/StationScreen.tsx) with
+ * the full Board one tab away; reception lives on the board itself, because
+ * placing arrivals is its work.
+ */
+export type Workspace = 'board' | 'station' | 'lab' | 'pharmacy'
 
 export function workspaceForRole(role: string): Workspace {
   const r = normalizeRole(role)
   if (r === 'lab') return 'lab'
   if (r === 'pharmacy') return 'pharmacy'
+  if (r === 'triage' || r === 'provider') return 'station'
   return 'board'
+}
+
+/**
+ * Whether lab RESULTS are locked for this account on the visit form. When
+ * the board has a Lab station, results are the lab's to enter: every other
+ * role that can edit the Labs section still ORDERS tests, but sees results
+ * read-only, so a provider is never asked to "put the labs in". An org with
+ * no Lab station (triage runs the rapid tests) leaves results open to
+ * whoever edits the section. Admins are never locked. Station names are
+ * org config, matched by name like the board's home column.
+ */
+export function labResultsLocked(role: string, isAdmin: boolean, stations: readonly string[]): boolean {
+  if (isAdmin) return false
+  if (normalizeRole(role) === 'lab') return false
+  return stations.some((s) => s.trim().toLowerCase() === 'lab')
 }
 
 /** Analytics is a provider and admin concern. */

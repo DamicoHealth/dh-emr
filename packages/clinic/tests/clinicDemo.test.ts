@@ -740,11 +740,15 @@ describe('the role switch lands on the right workspace', () => {
     await screen.findByRole('heading', { name: 'Patient flow' })
 
     await pick('triage')
-    await waitFor(async () => expect(await homeColumn()).toContain('Triage'))
+    // Triage lands on its own queue (the visits at the Triage station), Board one tap away.
+    await screen.findByRole('heading', { name: 'Triage' })
+    expect(screen.getByRole('button', { name: 'Board' })).toBeTruthy()
     expect(screen.queryByRole('button', { name: 'New visit' })).toBeNull()
 
     await pick('provider')
-    await waitFor(async () => expect(await homeColumn()).toContain('Provider'))
+    await screen.findByRole('heading', { name: 'Provider' })
+    // Grace Auma is seeded at the Provider station: she is the provider's queue.
+    expect(await screen.findByRole('button', { name: 'Open the visit for Grace Auma' })).toBeTruthy()
     expect(screen.getByRole('button', { name: 'Analytics' })).toBeTruthy()
     expect(screen.queryByRole('button', { name: 'Staff' })).toBeNull()
 
@@ -805,7 +809,7 @@ describe('the role switch lands on the right workspace', () => {
     renderShell()
     await screen.findByRole('heading', { name: 'Patient flow' })
     await pick('triage')
-    await screen.findByText('your station')
+    await screen.findByRole('heading', { name: 'Triage' })
     const template = (await active())[0] as PatientRecord
     const { user_id: _author, ...rest } = template
     await records.save({ ...rest, id: 'visitor-added-2', mrn: 'VIAD02021990' })

@@ -49,7 +49,7 @@ import {
   syncEngine,
 } from '@dh/core/sync'
 import { authSession, loadCurrentProfile, type ActiveProfile } from '@dh/core/auth'
-import { canRegisterVisit, canSeeAnalytics, workspaceForRole } from '@dh/core/config/roles'
+import { ROLE_LABELS, canRegisterVisit, canSeeAnalytics, normalizeRole, workspaceForRole } from '@dh/core/config/roles'
 import AnalyticsScreen from '@dh/core/ui/analytics/AnalyticsScreen'
 import { ErrorBoundary } from '@dh/core/ui/app/ErrorBoundary'
 import { SyncChip } from '@dh/core/ui/app/SyncChip'
@@ -59,6 +59,7 @@ import PendingScreen from '@dh/core/ui/auth/PendingScreen'
 import RevokedScreen from '@dh/core/ui/auth/RevokedScreen'
 import SignInScreen from '@dh/core/ui/auth/SignInScreen'
 import BoardScreen from '@dh/core/ui/board/BoardScreen'
+import StationScreen from '@dh/core/ui/board/StationScreen'
 import EncounterForm from '@dh/core/ui/encounter/EncounterForm'
 import LabScreen from '@dh/core/ui/lab/LabScreen'
 import PharmacyScreen from '@dh/core/ui/pharmacy/PharmacyScreen'
@@ -197,7 +198,7 @@ async function evaluateGate(demo: DemoAppHooks | null): Promise<Gate> {
 // its first screen tab is the landing tab.
 // ---------------------------------------------------------------------------
 
-type ScreenId = 'board' | 'lab' | 'pharmacy' | 'visits' | 'analytics' | 'staff' | 'settings'
+type ScreenId = 'board' | 'station' | 'lab' | 'pharmacy' | 'visits' | 'analytics' | 'staff' | 'settings'
 
 interface ScreenTab {
   kind: 'screen'
@@ -216,12 +217,18 @@ type TabDef = ScreenTab | ActionTab
 export function tabsFor(profile: ActiveProfile): TabDef[] {
   const tabs: TabDef[] = []
   const ws = workspaceForRole(profile.role)
+  const board: TabDef = { kind: 'screen', id: 'board', label: 'Board' }
+  // Triage and the provider land on their station queue (the visits waiting
+  // for them), with the full Board next to it. An admin who runs the clinic
+  // lands on the Board and keeps the queue one tap away.
+  const station: TabDef = { kind: 'screen', id: 'station', label: ROLE_LABELS[normalizeRole(profile.role)] }
   if (ws === 'lab') tabs.push({ kind: 'screen', id: 'lab', label: 'Lab' })
   else if (ws === 'pharmacy') tabs.push({ kind: 'screen', id: 'pharmacy', label: 'Pharmacy' })
-  else tabs.push({ kind: 'screen', id: 'board', label: 'Board' })
+  else if (ws === 'station') tabs.push(...(profile.isAdmin ? [board, station] : [station, board]))
+  else tabs.push(board)
   // An admin runs the clinic, so the Board is always theirs, after the
   // workspace their own role lands on.
-  if (profile.isAdmin && ws !== 'board') tabs.push({ kind: 'screen', id: 'board', label: 'Board' })
+  if (profile.isAdmin && ws !== 'board' && ws !== 'station') tabs.push(board)
   tabs.push({ kind: 'screen', id: 'visits', label: 'Visits' })
   // After Visits so New visit keeps its reach, for the roles that register.
   if (canRegisterVisit(profile.role, profile.isAdmin)) {
@@ -249,8 +256,19 @@ function renderScreen(
   profile: ActiveProfile,
   onSignOut: () => Promise<void>,
   demo: DemoAppHooks | null,
+  goTo: (id: ScreenId) => void,
 ) {
   switch (id) {
+    case 'station':
+      return (
+        <StationScreen
+          deviceId={deviceId}
+          refreshSignal={dataVersion}
+          profile={profile}
+          onRefresh={bumpData}
+          onOpenBoard={() => goTo('board')}
+        />
+      )
     case 'board':
       return (
         <BoardScreen
@@ -842,7 +860,7 @@ export function App({ demo }: AppProps) {
       <main>
         {/* key resets a failed boundary when the user navigates away. */}
         <ErrorBoundary key={shownTab}>
-          {renderScreen(shownTab, boot.deviceId, dataVersion, bumpData, profile, doSignOut, demoHooks)}
+          {renderScreen(shownTab, boot.deviceId, dataVersion, bumpData, profile, doSignOut, demoHooks, (id) => setTab(id))}
         </ErrorBoundary>
       </main>
 

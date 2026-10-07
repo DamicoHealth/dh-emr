@@ -234,6 +234,43 @@ input.readonly {
   vertical-align: middle;
 }
 
+/* Collapsed view-only section: what was recorded, nothing to scroll past. */
+.section-summary-wrap {
+  padding: 0 16px 12px;
+}
+
+.section-summary {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 14px;
+  margin: 0;
+}
+
+.section-summary > div {
+  display: contents;
+}
+
+.section-summary dt {
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.section-summary dd {
+  margin: 0;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.section-summary-empty {
+  margin: 0;
+}
+
+/* A lab result this role may read but not enter (the Lab station's job). */
+.lab-result-ro {
+  padding: 6px 0 2px;
+  font-weight: 600;
+}
+
 /* The disabled fieldset is the read-only mechanism; it must not add chrome. */
 .form-readonly {
   border: 0;

@@ -87,7 +87,7 @@ export const DEMO_ROSTER: readonly DemoStaffMember[] = [
     'triage',
     false,
     'Takes vitals, history and the chief concern',
-    'Board, Triage column',
+    'the Triage queue, with the Board one tap away',
   ),
   member(
     'provider',
@@ -96,7 +96,7 @@ export const DEMO_ROSTER: readonly DemoStaffMember[] = [
     'provider',
     false,
     'Sees the patient, diagnoses and prescribes',
-    'Board, Provider column',
+    'the Provider queue, with the Board one tap away',
   ),
   member(
     'lab',

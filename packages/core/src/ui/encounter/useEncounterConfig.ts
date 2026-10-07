@@ -12,6 +12,7 @@
 import { useEffect, useState } from 'react'
 import { config as configKv } from '../../kernel'
 import { getConfig, resolveFormulary, resolveStringList, visiblePresets } from '../../config/keys'
+import { resolveStations } from '../../domain/flow'
 import type { CustomLabTest, FormularyEntry, HiddenPresets } from '../../config/types'
 import { resolveLabTests, visibleLabTests } from '../../config/defaults/labTests'
 import {
@@ -31,6 +32,8 @@ export interface EncounterConfig {
   procedures: string[]
   referralTypes: string[]
   complaints: string[]
+  /** The board's station list (Clinic): decides who may enter lab results. */
+  stations: string[]
   loading: boolean
 }
 
@@ -42,6 +45,7 @@ const EMPTY: EncounterConfig = {
   procedures: [],
   referralTypes: [],
   complaints: [],
+  stations: resolveStations(null),
   loading: true,
 }
 
@@ -53,7 +57,7 @@ export function useEncounterConfig(): EncounterConfig {
     void (async () => {
       let next: EncounterConfig
       try {
-        const [sites, providers, formulary, labTests, procedures, referralTypes, complaints, hiddenStored] =
+        const [sites, providers, formulary, labTests, procedures, referralTypes, complaints, hiddenStored, stations] =
           await Promise.all([
             getConfig(configKv, 'sites'),
             getConfig(configKv, 'providers'),
@@ -63,6 +67,7 @@ export function useEncounterConfig(): EncounterConfig {
             getConfig(configKv, 'referralTypes'),
             getConfig(configKv, 'complaints'),
             getConfig(configKv, 'hiddenPresets'),
+            getConfig(configKv, 'flowStations'),
           ])
         // A never-customized org still hides the default-off lab tests, the
         // way the legacy first run seeded hiddenPresets.
@@ -89,6 +94,7 @@ export function useEncounterConfig(): EncounterConfig {
             hidden,
             'complaints',
           ),
+          stations: resolveStations(stations),
           loading: false,
         }
       } catch {
@@ -102,6 +108,7 @@ export function useEncounterConfig(): EncounterConfig {
           procedures: [...DEFAULT_PROCEDURES],
           referralTypes: DEFAULT_REFERRAL_TYPES.filter((r) => r !== 'None'),
           complaints: [...DEFAULT_COMPLAINTS],
+          stations: resolveStations(null),
           loading: false,
         }
       }
