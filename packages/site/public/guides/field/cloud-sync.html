@@ -68,27 +68,8 @@
       padding: 0;
       font-size: inherit;
     }
-    .toc {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-1);
-      padding: 1rem 1.25rem;
-      margin: 1.25rem 0 0.5rem;
-    }
-    .toc p { margin: 0 0 0.4rem; font-weight: 700; }
-    .toc ol {
-      margin: 0;
-      padding-left: 1.3rem;
-      columns: 2;
-      column-gap: 2rem;
-    }
     @media (max-width: 34rem) {
-      .toc ol { columns: 1; }
     }
-    .toc li { margin: 0.25rem 0; }
-    .toc a { color: var(--primary); text-decoration: none; }
-    .toc a:hover { text-decoration: underline; }
     .guide table {
       width: 100%;
       border-collapse: collapse;
@@ -106,29 +87,6 @@
     .guide tr:last-child td { border-bottom: 0; }
     .guide th { font-size: 0.9rem; background: var(--bg); }
     .table-scroll { overflow-x: auto; }
-    .callout {
-      background: var(--warn-bg);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-      margin: 0.9rem 0;
-      color: var(--warn-ink);
-    }
-    .callout p { color: var(--warn-ink); margin: 0.35rem 0; }
-    .callout p:first-child { margin-top: 0; }
-    .callout p:last-child { margin-bottom: 0; }
-    .callout strong { color: var(--warn-ink); }
-    .tip {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--primary);
-      border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-      margin: 0.9rem 0;
-    }
-    .tip p { margin: 0.35rem 0; }
-    .tip p:first-child { margin-top: 0; }
-    .tip p:last-child { margin-bottom: 0; }
     .backlink { margin-top: 2.5rem; }
   </style>
 </head>
@@ -153,14 +111,14 @@
 
 <main>
   <div class="wrap">
-    <div class="guide">
+    <div class="page guide">
       <p class="kicker">DH EMR Field guides</p>
       <h1>Cloud sync setup</h1>
-      <p class="muted">For the admin who wants several DH EMR Field devices to share one set of records. This guide stands up a cloud project that your organization owns, connects the devices to it, and explains what that does and does not protect. It takes about fifteen minutes and needs no command line. A single device on its own does not need any of this.</p>
+      <p class="muted">For the admin who wants several DH EMR Field devices to share one set of records. It sets up a cloud project your organization owns, connects each device, and explains what that does and does not protect. About fifteen minutes, no command line; a single device needs none of this.</p>
 
-      <nav class="toc" aria-label="On this page">
-        <p>On this page</p>
-        <ol>
+      <nav class="guide-toc" aria-label="Contents">
+        <p>Contents</p>
+        <ul>
           <li><a href="#what">What cloud sync gives you</a></li>
           <li><a href="#before">Before you start</a></li>
           <li><a href="#create">Create the project</a></li>
@@ -173,74 +131,105 @@
           <li><a href="#pausing">Free-tier pausing</a></li>
           <li><a href="#moving">Moving to a new project</a></li>
           <li><a href="#limits">The honest limit of a shared key</a></li>
-        </ol>
+        </ul>
       </nav>
 
-      <h2 id="what">1. What cloud sync gives you</h2>
-      <p>Each Field device enters visits on its own, offline. With cloud sync, every device also uploads its visits to one project whenever it has signal, and downloads the visits the other devices entered. After a sync, every device holds every visit, and an admin device's lists, formulary, lab tests, presets and forms reach the whole team.</p>
-      <p>The project is a Supabase project that your organization creates and owns. Damico Health hosts nothing and sees nothing: there is no central server, no account with us, and no subscription. The records live on your devices and in your project.</p>
-      <p>There are no user accounts in Field. Every device uses the same project address and the same project key. That is simple to set up and it is also the main limit, explained plainly in <a href="#limits">section 12</a>. Read it before you decide.</p>
-
-      <h2 id="before">2. Before you start</h2>
-      <ul>
-        <li>A Supabase account, at supabase.com. The free tier is enough for a small fleet.</li>
-        <li>The two SQL files that set up and check the project: <code>setup.sql</code> and <code>verify.sql</code>. They live in the <code>supabase</code> folder of the DH EMR source code, next to the full step-by-step in <code>SETUP.md</code>. Until they are published on this site, that is where they live.</li>
-        <li>Fifteen minutes, and a browser on a computer. The dashboard is easier on a large screen.</li>
-      </ul>
-
-      <h2 id="create">3. Create the project</h2>
-      <ol>
-        <li>On supabase.com, choose New project. Any name. Pick the region closest to the clinic.</li>
-        <li>Generate a strong database password and store it in a password manager. It is rarely needed again.</li>
-        <li>Wait for the project to finish provisioning.</li>
-      </ol>
-
-      <h2 id="schema">4. Run the schema</h2>
-      <ol>
-        <li>In the left sidebar, open SQL Editor, then New query.</li>
-        <li>Paste the entire contents of <code>setup.sql</code> and click Run.</li>
-        <li>It is safe to run twice; re-running is the documented upgrade path.</li>
-        <li>Recommended: paste and run <code>verify.sql</code> next. Every row of its output must say PASS. It changes nothing; it ends by rolling itself back.</li>
-      </ol>
-      <p class="muted">If you are upgrading a project that is already in use, run it after clinic hours. The run briefly locks the records table, and a device syncing during those seconds shows a sync error, retries, and succeeds afterward. Nothing is lost either way; it is just alarming to watch mid-clinic.</p>
-
-      <h2 id="credentials">5. Get the app credentials</h2>
-      <ol>
-        <li><strong>Project URL:</strong> Project Settings, then Data API. It is also shown in the Connect dialog at the top of the dashboard. It looks like https://yourproject.supabase.co.</li>
-        <li><strong>Publishable key</strong> (<code>sb_publishable_...</code>): Project Settings, then API Keys.</li>
-      </ol>
-      <p>Those two values are what every device enters. Write them down for the people setting up devices.</p>
-      <div class="callout">
-        <p><strong>The key rule.</strong> Devices get the publishable key, or the legacy anon key, and nothing else. Never put the <code>sb_secret_...</code> key or a legacy <code>service_role</code> key on any device, in any chat, or in the app. It bypasses every security rule. The app refuses keys that look like it, on purpose, with the message: "That is a server key (service_role or sb_secret). It bypasses every database security rule and must never go on a field device. Use the Publishable key, or the legacy anon key."</p>
+      <h2 id="what">What cloud sync gives you</h2>
+      <p>Each device enters visits offline. With cloud sync it also uploads them whenever it has signal and downloads the other devices' visits, so after a sync every device holds every visit, and an admin device's lists, formulary, lab tests, presets and forms reach the whole team.</p>
+      <p>The project is a Supabase project your organization creates and owns. Damico Health hosts nothing and sees nothing: no central server, no account with us, no subscription.</p>
+      <div class="callout warn">
+        <p>Field has no user accounts: every device uses the same project address and the same project key. Simple to set up, and also the main limit. Read <a href="#limits">the honest limit of a shared key</a> before you decide.</p>
       </div>
-      <p>That is the whole setup for Field. There are no accounts to create and no sign-in to enable.</p>
 
-      <h2 id="connect">6. Connect each device</h2>
-      <p>There are two ways to connect a device, and they end in the same place.</p>
-      <h3>A new device: the setup wizard</h3>
-      <p>On the first screen, tap <span class="ui">Connect to our clinic cloud</span>. The step headed <span class="ui">Connect to your cloud</span> asks for the <span class="ui">Project URL</span> and the <span class="ui">Project key</span>. Tap <span class="ui">Check and continue</span>; the app contacts the project and checks that its tables exist before letting you go on. Then name the device, choose whether it is an admin device, enter the clinic lists, and tap <span class="ui">Start using the app</span>. <a href="getting-started.html#wizard">Getting started</a> walks through every step and every error message.</p>
-      <h3>A device already in use</h3>
-      <p>Open <span class="ui">Settings</span>, find the <strong>Cloud sync</strong> card, and tap <span class="ui">Connect this device to a cloud</span>. A form opens with <span class="ui">Project address (from your admin)</span> and <span class="ui">Project key</span>. Tap <span class="ui">Verify and connect</span>. On success the app says: "Connected and registered. Records on this device will upload on the next sync." Every visit already on the device uploads with that first sync. The Cloud sync card updates at once; close and reopen the app so the chip in the top bar does too.</p>
-      <p>If the check fails, the message says why. "That URL or key does not look right. The URL should look like https://yourproject.supabase.co" means a typo. "Could not reach the project tables:" followed by a reason, or "Connected, but the records table was not found. Run the setup SQL on that project first." means <a href="#schema">section 4</a> was skipped.</p>
-      <p>Connecting registers the device in the project's <code>devices</code> table with the name and role chosen at setup. The project's security rules only accept records from devices in that table.</p>
+      <h2 id="before">Before you start</h2>
+      <table class="guide-table">
+        <tr><th>You need</th><th>Where</th></tr>
+        <tr><td>A Supabase account</td><td>supabase.com. The free tier is enough for a small fleet.</td></tr>
+        <tr><td><code>setup.sql</code> and <code>verify.sql</code></td><td>The <code>supabase</code> folder of the DH EMR source code, next to the step-by-step in <code>SETUP.md</code>. Until they are published on this site, that is where they live.</td></tr>
+        <tr><td>A browser on a computer</td><td>The dashboard is easier on a large screen.</td></tr>
+      </table>
 
-      <h2 id="verify">7. Verify with one test visit</h2>
-      <ol>
-        <li>On a connected device, enter one test visit and save it.</li>
-        <li>Tap the chip in the top bar, or <span class="ui">Sync now</span> on the Cloud sync card. The card says "Sync finished. 1 record uploaded. Nothing is waiting."</li>
-        <li>In the dashboard, open Table Editor, then <code>records</code>. One row is there.</li>
-        <li>Delete the test visit in the app, from the patient's chart, not in the dashboard. Deleting in the app marks the record deleted on every device; rows are never hard-deleted, by design.</li>
-        <li>Optional but worth it: enter a visit on a second device, sync both, and check that each device shows the other's visit on its Visits tab.</li>
+      <h2 id="create">Create the project</h2>
+      <ol class="steps">
+        <li><p>On supabase.com, choose New project. Any name; pick the region closest to the clinic.</p></li>
+        <li><p>Generate a strong database password and store it in a password manager. It is rarely needed again.</p></li>
+        <li><p>Wait for the project to finish provisioning.</p></li>
       </ol>
 
-      <h2 id="daily">8. Day to day</h2>
-      <p>Sync runs when a device is online, and anyone can run it by hand by tapping the chip or <span class="ui">Sync now</span>. The <strong>Cloud sync</strong> card shows the <span class="ui">Project</span>, the <span class="ui">Status</span>, and <span class="ui">Waiting to sync</span> ("Nothing pending", or the number of records). The <a href="user-guide.html#sync">user guide</a> explains every chip state.</p>
-      <p>If a sync cannot upload everything, the app says so plainly rather than pretending: "NOT backed up." followed by how many records are still waiting, the reason, and "Take a backup before wiping or handing on this device." Treat that as an instruction.</p>
-      <p>Settings that belong to the organization, the clinic lists, formulary, lab tests, reference ranges, presets and form templates, are edited on an admin device and reach every other device on its next sync. The Form templates card says so: "These belong to your organization; a change reaches everyone on the next sync." The quick-pick, preset and reference range cards carry the same line in their own words. On a standard device the organization's lists replace the local ones at the next sync, so edit on the admin device only.</p>
-      <p><span class="ui">Change cloud project</span> on the Cloud sync card opens the same connect form for pointing the device at a different project. Records already on the device upload to the new project on the next sync.</p>
+      <h2 id="schema">Run the schema</h2>
+      <ol class="steps">
+        <li><p>In the left sidebar, open SQL Editor, then New query.</p></li>
+        <li><p>Paste the entire contents of <code>setup.sql</code> and click Run. Safe to run twice; re-running is the documented upgrade path.</p></li>
+        <li><p>Recommended: paste and run <code>verify.sql</code>. It changes nothing and ends by rolling itself back.</p><p class="what-you-see">Every row of its output must say PASS.</p></li>
+      </ol>
+      <div class="callout warn">
+        <p>Upgrading a project already in use? Run it after clinic hours: it briefly locks the records table, and a device syncing in those seconds shows a sync error, retries, and succeeds. Nothing is lost, but it is alarming to watch mid-clinic.</p>
+      </div>
 
-      <h2 id="fleet">9. The device fleet</h2>
-      <p>Everything here is done in the dashboard's SQL Editor. The app itself cannot revoke, un-revoke, or change a device's role, on purpose, so that a stolen device cannot do any of it either.</p>
+      <h2 id="credentials">Get the app credentials</h2>
+      <table class="guide-table">
+        <tr><th>Value</th><th>Where in the dashboard</th><th>Looks like</th></tr>
+        <tr><td>Project URL</td><td>Project Settings, then Data API. Also in the Connect dialog at the top of the dashboard.</td><td>https://yourproject.supabase.co</td></tr>
+        <tr><td>Publishable key</td><td>Project Settings, then API Keys.</td><td><code>sb_publishable_...</code></td></tr>
+      </table>
+      <p>Every device enters those two values; write them down for whoever sets up devices. That is the whole Field setup: no accounts to create, no sign-in to enable.</p>
+      <div class="callout warn">
+        <p><strong>The key rule.</strong> Devices get the publishable key, or the legacy anon key, and nothing else. Never put the <code>sb_secret_...</code> key or a legacy <code>service_role</code> key on any device, in any chat, or in the app: it bypasses every security rule.</p>
+        <p>The app refuses keys that look like it, on purpose: "That is a server key (service_role or sb_secret). It bypasses every database security rule and must never go on a field device. Use the Publishable key, or the legacy anon key."</p>
+      </div>
+
+      <h2 id="connect">Connect each device</h2>
+      <h3>A new device: the setup wizard</h3>
+      <ol class="steps">
+        <li><p>On the first screen, tap <span class="ui">Connect to our clinic cloud</span>.</p></li>
+        <li><p>On the step headed <span class="ui">Connect to your cloud</span>, enter the <span class="ui">Project URL</span> and the <span class="ui">Project key</span>.</p></li>
+        <li><p>Tap <span class="ui">Check and continue</span>.</p><p class="what-you-see">The app checks that the project's tables exist before letting you go on.</p></li>
+        <li><p>Name the device and choose whether it is an admin device.</p></li>
+        <li><p>Enter the clinic lists and tap <span class="ui">Start using the app</span>.</p></li>
+      </ol>
+      <p><a href="getting-started.html#wizard">Getting started</a> covers every step and every error message.</p>
+
+      <h3>A device already in use</h3>
+      <ol class="steps">
+        <li><p>Open <span class="ui">Settings</span> and find the <span class="ui">Cloud sync</span> card.</p></li>
+        <li><p>Tap <span class="ui">Connect this device to a cloud</span>.</p><p class="what-you-see">A form opens with <span class="ui">Project address (from your admin)</span> and <span class="ui">Project key</span>.</p></li>
+        <li><p>Enter both and tap <span class="ui">Verify and connect</span>.</p><p class="what-you-see">On success: "Connected and registered. Records on this device will upload on the next sync." The card updates at once.</p></li>
+        <li><p>Close and reopen the app so the chip in the top bar updates too.</p></li>
+      </ol>
+      <p>Visits already on the device upload with that first sync. Connecting registers the device in the project's <code>devices</code> table under the name and role chosen at setup; the security rules accept records only from devices in that table.</p>
+      <table class="guide-table">
+        <tr><th>If the check fails</th><th>Meaning</th></tr>
+        <tr><td>"That URL or key does not look right. The URL should look like https://yourproject.supabase.co"</td><td>A typo.</td></tr>
+        <tr><td>"Could not reach the project tables:" followed by a reason, or "Connected, but the records table was not found. Run the setup SQL on that project first."</td><td><a href="#schema">Run the schema</a> was skipped.</td></tr>
+      </table>
+
+      <h2 id="verify">Verify with one test visit</h2>
+      <ol class="steps">
+        <li><p>On a connected device, enter one test visit and save it.</p></li>
+        <li><p>Tap the chip in the top bar, or <span class="ui">Sync now</span> on the Cloud sync card.</p><p class="what-you-see">"Sync finished. 1 record uploaded. Nothing is waiting."</p></li>
+        <li><p>In the dashboard, open Table Editor, then <code>records</code>.</p><p class="what-you-see">One row is there.</p></li>
+        <li><p>Delete the test visit in the app, from the patient's chart, not in the dashboard. That marks it deleted on every device; rows are never hard-deleted, by design.</p></li>
+        <li><p>Optional: enter a visit on a second device, sync both, and check that each shows the other's visit on its <span class="ui">Visits</span> tab.</p></li>
+      </ol>
+
+      <h2 id="daily">Day to day</h2>
+      <p>Sync runs whenever a device is online; anyone can run it by hand with the chip or <span class="ui">Sync now</span>. The <a href="user-guide.html#sync">user guide</a> explains every chip state.</p>
+      <table class="guide-table">
+        <tr><th>Cloud sync card</th><th>Shows</th></tr>
+        <tr><td><span class="ui">Project</span></td><td>The connected project.</td></tr>
+        <tr><td><span class="ui">Status</span></td><td>The current sync state.</td></tr>
+        <tr><td><span class="ui">Waiting to sync</span></td><td>"Nothing pending", or the number of records.</td></tr>
+      </table>
+      <div class="callout warn">
+        <p>If a sync cannot upload everything the app says so rather than pretending: "NOT backed up." then how many records are still waiting, the reason, and "Take a backup before wiping or handing on this device." Treat that as an instruction.</p>
+      </div>
+      <p>Organization settings (clinic lists, formulary, lab tests, reference ranges, presets, form templates) are edited on an admin device and reach every device on its next sync. The <span class="ui">Form templates</span> card says so: "These belong to your organization; a change reaches everyone on the next sync."</p>
+      <div class="callout">
+        <p>The quick-pick, preset and reference range cards say the same in their own words. On a standard device the organization's lists replace the local ones at the next sync: edit on the admin device only.</p>
+      </div>
+
+      <h2 id="fleet">The device fleet</h2>
+      <p>All of this is done in the dashboard's SQL Editor. The app cannot revoke, un-revoke or change a device's role, on purpose, so a stolen device cannot either.</p>
       <h3>List every device</h3>
       <p>Recognize every row. Revoke strangers.</p>
 <pre><code>SELECT id, name, role, created_at, last_sync_at,
@@ -252,33 +241,45 @@ FROM devices ORDER BY last_sync_at DESC NULLS LAST;</code></pre>
       <h3>Un-revoke a device</h3>
 <pre><code>UPDATE devices SET revoked_at = NULL WHERE id = '&lt;device id&gt;';</code></pre>
       <h3>Change a device's role</h3>
-      <p>The role in the cloud is authoritative. Set it to <code>admin</code> or <code>standard</code> and the device adopts it on its next sync; there is no control in the app for this.</p>
+      <p>The cloud role is authoritative: set <code>admin</code> or <code>standard</code> and the device adopts it on its next sync. The app has no control for this.</p>
 <pre><code>UPDATE devices SET role = 'admin' WHERE id = '&lt;device id&gt;';</code></pre>
       <h3>Sanity check the row counts</h3>
-      <p>Run this before and after any migration; the numbers must match.</p>
+      <p>Run before and after any migration; the numbers must match.</p>
 <pre><code>SELECT (SELECT count(*) FROM records) AS records,
        (SELECT count(*) FROM records WHERE deleted IS TRUE) AS deleted_records,
        (SELECT count(*) FROM devices) AS devices,
        (SELECT count(*) FROM config) AS config_rows,
        (SELECT max(saved_at) FROM records) AS newest_record;</code></pre>
-      <p>Renaming a device is done in the app, on the This device card with <span class="ui">Rename this device</span>, and is always safe: it changes the label only and never re-registers the device. The <a href="admin-guide.html#fleet">admin guide</a> covers renaming and replacing devices.</p>
+      <div class="callout">
+        <p>Renaming happens in the app, on the <span class="ui">This device</span> card with <span class="ui">Rename this device</span>, and is always safe: it changes the label only and never re-registers the device. The <a href="admin-guide.html#fleet">admin guide</a> covers renaming and replacing devices.</p>
+      </div>
 
-      <h2 id="pausing">10. Free-tier pausing</h2>
-      <p>Supabase pauses free-tier projects after about a week with no traffic, and a project paused long enough (around 90 days) can stop being restorable in place. A team that syncs twice a year and never opens the dashboard can silently lose its cloud copy this way.</p>
-      <p>If your usage is episodic, do one of these: upgrade the project to a paid tier, or put a calendar reminder to open the dashboard monthly and click Restore if prompted. And always keep device backups. The app's backup file is the true archive; the cloud is a convenience copy for the devices, not the organization's only copy.</p>
+      <h2 id="pausing">Free-tier pausing</h2>
+      <div class="callout warn">
+        <p>Supabase pauses free-tier projects after about a week without traffic, and one paused long enough (around 90 days) can stop being restorable in place. A team that syncs twice a year and never opens the dashboard can silently lose its cloud copy.</p>
+      </div>
+      <p>If usage is episodic, upgrade to a paid tier or set a monthly reminder to open the dashboard and click Restore if prompted. Keep device backups regardless: the app's backup file is the true archive; the cloud is a convenience copy for the devices, not the organization's only copy.</p>
 
-      <h2 id="moving">11. Moving to a new project</h2>
-      <p>If you ever replace the project, for example after a key has leaked, there are two steps for each device. First, point it at the new project with <span class="ui">Change cloud project</span>; records already on the device upload there on the next sync. Second, if some records exist only in the old project and on no device, export them from the old project as JSON and bring them in through the <strong>Moving from another cloud project</strong> card with <span class="ui">Import records from a file</span>. The card's warning matters: "Export as JSON, not CSV. CSV flattens lab results and medication lists into text and they cannot be read back reliably." The <a href="admin-guide.html#backup">admin guide</a> covers the import.</p>
+      <h2 id="moving">Moving to a new project</h2>
+      <p>If you replace the project, for example after a key has leaked, do two things per device.</p>
+      <ol class="steps">
+        <li><p>Tap <span class="ui">Change cloud project</span> on the Cloud sync card and point the device at the new project through the same connect form.</p><p class="what-you-see">Records already on the device upload there on the next sync.</p></li>
+        <li><p>If records exist only in the old project and on no device, export them from it as JSON and bring them in through the <span class="ui">Moving from another cloud project</span> card with <span class="ui">Import records from a file</span>. The <a href="admin-guide.html#backup">admin guide</a> covers the import.</p></li>
+      </ol>
+      <div class="callout warn">
+        <p>The card's warning matters: "Export as JSON, not CSV. CSV flattens lab results and medication lists into text and they cannot be read back reliably."</p>
+      </div>
 
-      <h2 id="limits">12. The honest limit of a shared key</h2>
-      <p>Every Field device shares one key. The database cannot tell devices apart, so anyone holding the key can read everything in the project and write to it. The key is the whole fence.</p>
-      <ul>
-        <li><strong>Revoking stops an honest device, not a determined person.</strong> The revocation switch in <a href="#fleet">section 9</a> stops a revoked device from syncing. It does not stop someone who copied the key into another tool. If the key has leaked, the only real fix is a new project with a new key, and reconnecting every device.</li>
-        <li><strong>There is no record of who entered what.</strong> A visit carries the device that filed it and the provider picked on the form. Nobody signed in, so nothing proves who held the device.</li>
-        <li><strong>A lost device keeps its data.</strong> Revoking does nothing to the records already on it, and they are not encrypted at rest. Treat a lost device as a disclosure.</li>
-        <li><strong>If you need accounts, you need DH EMR Clinic.</strong> Clinic gives every staff member their own sign-in and roles. It is a separate product with its own project setup, and there is no path from a Field organization into Clinic today. Choose with that in mind.</li>
-      </ul>
-      <p>For a small, trusted team whose devices spend days without signal, the shared key is an honest trade. Make it as safe as it can be: give the key to the people setting up devices and nobody else, review the fleet listing now and then, and keep backups.</p>
+      <h2 id="limits">The honest limit of a shared key</h2>
+      <p>Every Field device shares one key. The database cannot tell devices apart, so anyone holding the key can read and write everything in the project. The key is the whole fence.</p>
+      <table class="guide-table">
+        <tr><th>Limit</th><th>What it means</th></tr>
+        <tr><td>Revoking stops an honest device, not a determined person</td><td>Revocation (<a href="#fleet">the device fleet</a>) stops a revoked device from syncing, not someone who copied the key into another tool. After a leak the only real fix is a new project with a new key, and reconnecting every device.</td></tr>
+        <tr><td>There is no record of who entered what</td><td>A visit carries the device that filed it and the provider picked on the form. Nobody signed in, so nothing proves who held the device.</td></tr>
+        <tr><td>A lost device keeps its data</td><td>Revoking does nothing to the records already on it, and they are not encrypted at rest. Treat a lost device as a disclosure.</td></tr>
+        <tr><td>If you need accounts, you need DH EMR Clinic</td><td>Clinic gives every staff member their own sign-in and role. It is a separate product with its own project setup; there is no path from a Field organization into Clinic today.</td></tr>
+      </table>
+      <p>For a small, trusted team whose devices spend days without signal, the shared key is an honest trade. Give the key only to whoever sets up devices, review the fleet listing now and then, and keep backups.</p>
 
       <p class="backlink"><a href="../">Back to all guides</a></p>
     </div>

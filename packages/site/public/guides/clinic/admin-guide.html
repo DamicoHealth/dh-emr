@@ -69,27 +69,8 @@
       padding: 0;
       font-size: inherit;
     }
-    .toc {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-1);
-      padding: 1rem 1.25rem;
-      margin: 1.25rem 0 0.5rem;
-    }
-    .toc p { margin: 0 0 0.4rem; font-weight: 700; }
-    .toc ol {
-      margin: 0;
-      padding-left: 1.3rem;
-      columns: 2;
-      column-gap: 2rem;
-    }
     @media (max-width: 34rem) {
-      .toc ol { columns: 1; }
     }
-    .toc li { margin: 0.25rem 0; }
-    .toc a { color: var(--primary); text-decoration: none; }
-    .toc a:hover { text-decoration: underline; }
     .guide table {
       width: 100%;
       border-collapse: collapse;
@@ -110,46 +91,6 @@
     /* The six-column defaults grid scrolls sideways on a phone instead of
        breaking words. */
     .guide table.wide { min-width: 34rem; }
-    .callout {
-      background: var(--warn-bg);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-      margin: 0.9rem 0;
-      color: var(--warn-ink);
-    }
-    .callout p { color: var(--warn-ink); margin: 0.35rem 0; }
-    .callout p:first-child { margin-top: 0; }
-    .callout p:last-child { margin-bottom: 0; }
-    .callout strong { color: var(--warn-ink); }
-    .tip {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--primary);
-      border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-      margin: 0.9rem 0;
-    }
-    .tip p { margin: 0.35rem 0; }
-    .tip p:first-child { margin-top: 0; }
-    .tip p:last-child { margin-bottom: 0; }
-    .confirm {
-      margin: 1rem 0;
-      padding: 0.85rem 1.1rem;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--primary);
-      border-radius: var(--radius);
-    }
-    .confirm .lead {
-      margin: 0 0 0.4rem;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-    }
-    .confirm p { margin: 0.4rem 0; }
     .backlink { margin-top: 2.5rem; }
   </style>
 </head>
@@ -174,168 +115,233 @@
 
 <main>
   <div class="wrap">
-    <div class="guide">
+    <div class="guide page">
       <p class="kicker">DH EMR Clinic guides</p>
       <h1>Admin guide</h1>
-      <p class="muted">This guide is for the person who runs DH EMR Clinic for an organization: the one who approves staff accounts, sets their roles, hands out the join link, keeps the forms, lists and formulary right, and looks after backups. For a staff member's day on the board, read the <a href="user-guide.html">user guide</a>. For standing up the organization's own cloud project, making the first admin and setting up your own device, read <a href="setup.html">Setting up DH EMR Clinic for your organization</a>.</p>
-      <p class="muted">Clinic has one kind of admin: the <strong>admin account</strong>, a staff account with the Admin flag. It gets the Staff tab, it unlocks the editors under Settings on whichever device it is signed in on, and the server trusts it to approve and revoke accounts and to change the organization's settings. Devices have no admin role in Clinic. <a href="#roles">Section 1</a> explains.</p>
+      <p class="muted">For the person who runs DH EMR Clinic for an organization: approving staff, setting roles, sharing the join link, keeping forms, lists and the formulary right, and taking backups. A staff member's day is in the <a href="user-guide.html">user guide</a>; the cloud project and the first admin are in <a href="setup.html">Setting up DH EMR Clinic for your organization</a>.</p>
+      <p class="muted">Clinic has one kind of admin: a staff account with the Admin flag. Devices have no admin role.</p>
 
-      <nav class="toc" aria-label="On this page">
-        <p>On this page</p>
-        <ol>
-          <li><a href="#roles">The admin account</a></li>
-          <li><a href="#staff">The Staff screen: accounts</a></li>
-          <li><a href="#invite">Inviting devices: the join link and QR code</a></li>
-          <li><a href="#fleet">Devices</a></li>
-          <li><a href="#templates">Form templates and the Roles grid</a></li>
-          <li><a href="#lists">Clinic lists and patient flow stations</a></li>
-          <li><a href="#formulary">Formulary</a></li>
-          <li><a href="#labs">Lab tests and reference ranges</a></li>
-          <li><a href="#presets">Diagnosis quick-picks and prescription presets</a></li>
-          <li><a href="#backup">Backup and restore</a></li>
-          <li><a href="#recovery">Recovery: locked out, no admin left, forgotten passwords</a></li>
-          <li><a href="#demo">The demo</a></li>
-          <li><a href="#limits">Honest limits</a></li>
-        </ol>
+      <nav class="guide-toc" aria-label="Contents">
+        <p>Contents</p>
+        <ul>
+          <li><a href="#roles">1. The admin account</a></li>
+          <li><a href="#staff">2. The Staff screen: accounts</a></li>
+          <li><a href="#invite">3. Inviting devices: the join link and QR code</a></li>
+          <li><a href="#fleet">4. Devices</a></li>
+          <li><a href="#templates">5. Form templates and the Roles grid</a></li>
+          <li><a href="#lists">6. Clinic lists and patient flow stations</a></li>
+          <li><a href="#formulary">7. Formulary</a></li>
+          <li><a href="#labs">8. Lab tests and reference ranges</a></li>
+          <li><a href="#presets">9. Diagnosis quick-picks and prescription presets</a></li>
+          <li><a href="#backup">10. Backup and restore</a></li>
+          <li><a href="#recovery">11. Recovery</a></li>
+          <li><a href="#demo">12. The demo</a></li>
+          <li><a href="#limits">13. Honest limits</a></li>
+        </ul>
       </nav>
 
       <h2 id="roles">1. The admin account</h2>
-      <p>Every staff account has a station role (Reception, Triage, Provider, Lab or Pharmacy) and an Admin flag. The <strong>Account</strong> card under <span class="ui">Settings</span> shows yours: a <span class="ui">Name</span> row, a <span class="ui">Role</span> row (for example "Provider"), and an <span class="ui">Admin</span> row reading "Yes" or "No". The flag is given from the Staff screen with <span class="ui">Make admin</span> (<a href="#staff">section 2</a>). The very first admin of a new organization is made with one line in the project's SQL editor instead, because nobody is there yet to make them; the <a href="setup.html#first-admin">setup guide</a> shows that line.</p>
-      <p>An admin account gets:</p>
-      <ul>
-        <li>The <span class="ui">Staff</span> tab: approving, roles, revoking, the invite link.</li>
-        <li>The <span class="ui">Board</span>, <span class="ui">Visits</span>, <span class="ui">New visit</span> and <span class="ui">Analytics</span> tabs whatever the station role, and the role's own workspace first when the role is lab or pharmacy (the <span class="ui">Lab</span> or <span class="ui">Pharmacy</span> tab).</li>
-        <li>The whole visit form. The Roles grid says it in one line: "Administrators always see and edit every section."</li>
-        <li>The organization's settings editors under <span class="ui">Settings</span>, on whichever device the admin is signed in on: the clinic lists (sites, clinicians, complaints, procedures, referral destinations and the patient flow stations), the formulary, the lab test panel with its reference ranges, the diagnosis quick-picks and prescription presets, and the form templates with the Roles grid.</li>
-        <li>The server's trust. Approving, revoking, making admins, and writing the organization's settings to the cloud are accepted only from an admin account. A non-admin account that tries is refused by the server, not just by the screen.</li>
-      </ul>
+      <p>Every staff account has a station role (Reception, Triage, Provider, Lab or Pharmacy) and an Admin flag. The <span class="ui">Account</span> card under <span class="ui">Settings</span> shows yours: <span class="ui">Name</span>, <span class="ui">Role</span>, and <span class="ui">Admin</span> "Yes" or "No". The flag is given with <span class="ui">Make admin</span> (<a href="#staff">section 2</a>); the very first admin is made with one SQL line in the <a href="setup.html#first-admin">setup guide</a>.</p>
+      <p>An admin gets the <span class="ui">Staff</span> tab, every other tab whatever the role, the whole visit form ("Administrators always see and edit every section.") and the settings editors on any device. Only an admin account can approve, revoke, make admins or write settings to the cloud; the server refuses a non-admin, not just the screen.</p>
 
       <h3>What a non-admin sees under Settings</h3>
-      <p>None of the editors are hidden. They are visible but turned off, and the reason is in the hover text of every disabled control: "Only an administrator account can change this. Ask your clinic's admin." The Clinic lists card says it in its own words: "Editing is turned off: only an administrator account can change clinic lists, the formulary or lab tests. Ask your clinic's admin." The Form templates card says: "The editor opens read-only: only an administrator account can change form templates. Ask your clinic's admin." The template editor and the reference range editor open with a "Read only" banner and the same reason. This is deliberate: anyone can see what exists and knows who to ask.</p>
-      <div class="callout">
-        <p><strong>The gate is the account, never the device.</strong> A device that joined by the invite link is no different from the organization lead's own device: sign in as an admin on any device and the editors open; sign in as a non-admin on any device and they are off. There is no admin device to set up and nothing to change in the project's device list for it. The <strong>This device</strong> card under Settings shows the device's name, id and mode, and no role. If you also run DH EMR Field, note the difference: Field has no accounts, so there the gate is the device role chosen in its wizard.</p>
+      <p>The editors are visible but turned off, so anyone can see what exists and knows who to ask. Renaming the device, syncing, backup, restore and import work for any account.</p>
+      <table class="guide-table">
+        <tr><th>Where</th><th>What it says</th></tr>
+        <tr><td>Hover text of every disabled control</td><td>"Only an administrator account can change this. Ask your clinic's admin."</td></tr>
+        <tr><td>The <span class="ui">Clinic lists</span> card</td><td>"Editing is turned off: only an administrator account can change clinic lists, the formulary or lab tests. Ask your clinic's admin."</td></tr>
+        <tr><td>The <span class="ui">Form templates</span> card</td><td>"The editor opens read-only: only an administrator account can change form templates. Ask your clinic's admin."</td></tr>
+        <tr><td>The template editor and the range editor</td><td>A "Read only" banner with the same reason.</td></tr>
+      </table>
+      <div class="callout warn">
+        <p><strong>The gate is the account, never the device.</strong> An admin signed in on any device, including one that joined by the invite link, gets the editors; a non-admin does not. The <span class="ui">This device</span> card shows no role. DH EMR Field has no accounts, so its gate is the device role chosen in its wizard.</p>
       </div>
-      <p>Everything else in Settings works for any account: renaming the device, syncing, backup, restore and import.</p>
 
       <h2 id="staff">2. The Staff screen: accounts</h2>
-      <p>The <span class="ui">Staff</span> tab is shown to admin accounts only. It has two cards. <span class="ui">Invite a device</span> is first (<a href="#invite">section 3</a>); <span class="ui">Staff accounts</span> is below it. The card explains itself: "Approve new accounts, set station roles, and revoke access. A new account can see nothing until it is approved here. Changes are enforced by the server: a device that is offline keeps its last confirmed access and is cut off the moment it reconnects."</p>
-      <p>Each account is one row: the person's name (or "Unnamed account"), "(you)" on your own row, a status chip reading "Pending", "Active" or "Revoked", a chip with the station role (for example "Triage"), and an "Admin" chip on admin accounts. The oldest account is first. Every change you make is confirmed in a message above the cards, and every refusal from the server appears there too, in the server's own words, after which the list reloads.</p>
-      <p>While nobody else has joined, the card says: "No one else is here yet. Connect a device with the invite link above; staff members then create their own accounts from its sign-in screen. New accounts appear on this list waiting for your approval, and they can see nothing until you approve them, so there is no rush."</p>
+      <p>The <span class="ui">Staff</span> tab is shown to admin accounts only, with two cards: <span class="ui">Invite a device</span> (<a href="#invite">section 3</a>) and <span class="ui">Staff accounts</span>, where "A new account can see nothing until it is approved here."</p>
+      <p>Each row has the name (or "Unnamed account"; "(you)" on yours), a chip "Pending", "Active" or "Revoked", a role chip, and an "Admin" chip on admins; oldest first. Changes are confirmed in a message above the cards; a server refusal appears there in the server's own words, and the list reloads.</p>
 
       <h3>Approving a new account</h3>
-      <p>When a staff member creates an account from a device's sign-in screen, they land on a screen headed "Waiting for approval", and your Staff screen shows a note: "1 account is waiting for your approval." (or "3 accounts are waiting for your approval."). Set their station role first (next heading), then tap <span class="ui">Approve</span> on their row. The message reads, for example, "Grace N. is approved and can sign in now." On their device they tap <span class="ui">Check again</span> and the app opens on their role's workspace.</p>
-      <p>Until you approve, that account sees nothing at all: no visits, no board, no names. So there is no risk in an unknown account sitting on the list. Approve the people you know; leave the rest.</p>
+      <ol class="steps">
+        <li><p>The staff member creates an account from a device's sign-in screen and lands on "Waiting for approval".</p><p class="what-you-see">Your Staff screen says "1 account is waiting for your approval." (or "3 accounts are waiting for your approval.").</p></li>
+        <li><p>Set their station role (next heading).</p></li>
+        <li><p>Tap <span class="ui">Approve</span> on their row.</p><p class="what-you-see">"Grace N. is approved and can sign in now."</p></li>
+        <li><p>They tap <span class="ui">Check again</span> on their device and land on their role's workspace.</p></li>
+      </ol>
+      <div class="callout">
+        <p>Until approved, an account sees nothing: no visits, no board, no names. An unknown account on the list is no risk. Approve the people you know; leave the rest.</p>
+      </div>
 
       <h3>Setting the station role</h3>
-      <p>Each row has a role list: Reception, Triage, Provider, Lab, Pharmacy. Pick one and the change saves at once; the message reads, for example, "Grace N. is now Triage." The role decides which tabs the person gets and which sections of the visit form they can fill in:</p>
+      <p>Pick a role from the list on the row; it saves at once: "Grace N. is now Triage." The role decides the tabs, the landing screen and the visit form slice:</p>
       <div class="table-scroll">
-      <table>
-        <tr><th>Role</th><th>Tabs</th><th>On the visit form, by default</th></tr>
+      <table class="guide-table">
+        <tr><th>Role</th><th>Tabs, landing tab first</th><th>On the visit form, by default</th></tr>
         <tr><td>Reception</td><td>Board, Visits, New visit, Settings</td><td>Fills in Visit and Patient; sees everything else read-only</td></tr>
-        <tr><td>Triage</td><td>Board, Visits, Settings</td><td>Fills in Vitals, History, Chief Concern and Labs; sees Patient read-only</td></tr>
-        <tr><td>Provider</td><td>Board, Visits, New visit, Analytics, Settings</td><td>Fills in every section</td></tr>
+        <tr><td>Triage</td><td>Triage (its queue), Board, Visits, Settings</td><td>Fills in Vitals, History, Chief Concern and Labs; sees Patient read-only</td></tr>
+        <tr><td>Provider</td><td>Provider (its queue), Board, Visits, New visit, Analytics, Settings</td><td>Fills in everything except Patient and Vitals, which it sees read-only</td></tr>
         <tr><td>Lab</td><td>Lab, Visits, Settings</td><td>Fills in Labs; sees Patient and Chief Concern read-only</td></tr>
         <tr><td>Pharmacy</td><td>Pharmacy, Visits, Settings</td><td>Fills in Medications; sees Patient and Diagnosis read-only</td></tr>
       </table>
       </div>
-      <p>Lab and pharmacy accounts have no Board tab; their workspace is the list of visits waiting on them. An admin gets every tab in the table plus Staff, with the Board placed right after their own role's workspace. What each role sees on the form is organization config, changed in the Roles grid (<a href="#templates">section 5</a>). The <a href="user-guide.html#screens">user guide</a> walks through each role's day.</p>
-      <p class="muted">If a row shows a role that is not on the list, for example "nurse" from an older version, the row shows the odd value as stored; the app treats "nurse" as Triage and any other unknown value as Provider. Pick a real role from the list and the odd value goes away.</p>
-      <p>A role change reaches the person's device the next time the app checks their account with the server. Closing and reopening the app does that at once. They land on the new role's workspace.</p>
+      <p>Triage and Provider land on their station queue: today's visits at that column, longest-waiting first, under the station name and "<em>date</em> · N waiting · M at <em>previous station</em>". Each visit has <span class="ui">Open</span> and a Next button ("Next: Lab" for the provider); <span class="ui">Open the Board</span> is one tap away. Lab and pharmacy have no Board tab.</p>
+      <p>An admin gets every tab plus Staff, landing on the Board (after Lab or Pharmacy for those roles). The form slice is changed in the Roles grid (<a href="#templates">section 5</a>); the <a href="user-guide.html#screens">user guide</a> walks through each role's day. A role change reaches the device at its next account check; reopening the app does that at once.</p>
+      <p class="muted">A role not on the list, for example "nurse" from an older version, is shown as stored and treated as Triage; any other unknown value is treated as Provider. Pick a real role and it goes away.</p>
 
       <h3>Revoking and restoring</h3>
-      <p><span class="ui">Revoke</span> appears on every active account. When you are the only admin, the one on your own row is turned off (the last-admin rule, below). The app confirms first:</p>
-      <div class="confirm">
-        <p class="lead">The revoke confirm</p>
-        <p>"Revoke access for Grace N.?</p>
-        <p>They are locked out the next time their device talks to the server. Nothing they recorded is deleted, and you can restore them here later."</p>
-      </div>
-      <p>The message afterwards is honest about timing: "Grace N. is revoked. It takes effect when their device next connects." From that moment the server refuses every request from that account. On their device the next account check lands on a screen headed "This account has been turned off", which tells them: "The account for Grace N. was turned off by your organization's administrator. If you think that is a mistake, talk to them - they can turn it back on in a moment, and then Check again will let you straight in." and "No records have been lost. Anything this account already saved is safe with your organization."</p>
-      <p>A revoked account's row shows a "Revoked" chip and a <span class="ui">Restore</span> button. Tap it and the message reads "Grace N. is restored and can sign in again."; on their device <span class="ui">Check again</span> lets them in. The card's footer is the rule to remember: "Revoking never deletes anything: visits an account recorded stay in the organization."</p>
-      <div class="callout">
-        <p><strong>Honest limit: a revoked device that is offline keeps working until it reconnects.</strong> The app keeps the last confirmed account on the device so a clinic does not stop when the wifi does, and nothing on the device can enforce a revocation it has not heard about. The moment the device reaches the server again, every request fails and the next check lands on the turned-off screen. If the device itself is lost, revoke the device too (<a href="#fleet">section 4</a>).</p>
+      <ol class="steps">
+        <li><p>Tap <span class="ui">Revoke</span> on an active row.</p><p class="what-you-see">"Revoke access for Grace N.? They are locked out the next time their device talks to the server. Nothing they recorded is deleted, and you can restore them here later."</p></li>
+        <li><p>Confirm.</p><p class="what-you-see">"Grace N. is revoked. It takes effect when their device next connects." The row gets a "Revoked" chip and a <span class="ui">Restore</span> button.</p></li>
+        <li><p>To let them back in later, tap <span class="ui">Restore</span>.</p><p class="what-you-see">"Grace N. is restored and can sign in again." <span class="ui">Check again</span> on their device lets them in.</p></li>
+      </ol>
+      <p>From then on the server refuses every request from the account; their device's next check lands on "This account has been turned off", which ends: "No records have been lost. Anything this account already saved is safe with your organization." The card's footer: "Revoking never deletes anything: visits an account recorded stay in the organization."</p>
+      <div class="callout warn">
+        <p><strong>Honest limit: a revoked device that is offline keeps working until it reconnects.</strong> The app keeps the last confirmed account so a clinic does not stop when the wifi does; nothing on the device can enforce a revocation it has not heard about. If the device itself is lost, revoke the device too (<a href="#fleet">section 4</a>).</p>
       </div>
 
       <h3>Making and removing admins</h3>
-      <p><span class="ui">Make admin</span> on a row confirms first:</p>
-      <div class="confirm">
-        <p class="lead">The make-admin confirm</p>
-        <p>"Make Grace N. an administrator?</p>
-        <p>Admins approve and revoke accounts, and edit the organization's lists, formulary and form templates."</p>
-      </div>
-      <p>The message afterwards reads "Grace N. is now an administrator." and an "Admin" chip appears on the row. <span class="ui">Remove admin</span> on an admin's row takes the flag away without a confirm; the message reads "Grace N. is no longer an administrator." The person keeps their station role and their account; they lose the Staff tab and the extra tabs on their next account check.</p>
+      <ol class="steps">
+        <li><p>Tap <span class="ui">Make admin</span> on the row.</p><p class="what-you-see">"Make Grace N. an administrator? Admins approve and revoke accounts, and edit the organization's lists, formulary and form templates."</p></li>
+        <li><p>Confirm.</p><p class="what-you-see">"Grace N. is now an administrator." and an "Admin" chip.</p></li>
+        <li><p>To take the flag away, tap <span class="ui">Remove admin</span>; there is no confirm.</p><p class="what-you-see">"Grace N. is no longer an administrator." They keep role and account, and lose the Staff tab and the extra tabs at their next account check.</p></li>
+      </ol>
 
       <h3>The last-admin rule</h3>
-      <p>An organization can never be left without an admin from inside the app. When you are the only active admin, your own <span class="ui">Revoke</span> and <span class="ui">Remove admin</span> buttons are turned off, and their hover text says why: "You are the only administrator. Make someone else an admin first." That is, word for word, the sentence the server itself raises if a request gets through anyway (for example two admins acting at the same moment); it then appears in the red banner at the top of the screen. Make a second admin before you change your own account.</p>
-      <p>Two other refusals can appear in that banner. "The server did not apply the change. Your account may not have permission to change this account." means the server quietly declined, most often because your own admin flag was removed on another device in the meantime. "You are signed out. Sign in and try again." means exactly that.</p>
+      <div class="callout warn">
+        <p><strong>While you are the only active admin, your own <span class="ui">Revoke</span> and <span class="ui">Remove admin</span> buttons are off</strong>, with the hover text "You are the only administrator. Make someone else an admin first." Make a second admin before you change your own account.</p>
+      </div>
+      <p>The server raises the same sentence if a request gets through anyway (two admins acting at once); it shows in the red banner at the top of the screen, as do two other refusals:</p>
+      <table class="guide-table">
+        <tr><th>Banner</th><th>Meaning</th></tr>
+        <tr><td>"The server did not apply the change. Your account may not have permission to change this account."</td><td>The server quietly declined, most often because your own admin flag was removed on another device meanwhile.</td></tr>
+        <tr><td>"You are signed out. Sign in and try again."</td><td>Exactly that.</td></tr>
+      </table>
 
       <h2 id="invite">3. Inviting devices: the join link and QR code</h2>
-      <p>The <span class="ui">Invite a device</span> card at the top of the Staff screen is how every device joins. Its own description: "Staff open this link on their device, or scan the code with its camera. The app sets itself up and shows sign-in; they create an account there, and you approve it below. Nobody types a project address or key."</p>
-      <ul>
-        <li><span class="ui">Organization name</span>: a text box with the hint "Shown on a device when it joins. It travels in the link, so set it before you share." Typing a name rebuilds the link and the code. The link keeps the first 80 characters of the name.</li>
-        <li><span class="ui">Join link</span>: the link itself, in a read-only box that selects all when tapped. It starts with the app's address and carries everything the device needs after a <code>#join=</code> mark.</li>
-        <li><span class="ui">Copy link</span>: copies it. The message reads "Link copied. Paste it into a message to your staff." If the browser refuses the clipboard: "Could not copy automatically. Select the link above and copy it by hand."</li>
-        <li>The QR code, drawn under the buttons. If a very long organization name makes the link too long for a code, the card says "The link is too long for a QR code. Share the link itself instead."</li>
-      </ul>
-      <p>What happens on the staff member's device: opening the link (or scanning the code and opening the address the camera offers) opens DH EMR Clinic, which connects itself to your project, names itself after the device and the date, for example "iPad joined 2026-10-06", and shows the <span class="ui">Sign in</span> screen. A new staff member taps <span class="ui">New here? Create an account</span>, fills in <span class="ui">Your name</span>, <span class="ui">Email</span> and <span class="ui">Password</span>, and taps <span class="ui">Create account</span>. The sign-up screen tells them what to expect: "A new account starts with no access at all. Your administrator approves it from their device, and then you can sign in and work. That usually takes a moment, not a day." They appear on your Staff list as Pending. Someone who already has an account just signs in. The <a href="user-guide.html#signing-in">user guide</a> covers the sign-in screens from the staff member's side.</p>
-      <p>The device's name can be changed later under Settings on the This device card with <span class="ui">Rename this device</span>; a rename is always safe (<a href="#fleet">section 4</a>). The organization's sites, clinicians and forms reach the device on its first sync after the account is approved.</p>
-      <p>If the link is opened on a device that is already connected to a <em>different</em> project, the app asks before switching:</p>
-      <div class="confirm">
-        <p class="lead">The switch-project confirm</p>
-        <p>"This device is already connected to oldproject.supabase.co.</p>
-        <p>Switch it to Kabale Community Clinic (newproject.supabase.co)?</p>
-        <p>The device registers itself in the new project and signs in there. Visits already synced to the old project stay there; anything not yet backed up uploads to the new one."</p>
-      </div>
-      <p>Opened on a device already connected to the same project, the link does nothing. A damaged link says "That join link is damaged or incomplete. Ask your admin to send it again." A link made by a newer app than the device has says "That join link was made by a newer version of DH EMR Clinic. Update this app, then open the link again."</p>
-      <div class="callout">
-        <p><strong>What the link carries, in the card's own words:</strong> "What the link carries: the project address, its publishable key and the organization name. The publishable key is public by design and unlocks nothing on its own, because every read and write needs an approved account. Anyone with the link can create an account that waits for your approval, so share it with staff, not the public."</p>
-        <p>A link cannot be expired from the app. It keeps working for as long as the project's publishable key does. That is fine, because a stranger with the link can only create an account you will never approve; keep approving only people you know.</p>
+      <p>The <span class="ui">Invite a device</span> card at the top of the Staff screen is how every device joins: staff open the link or scan the code, the app sets itself up and shows sign-in, they create an account, you approve it. Nobody types a project address or key.</p>
+      <table class="guide-table">
+        <tr><th>Control</th><th>What it does</th></tr>
+        <tr><td><span class="ui">Organization name</span></td><td>"Shown on a device when it joins. It travels in the link, so set it before you share." Typing rebuilds the link and the code; the link keeps the first 80 characters.</td></tr>
+        <tr><td><span class="ui">Join link</span></td><td>A read-only box that selects all when tapped: the app's address plus everything the device needs after a <code>#join=</code> mark.</td></tr>
+        <tr><td><span class="ui">Copy link</span></td><td>"Link copied. Paste it into a message to your staff." If the browser refuses the clipboard: "Could not copy automatically. Select the link above and copy it by hand."</td></tr>
+        <tr><td>The QR code</td><td>Drawn under the buttons. If a very long organization name makes the link too long: "The link is too long for a QR code. Share the link itself instead."</td></tr>
+      </table>
+
+      <h3>On the staff member's device</h3>
+      <ol class="steps">
+        <li><p>They open the link, or scan the code and open the address the camera offers.</p><p class="what-you-see">DH EMR Clinic connects itself to your project, names the device after the device and the date, for example "iPad joined 2026-10-06", and shows the <span class="ui">Sign in</span> screen.</p></li>
+        <li><p>A new staff member taps <span class="ui">New here? Create an account</span>, fills in <span class="ui">Your name</span>, <span class="ui">Email</span> and <span class="ui">Password</span>, and taps <span class="ui">Create account</span>. Someone with an account just signs in.</p></li>
+        <li><p>They appear on your Staff list as Pending; set the role and approve (<a href="#staff">section 2</a>).</p></li>
+      </ol>
+      <p>The device can be renamed later (<a href="#fleet">section 4</a>); the organization's sites, clinicians and forms arrive on its first sync after approval. The <a href="user-guide.html#signing-in">user guide</a> covers the sign-in screens.</p>
+      <table class="guide-table">
+        <tr><th>If the link is opened on</th><th>What happens</th></tr>
+        <tr><td>A device already on the same project</td><td>Nothing.</td></tr>
+        <tr><td>A device connected to a different project</td><td>A confirm: "This device is already connected to oldproject.supabase.co. Switch it to Kabale Community Clinic (newproject.supabase.co)? The device registers itself in the new project and signs in there. Visits already synced to the old project stay there; anything not yet backed up uploads to the new one."</td></tr>
+        <tr><td>A damaged link</td><td>"That join link is damaged or incomplete. Ask your admin to send it again."</td></tr>
+        <tr><td>A link from a newer app than the device has</td><td>"That join link was made by a newer version of DH EMR Clinic. Update this app, then open the link again."</td></tr>
+      </table>
+      <div class="callout warn">
+        <p>"What the link carries: the project address, its publishable key and the organization name. The publishable key is public by design and unlocks nothing on its own, because every read and write needs an approved account. Anyone with the link can create an account that waits for your approval, so share it with staff, not the public."</p>
+        <p>A link cannot be expired from the app; it works as long as the project's publishable key does. A stranger with it can only create an account you never approve.</p>
       </div>
 
       <h2 id="fleet">4. Devices</h2>
-      <p>A device registers itself in your project's device list the first time it works there. The <strong>This device</strong> card under Settings shows each device's <span class="ui">Name</span>, the first eight characters of its <span class="ui">Device ID</span>, and its <span class="ui">Mode</span> ("Cloud sync" on every Clinic device). A device has no admin role in Clinic (<a href="#roles">section 1</a>); the <code>role</code> column you will see in the device list below is used by DH EMR Field only, and Clinic ignores it, so leave it alone.</p>
-      <p>Everything else about the fleet is done in the project dashboard's SQL Editor, on purpose, so that a stolen device cannot do any of it either. The queries are the ones from the setup guide, <code>SETUP.md</code>, which lives in the <code>supabase</code> folder of the DH EMR source code until it is published on this site.</p>
+      <p>A device registers itself in the project's device list the first time it works there. The <span class="ui">This device</span> card shows its <span class="ui">Name</span>, the first eight characters of its <span class="ui">Device ID</span>, and its <span class="ui">Mode</span> ("Cloud sync" on every Clinic device). The <code>role</code> column below is used by DH EMR Field only; leave it alone.</p>
+      <p>Everything else about the fleet is done in the project dashboard's SQL Editor, on purpose, so a stolen device cannot do it either. The queries come from <code>SETUP.md</code> (<a href="#recovery">section 11</a>).</p>
 
       <h3>List every device</h3>
-      <p>Recognize every row. Match a row to a device by its name and by the first eight characters of the id shown on its This device card.</p>
+      <p>Recognize every row; match it to a device by name and the first eight characters of its id.</p>
 <pre><code>SELECT id, name, role, created_at, last_sync_at,
        CASE WHEN revoked_at IS NULL THEN 'active' ELSE 'REVOKED' END AS status
 FROM devices ORDER BY last_sync_at DESC NULLS LAST;</code></pre>
 
       <h3>Renaming is safe</h3>
-      <p><span class="ui">Rename this device</span> on the This device card opens a <span class="ui">Device name</span> box with <span class="ui">Save name</span>. The card says why it is safe: "Renaming keeps this device's identity: records it has already filed stay its own." A rename changes the label only and the app confirms, for example, "This device is now called "Reception iPad"." A blank name is refused: "A device name cannot be blank."</p>
+      <ol class="steps">
+        <li><p>Tap <span class="ui">Rename this device</span> on the This device card.</p></li>
+        <li><p>Type the name in <span class="ui">Device name</span> and tap <span class="ui">Save name</span>.</p><p class="what-you-see">"This device is now called "Reception iPad"." A blank name is refused: "A device name cannot be blank."</p></li>
+      </ol>
+      <div class="callout">
+        <p>"Renaming keeps this device's identity: records it has already filed stay its own." A rename changes the label only.</p>
+      </div>
 
       <h3>Revoking a lost or stolen device</h3>
-      <p>Records the device already uploaded are kept. From the moment this runs, the project refuses records from that device:</p>
-<pre><code>UPDATE devices SET revoked_at = now() WHERE id = '&lt;device id&gt;';</code></pre>
-      <p>Do two more things. On the Staff screen, <span class="ui">Revoke</span> the account that was signed in on the device, because the account is what reads the organization's records. And treat the loss as a disclosure: revoking does nothing to the records already on the device, and they are not encrypted at rest. The app can never un-revoke a device. If the device turns up again, the SQL editor is the only way back:</p>
-<pre><code>UPDATE devices SET revoked_at = NULL WHERE id = '&lt;device id&gt;';</code></pre>
+      <ol class="steps">
+        <li><p>In the SQL Editor, revoke the device. Records it already uploaded are kept; from this moment the project refuses records from it.</p>
+<pre><code>UPDATE devices SET revoked_at = now() WHERE id = '&lt;device id&gt;';</code></pre></li>
+        <li><p>On the Staff screen, <span class="ui">Revoke</span> the account that was signed in on it, because the account is what reads the organization's records.</p></li>
+        <li><p>Treat the loss as a disclosure: revoking does nothing to the records already on the device, and they are not encrypted at rest.</p></li>
+      </ol>
+      <div class="callout warn">
+        <p><strong>The app can never un-revoke a device.</strong> If it turns up again, the SQL editor is the only way back: <code>UPDATE devices SET revoked_at = NULL WHERE id = '&lt;device id&gt;';</code></p>
+      </div>
 
       <h3>Replacing a device</h3>
-      <p>On a Clinic device the cloud already holds everything that synced, so a new device fills itself after it joins by the link and its account signs in. What a backup protects is anything that had not uploaded yet. Before wiping the old device, open its <strong>Cloud sync</strong> card under Settings: the <span class="ui">Waiting to sync</span> row must read "Nothing pending". If it does not, tap <span class="ui">Sync now</span> with a working connection; if the device cannot reach the server, tap <span class="ui">Download backup</span> on the Backup and restore card and restore that file on the new device with <span class="ui">Restore from a backup</span>. The <strong>Moving to a new device</strong> card under Settings lists the same four steps: back up the old device, connect the new one, restore the file, check the record count matches before wiping the old device.</p>
-      <p class="muted">If a device has both DH EMR Clinic and DH EMR Field installed, they keep separate records. Nothing crosses between them.</p>
+      <p>The cloud holds everything that synced, so a new device fills itself once it joins by the link and signs in. A backup protects whatever had not uploaded yet. The <span class="ui">Moving to a new device</span> card under Settings lists the same steps.</p>
+      <ol class="steps">
+        <li><p>On the old device, open the <span class="ui">Cloud sync</span> card under Settings. <span class="ui">Waiting to sync</span> must read "Nothing pending"; if not, tap <span class="ui">Sync now</span> with a working connection.</p></li>
+        <li><p>If the device cannot reach the server, tap <span class="ui">Download backup</span> instead.</p></li>
+        <li><p>Join the new device by the link and sign in; restore any backup there with <span class="ui">Restore from a backup</span>.</p></li>
+        <li><p>Check the record count matches before wiping the old device.</p></li>
+      </ol>
+      <p class="muted">A device with both DH EMR Clinic and DH EMR Field installed keeps separate records. Nothing crosses between them.</p>
 
       <h2 id="templates">5. Form templates and the Roles grid</h2>
-      <p>The visit form itself belongs to your organization: which forms are offered, their sections, your own questions, and which role sees which section. The <strong>Form templates</strong> card under Settings lists each form with "On" or "Off" next to it and has one button, <span class="ui">Open the template editor</span>. A new organization has one form, named "General Visit", already on; rename it if you like.</p>
-      <p>The editor is a panel headed <span class="ui">Form templates</span>. Every change is saved as you make it: the header reads "Saving…" and then "Saved". Its note applies to everything inside: "These belong to your organization. A change here reaches everyone on the next sync." Tap <span class="ui">Close</span> when you are done; there is nothing to discard. On a device that has not synced yet the editor refuses to open for writing: "Form settings have not reached this device yet", because "saving now would replace your organization's real form with an empty one. Sync this device, then come back." Do not work around that guard.</p>
+      <p>The <span class="ui">Form templates</span> card under Settings lists each form with "On" or "Off" and has one button, <span class="ui">Open the template editor</span>. A new organization has one form, "General Visit", already on.</p>
+      <p>The editor is a panel headed <span class="ui">Form templates</span>. Every change saves as you make it, the header reading "Saving…" then "Saved", and "A change here reaches everyone on the next sync." Tap <span class="ui">Close</span> when you are done; there is nothing to discard.</p>
+      <div class="callout warn">
+        <p><strong>On a device that has not synced yet, the editor refuses to open for writing:</strong> "Form settings have not reached this device yet", because "saving now would replace your organization's real form with an empty one. Sync this device, then come back." Do not work around that guard.</p>
+      </div>
 
       <h3>Forms</h3>
-      <p>Each form has an editable name box, a checkbox captioned <span class="ui">On</span>, and the buttons <span class="ui">Sections</span>, <span class="ui">Duplicate</span> and <span class="ui">Delete</span>. The card says what "On" means: "Turn a form on to offer it for new visits; with more than one on, the visit form shows a selector. Every visit keeps the name of the form it was filed under." To add a form, type a name in <span class="ui">New form name</span> and tap <span class="ui">Add form</span>. Duplicating first is the safe way to experiment with a working form; the copy is named after the original with "(copy)". The editor never strands the team: it refuses to delete the last form ("At least one form must remain. Add another form before deleting this one.") and refuses to turn off the last form that is on ("At least one form must stay on, or there is no visit form to open. Turn another form on first."). Deleting a form confirms with "Visits already filed under it keep their answers and their template name. The form just stops being offered for new visits."</p>
+      <table class="guide-table">
+        <tr><th>On each form</th><th>What it does</th></tr>
+        <tr><td>The name box</td><td>Rename in place.</td></tr>
+        <tr><td><span class="ui">On</span></td><td>Offers the form for new visits; with more than one on, the visit form shows a selector. "Every visit keeps the name of the form it was filed under."</td></tr>
+        <tr><td><span class="ui">Sections</span></td><td>Opens the form's sections (next heading).</td></tr>
+        <tr><td><span class="ui">Duplicate</span></td><td>Copies the form as its name plus "(copy)": the safe way to experiment.</td></tr>
+        <tr><td><span class="ui">Delete</span></td><td>Confirms: "Visits already filed under it keep their answers and their template name. The form just stops being offered for new visits."</td></tr>
+      </table>
+      <ol class="steps">
+        <li><p>To add a form, type a name in <span class="ui">New form name</span> and tap <span class="ui">Add form</span>.</p></li>
+      </ol>
+      <div class="callout">
+        <p>The editor never strands the team. Deleting the last form: "At least one form must remain. Add another form before deleting this one." Turning off the last form that is on: "At least one form must stay on, or there is no visit form to open. Turn another form on first."</p>
+      </div>
 
       <h3>Sections</h3>
-      <p>Tap <span class="ui">Sections</span> on a form. The card is headed "Sections of" and the form's name, and explains: "Reorder with the arrows, hide sections you do not use, rename them, and add your own sections with questions. The lists the built-in sections offer, like medications and lab tests, are edited on the Settings screen."</p>
-      <p>Each section is one row with <span class="ui">↑</span> and <span class="ui">↓</span> arrows, an editable title box, a chip reading "Built in" or the number of questions, a <span class="ui">Roles</span> button, and a <span class="ui">Hide</span> or <span class="ui">Show</span> button. A renamed built-in section gets <span class="ui">Reset name</span>. Visit and Patient show a disabled <span class="ui">Always shown</span> button, because every visit needs them. <span class="ui">Add a section</span> adds your own section at the end; custom sections also get <span class="ui">Questions</span>, <span class="ui">Delete</span>, and a checkbox <span class="ui">Starts collapsed on the visit form</span>. Deleting a custom section confirms with "Answers already saved on existing records are kept, but will no longer appear on the form."</p>
-      <p>Under <span class="ui">Questions</span>, each question has arrows, a label box, a type list (Short text, Long text, Single choice, Multiple choice, Number, Scale (0-N), Yes / No, Date), a <span class="ui">Required</span> checkbox and <span class="ui">Remove</span>. Choice questions get <span class="ui">Choices</span> ("Choices, one per line"); scale questions get <span class="ui">Scale</span> with <span class="ui">Lowest</span> and <span class="ui">Highest</span>. Add one with <span class="ui">New question</span> and <span class="ui">Add question</span>. Every question shows its permanent field id, so removing a question never touches saved answers.</p>
+      <p>Tap <span class="ui">Sections</span> on a form; the card is headed "Sections of" and the form's name. The lists the built-in sections offer, like medications and lab tests, are edited on the Settings screen, not here.</p>
+      <table class="guide-table">
+        <tr><th>On each section row</th><th>What it does</th></tr>
+        <tr><td><span class="ui">↑</span> <span class="ui">↓</span></td><td>Reorder.</td></tr>
+        <tr><td>The title box</td><td>Rename. A renamed built-in section gets <span class="ui">Reset name</span>.</td></tr>
+        <tr><td>Chip</td><td>"Built in", or the number of questions on your own section.</td></tr>
+        <tr><td><span class="ui">Roles</span></td><td>Opens the Roles grid (below).</td></tr>
+        <tr><td><span class="ui">Hide</span> / <span class="ui">Show</span></td><td>Takes the section off the form for everyone, or puts it back. Visit and Patient show a disabled <span class="ui">Always shown</span> instead, because every visit needs them.</td></tr>
+        <tr><td><span class="ui">Questions</span>, <span class="ui">Delete</span>, <span class="ui">Starts collapsed on the visit form</span></td><td>Your own sections only. Deleting confirms: "Answers already saved on existing records are kept, but will no longer appear on the form."</td></tr>
+        <tr><td><span class="ui">Add a section</span></td><td>Adds your own section at the end of the form.</td></tr>
+      </table>
+
+      <h3>Questions</h3>
+      <p>Under <span class="ui">Questions</span>, each question has arrows, a label box, a type list (Short text, Long text, Single choice, Multiple choice, Number, Scale (0-N), Yes / No, Date), a <span class="ui">Required</span> checkbox and <span class="ui">Remove</span>. Choice questions get <span class="ui">Choices</span> ("Choices, one per line"); scale questions get <span class="ui">Scale</span> with <span class="ui">Lowest</span> and <span class="ui">Highest</span>.</p>
+      <ol class="steps">
+        <li><p>Type the label in <span class="ui">New question</span>, pick a type, and tap <span class="ui">Add question</span>.</p></li>
+      </ol>
+      <p>Every question shows its permanent field id, so removing one never touches saved answers.</p>
 
       <h3>The Roles grid: who sees which section</h3>
-      <p>This is the part of the editor that makes Clinic a clinic. Tap <span class="ui">Roles</span> on any section row (it becomes <span class="ui">Done with roles</span>) and a small grid opens under the row. Its note: "Who sees the Vitals section on the visit form. Edit includes View; a role with neither does not see the section. Administrators always see and edit every section." While the section is still on the shipped defaults the note ends with "These are the built-in defaults."</p>
-      <p>The grid has three columns, <span class="ui">Role</span>, <span class="ui">View</span> and <span class="ui">Edit</span>, and five rows: Reception, Triage, Provider, Lab, Pharmacy. Each cell is a checkbox. Ticking Edit ticks View as well; clearing View clears Edit. A role with neither box ticked does not see the section at all. Every tick saves at once, the row gains a "Roles changed" chip, and a <span class="ui">Reset to default</span> button appears; tapping it removes your change and the section goes back to the shipped defaults. Like everything in the editor, the grid is turned off for a non-admin account.</p>
-      <p>The shipped defaults, section by section. "Edit" means the role fills it in; "View" means read-only; a blank means the role does not see it:</p>
+      <ol class="steps">
+        <li><p>Tap <span class="ui">Roles</span> on a section row. It becomes <span class="ui">Done with roles</span> and a grid opens under the row, with the rows Reception, Triage, Provider, Lab and Pharmacy and the columns <span class="ui">View</span> and <span class="ui">Edit</span>.</p><p class="what-you-see">Its note ends "These are the built-in defaults." until you change something.</p></li>
+        <li><p>Tick the boxes. "Edit includes View; a role with neither does not see the section. Administrators always see and edit every section."</p><p class="what-you-see">Every tick saves at once. The row gains a "Roles changed" chip and a <span class="ui">Reset to default</span> button, which removes your change.</p></li>
+        <li><p>Tap <span class="ui">Done with roles</span>.</p></li>
+      </ol>
+      <p>The shipped defaults ("Edit" fills it in, "View" is read-only, blank is not shown):</p>
       <div class="table-scroll">
-      <table class="wide">
+      <table class="guide-table wide">
         <tr><th>Section</th><th>Reception</th><th>Triage</th><th>Provider</th><th>Lab</th><th>Pharmacy</th></tr>
         <tr><td>Visit</td><td>Edit</td><td></td><td>Edit</td><td></td><td></td></tr>
-        <tr><td>Patient</td><td>Edit</td><td>View</td><td>Edit</td><td>View</td><td>View</td></tr>
-        <tr><td>Vitals</td><td>View</td><td>Edit</td><td>Edit</td><td></td><td></td></tr>
+        <tr><td>Patient</td><td>Edit</td><td>View</td><td>View</td><td>View</td><td>View</td></tr>
+        <tr><td>Vitals</td><td>View</td><td>Edit</td><td>View</td><td></td><td></td></tr>
         <tr><td>History</td><td>View</td><td>Edit</td><td>Edit</td><td></td><td></td></tr>
         <tr><td>Chief Concern</td><td>View</td><td>Edit</td><td>Edit</td><td>View</td><td></td></tr>
         <tr><td>Labs</td><td>View</td><td>Edit</td><td>Edit</td><td>Edit</td><td></td></tr>
@@ -349,133 +355,212 @@ FROM devices ORDER BY last_sync_at DESC NULLS LAST;</code></pre>
         <tr><td>Your own sections</td><td>View</td><td></td><td>Edit</td><td></td><td></td></tr>
       </table>
       </div>
-      <p>How the form behaves for a role, so you can predict a change before you make it:</p>
-      <ul>
-        <li>A view-only section shows a "View only" chip in its header and cannot be typed into. A hidden section is simply not there. The form's subtitle names the slice, for example "Triage sections".</li>
-        <li>On a <em>new</em> visit (from <span class="ui">New visit</span> or <span class="ui">+ New patient</span>), Visit and Patient are editable for every role, whatever the grid says, and view-only sections are left out. That is why reception's registration is a short intake form.</li>
-        <li>A save writes only the sections the role could edit. Every other section is kept from the stored visit, so a pharmacy save never blanks the vitals that triage entered on another device.</li>
-        <li>The role's slice applies everywhere the form opens: on the Board, on the Lab and Pharmacy screens, from <span class="ui">New visit</span>, and from the <span class="ui">Visits</span> tab, where <span class="ui">Edit</span> and <span class="ui">+ New visit</span> on a patient's chart open the role's view too. The chart itself still shows every section of a visit, read-only, to every role.</li>
-      </ul>
-      <div class="tip">
-        <p><strong>Example.</strong> Your triage nurses also record the working diagnosis before the provider sees the patient. Open <span class="ui">Roles</span> on the Diagnosis section and tick <span class="ui">Edit</span> for Triage. From the next sync, triage sees and fills in Diagnosis on the board; the provider still edits everything. Change your mind with <span class="ui">Reset to default</span>.</p>
-      </div>
+      <p>Patient and Vitals are reception's and triage's work, done before the provider opens the visit, so the provider only views them. If your providers take their own vitals, tick <span class="ui">Edit</span> for Provider on Vitals.</p>
+
+      <h3>How the form behaves for a role</h3>
+      <table class="guide-table">
+        <tr><th>Situation</th><th>What the role gets</th></tr>
+        <tr><td>A view-only section</td><td>Starts collapsed to a summary of what was recorded, as label: value lines such as "Temperature 37.0 °C", with a "View only" chip; tapping the header opens the full read-only form. Empty: "Nothing recorded yet." The form's subtitle names the slice, for example "Triage sections" (<a href="user-guide.html#view-only">user guide</a>).</td></tr>
+        <tr><td>A hidden section</td><td>Simply not there.</td></tr>
+        <tr><td>A new visit (<span class="ui">New visit</span> or <span class="ui">+ New patient</span>)</td><td>Visit and Patient are editable for every role, whatever the grid says, and view-only sections are left out: a short intake form.</td></tr>
+        <tr><td>Saving</td><td>Writes only the sections the role could edit; the rest is kept from the stored visit, so a pharmacy save never blanks the vitals triage entered on another device.</td></tr>
+        <tr><td>Lab results</td><td>When the board has a Lab station, every role other than Lab (and admins) orders tests with the <span class="ui">Ordered</span> checkbox and reads results, "Awaiting result" until the lab enters one; the result controls, <span class="ui">Lab comments</span> and urinalysis are read-only for them. Without a Lab station, whoever can edit Labs enters results.</td></tr>
+        <tr><td>Where it applies</td><td>Everywhere the form opens: the queue, the Board, the Lab and Pharmacy screens, <span class="ui">New visit</span>, and <span class="ui">Edit</span> or <span class="ui">+ New visit</span> on a chart under <span class="ui">Visits</span>. The chart itself shows every section, read-only, to every role.</td></tr>
+      </table>
       <div class="callout">
-        <p><strong>Honest limit: roles are a workflow layer, not a security wall.</strong> The grid decides what a role's form shows and saves. It does not stop anyone from reading records. Any approved account can read the organization's records, for example from a patient's chart on the Visits tab, and the server cannot enforce field-level permissions. Approve only people you trust with the whole chart.</p>
+        <p><strong>Example.</strong> Your triage nurses record the working diagnosis before the provider sees the patient: open <span class="ui">Roles</span> on Diagnosis and tick <span class="ui">Edit</span> for Triage. From the next sync triage fills in Diagnosis; the provider still edits it. Undo with <span class="ui">Reset to default</span>.</p>
+      </div>
+      <div class="callout warn">
+        <p><strong>Honest limit: roles are a workflow layer, not a security wall.</strong> The grid decides what a role's form shows and saves. Any approved account can read the organization's records, for example from a chart under Visits, and the server cannot enforce field-level permissions. Approve only people you trust with the whole chart.</p>
       </div>
 
       <h2 id="lists">6. Clinic lists and patient flow stations</h2>
-      <p>The <strong>Clinic lists</strong> card under Settings explains itself: "These fill the pick lists on the visit form: sites, clinicians, complaints, procedures and referral destinations. On a cloud device your organization's lists replace these on the next sync. One entry per line, and commas belong inside an entry - "Grace N., clinical officer" is one clinician." Six boxes, each with its own save button:</p>
-      <ul>
-        <li><span class="ui">Clinic or site names</span>, saved with <span class="ui">Save sites</span></li>
-        <li><span class="ui">Clinicians</span>, saved with <span class="ui">Save clinicians</span></li>
-        <li><span class="ui">Complaints</span>, saved with <span class="ui">Save complaints</span>: the buttons under the Chief concern box</li>
-        <li><span class="ui">Procedures</span>, saved with <span class="ui">Save procedures</span></li>
-        <li><span class="ui">Referral destinations</span>, saved with <span class="ui">Save referral destinations</span></li>
-        <li><span class="ui">Patient flow stations (clinic mode board)</span>, saved with <span class="ui">Save stations</span>: the columns of the Board</li>
-      </ul>
-      <p>The format is the same everywhere: one entry per line, and commas belong inside an entry. Blank lines are dropped and duplicates are removed. After a save the app confirms, for example "Saved 3 sites. Reopen the visit form to see them." Sites and clinicians can never be saved empty, because every visit needs a site and the form could never save; the app refuses with "You need at least one site. An empty list would block every save." The other lists refuse too: "This list cannot be saved empty. One complaint per line."</p>
-      <p>Until real sites and clinicians are set, every visit is filed under the placeholders "Site A" and "Physician A", and Settings shows a red warning above the card: "This device is still filing records under placeholder names." Fix this before the first clinic day. Placeholder names are no use in a report.</p>
+      <p>The <span class="ui">Clinic lists</span> card under Settings fills the pick lists on the visit form. "One entry per line, and commas belong inside an entry - "Grace N., clinical officer" is one clinician." Blank lines are dropped and duplicates removed. Six boxes, each with its own save button:</p>
+      <table class="guide-table">
+        <tr><th>Box</th><th>Save button</th><th>Fills</th></tr>
+        <tr><td><span class="ui">Clinic or site names</span></td><td><span class="ui">Save sites</span></td><td>The site on each visit</td></tr>
+        <tr><td><span class="ui">Clinicians</span></td><td><span class="ui">Save clinicians</span></td><td>The clinician on each visit</td></tr>
+        <tr><td><span class="ui">Complaints</span></td><td><span class="ui">Save complaints</span></td><td>The buttons under the Chief concern box</td></tr>
+        <tr><td><span class="ui">Procedures</span></td><td><span class="ui">Save procedures</span></td><td>The Procedures section</td></tr>
+        <tr><td><span class="ui">Referral destinations</span></td><td><span class="ui">Save referral destinations</span></td><td>The Referral section</td></tr>
+        <tr><td><span class="ui">Patient flow stations (clinic mode board)</span></td><td><span class="ui">Save stations</span></td><td>The columns of the Board</td></tr>
+      </table>
+      <p>After a save: "Saved 3 sites. Reopen the visit form to see them."</p>
+      <div class="callout">
+        <p>Sites and clinicians can never be saved empty, because every visit needs a site: "You need at least one site. An empty list would block every save." The other lists refuse too: "This list cannot be saved empty. One complaint per line."</p>
+      </div>
+      <div class="callout warn">
+        <p><strong>Until real sites and clinicians are set, every visit is filed under "Site A" and "Physician A"</strong>, and Settings shows a red warning: "This device is still filing records under placeholder names." Fix this before the first clinic day; placeholder names are no use in a report.</p>
+      </div>
 
       <h3>Patient flow stations</h3>
-      <p>The stations are the columns of the Board, in order. The shipped list is Check-in, Triage, Provider, Lab, Pharmacy, Done. The box's own help text is the rule that matters:</p>
-      <div class="confirm">
-        <p class="lead">The stations box, in its own words</p>
+      <p>The stations are the columns of the Board, in order; the shipped list is Check-in, Triage, Provider, Lab, Pharmacy, Done. The box's own help text is the rule that matters:</p>
+      <div class="callout warn">
         <p>"One station per line, in board order; the last station means done for the day. Station names are how visits point at a station, so renaming one strands today's visits under the old name. To rename mid-day, add the new name first and remove the old one after the day is done."</p>
       </div>
-      <p>So: the <strong>last</strong> line is the done-for-the-day column, which the Board keeps collapsed. A visit points at its station <strong>by name</strong>. If you rename "Provider" to "Doctor" at noon, every visit sitting under Provider is no longer on any column; the Board does not lose them, but they drop off the columns until someone moves them. Add the new name first, move the visits, and remove the old name after the day is done. After a save the app confirms with "Saved 6 stations. The board picks them up on its next refresh."</p>
-      <p>Two more things depend on names. A signed-in role's own column carries a "your station" tag: reception's is always the first station, whatever it is called; triage, provider, lab and pharmacy find a station spelled like their role (capitals do not matter). Rename "Triage" to "Nursing" and triage staff lose the tag, nothing else. The shipped Lab column, between Provider and Pharmacy, is where the other roles park a patient who is at the lab: the Lab team itself works from the Lab tab, which lists visits by ordered tests, not by column, and lab accounts have no Board tab unless they are admins. If your flow never sends a patient to the lab and back, remove the Lab station; the Lab tab works the same without it.</p>
+      <p>The last line is the done column, which the Board keeps collapsed. Rename "Provider" to "Doctor" at noon and every visit under Provider drops off the columns until someone moves it. To rename mid-day:</p>
+      <ol class="steps">
+        <li><p>Add the new name as its own line and tap <span class="ui">Save stations</span>.</p><p class="what-you-see">"Saved 6 stations. The board picks them up on its next refresh."</p></li>
+        <li><p>Move the visits to the new column on the Board.</p></li>
+        <li><p>Remove the old name after the day is done.</p></li>
+      </ol>
+      <table class="guide-table">
+        <tr><th>What else depends on station names</th><th>Rule</th></tr>
+        <tr><td>The "your station" tag on the Board</td><td>Reception's is always the first station, whatever it is called; triage, provider, lab and pharmacy find a station spelled like their role (capitals do not matter). Rename "Triage" to "Nursing" and triage staff lose the tag, nothing else.</td></tr>
+        <tr><td>The Triage and Provider queues</td><td>Each lists the column spelled like the role. Without one the queue says "No Provider station on the board" (or Triage) and points at the Board.</td></tr>
+        <tr><td>The Lab column</td><td>Where other roles park a patient who is at the lab; while it exists only the Lab role and admins enter results. The Lab tab lists visits by ordered tests, not by column, so if your flow never sends a patient to the lab and back, remove the station: the Lab tab works the same, and whoever can edit Labs enters results.</td></tr>
+      </table>
 
       <h2 id="formulary">7. Formulary</h2>
-      <p>The <strong>Formulary</strong> card under Settings holds the medications offered on the visit form: a table with the columns <span class="ui">Medication</span>, <span class="ui">Dose</span>, <span class="ui">Unit</span>, <span class="ui">Category</span> and <span class="ui">Controlled</span>, a <span class="ui">Remove</span> button on each row, and the buttons <span class="ui">Add medication</span> and <span class="ui">Save formulary</span>. Clinic ships with 38 entries, from "Amoxicillin 500mg" to "Normal Saline 500ml". The formulary cannot be saved empty; after a save the app confirms, for example, "Saved 38 medications. Reopen the visit form to see them."</p>
-      <div class="callout">
-        <p><strong>One rule matters more than the rest.</strong> The card's own words: "Edit carefully: saved prescriptions keep pointing at the same entry, so never reuse a row for a different drug - add a new row instead." Editing a row to become a different drug silently changes what old prescriptions appear to say, and what the pharmacy screen shows for them. Add new rows; remove rows you no longer stock.</p>
+      <p>The <span class="ui">Formulary</span> card under Settings is a table with the columns <span class="ui">Medication</span>, <span class="ui">Dose</span>, <span class="ui">Unit</span>, <span class="ui">Category</span> and <span class="ui">Controlled</span>, <span class="ui">Remove</span> on each row, and the buttons <span class="ui">Add medication</span> and <span class="ui">Save formulary</span>. Clinic ships with 38 entries, from "Amoxicillin 500mg" to "Normal Saline 500ml".</p>
+      <p>It refuses to save empty ("The formulary cannot be saved empty.") and confirms with, for example, "Saved 38 medications. Reopen the visit form to see them."</p>
+      <div class="callout warn">
+        <p>"Edit carefully: saved prescriptions keep pointing at the same entry, so never reuse a row for a different drug - add a new row instead." Editing a row into a different drug silently changes what old prescriptions appear to say. Add new rows; remove rows you no longer stock.</p>
       </div>
-      <p>The dose in the formulary fills the dose box on the visit form when the drug is picked. The unit decides whether the app can work out a quantity for the pharmacy: it counts "tabs", "caps" and "sachet". A line with another unit, for example "ml" or "cream", records no quantity, and on the Pharmacy screen that line reads "no quantity worked out, count by hand". The pharmacy's <span class="ui">Qty</span> box is prefilled from the computed quantity, so a formulary with the right units saves them typing on every line.</p>
+      <table class="guide-table">
+        <tr><th>Column</th><th>Effect on the visit form</th></tr>
+        <tr><td>Dose</td><td>Fills the dose box when the drug is picked.</td></tr>
+        <tr><td>Unit</td><td>Decides whether the app can work out a quantity for the pharmacy: it counts "tabs", "caps" and "sachet". Any other unit, for example "ml" or "cream", records no quantity, and on the Pharmacy screen that line reads "no quantity worked out, count by hand" instead of prefilling the <span class="ui">Qty</span> box.</td></tr>
+      </table>
 
       <h2 id="labs">8. Lab tests and reference ranges</h2>
-      <p>The <strong>Lab tests</strong> card defines the lab panel on the visit form: a table with the columns <span class="ui">Test</span>, <span class="ui">Type</span>, <span class="ui">Unit</span>, <span class="ui">On by default</span> and <span class="ui">Ranges</span>, a <span class="ui">Remove</span> button on each row, and the buttons <span class="ui">Add lab test</span> and <span class="ui">Save lab tests</span>. A test's type is "Positive / negative" (POS and NEG buttons on the form) or "Number" (a number box with the unit as its hint). The card says: "Saving replaces the whole panel for your organization." The list cannot be saved empty.</p>
-      <p>In Clinic the lab panel also drives the Lab workspace. On the Labs section of a visit, staff tick <span class="ui">Ordered</span> next to a test; a visit with a test ordered and no result yet appears on the lab role's <span class="ui">Lab</span> tab, longest-waiting first, and leaves it when the result is entered. Removing a test from the panel removes it from the form, but results already saved on visits are kept.</p>
+      <p>The <span class="ui">Lab tests</span> card is a table with the columns <span class="ui">Test</span>, <span class="ui">Type</span>, <span class="ui">Unit</span>, <span class="ui">On by default</span> and <span class="ui">Ranges</span>, <span class="ui">Remove</span> on each row, and the buttons <span class="ui">Add lab test</span> and <span class="ui">Save lab tests</span>. A type is "Positive / negative" (POS and NEG on the form) or "Number" (a box with the unit as its hint).</p>
+      <p>"Saving replaces the whole panel for your organization." The list cannot be saved empty. A visit with a test ticked <span class="ui">Ordered</span> and no result yet appears on the <span class="ui">Lab</span> tab, longest-waiting first, and leaves it when the result is entered. Removing a test keeps results already saved.</p>
 
       <h3>On by default</h3>
-      <p>The <span class="ui">On by default</span> checkbox is the one control for whether a test is offered on the visit form; there is no separate list of hidden tests to manage. Ticked, the test is on the form. Unticked, the test is hidden on the visit form: it stays in your panel, so the list is not cluttered with tests the clinic does not run, and results already saved for it are not touched. Untick and tap <span class="ui">Save lab tests</span> to take a test off the form; tick and save to put it back. Like the rest of the panel, the change reaches every device on the next sync.</p>
-      <p>Three built-in tests ship unticked: "Hepatitis C (Anti-HCV)", "COVID-19 Rapid" and "TB (AFB Smear)". If your clinic runs one of them, tick its box and save, and it is on the visit form like any other test.</p>
+      <p>The <span class="ui">On by default</span> checkbox is the one control for whether a test is offered on the visit form. Unticked, the test stays in your panel with its saved results, but is hidden on the form.</p>
+      <ol class="steps">
+        <li><p>Untick <span class="ui">On by default</span> on the row, or tick it to put a test back.</p></li>
+        <li><p>Tap <span class="ui">Save lab tests</span>. The change reaches every device on the next sync.</p></li>
+      </ol>
+      <p>Three built-in tests ship unticked: "Hepatitis C (Anti-HCV)", "COVID-19 Rapid" and "TB (AFB Smear)".</p>
 
       <h3>Reference ranges: new results only</h3>
-      <p>On a Number test, the <span class="ui">Ranges</span> button opens the reference range editor, headed <span class="ui">Reference ranges</span>. On a row that has not been saved yet the button is off, with the reason "Save lab tests first, then set the reference ranges for this test." The card explains what ranges do: "On a numeric test, Ranges sets the bands that interpret a value as it is entered; changing them affects new results only, and visits already saved keep the interpretation recorded at the time." The editor repeats that rule in a note, and it governs everything here:</p>
-      <div class="confirm">
-        <p class="lead">The editor's standing notice</p>
-        <p>"Changing ranges affects new results only.</p>
-        <p>Visits already saved keep the interpretation that was recorded at the time; editing ranges never rewrites a recorded result. Only new results entered after this change use the new ranges."</p>
+      <div class="callout warn">
+        <p><strong>"Changing ranges affects new results only.</strong> Visits already saved keep the interpretation that was recorded at the time; editing ranges never rewrites a recorded result. Only new results entered after this change use the new ranges." That standing notice in the editor governs everything here.</p>
       </div>
-      <p>Each range is one row: a <span class="ui">Label</span> (for example "Normal"), <span class="ui">From (at least)</span>, <span class="ui">Up to (below)</span>, and a <span class="ui">Color</span>: None, Green (normal), Amber (caution), Red (critical) or Gray (neutral). An empty bound is open. Add rows with <span class="ui">Add range</span>, reorder with the arrows, remove with <span class="ui">Remove</span>. The matching rule: "Ranges are checked top to bottom and the first match wins. A value equal to "from" is inside the range; a value equal to "up to" is not - it belongs to the next range up."</p>
-      <p>Before you save, a box headed "Check these before saving (saving is still allowed):" lists anything odd: a range with no label, a range that can never match, two ranges that overlap, a gap no range covers, or a bound that is not a number. Read it. Use <span class="ui">Try a value</span> at the bottom to see exactly what a new result would record, for example "Would record 182 mg/dL with interpretation Elevated". Then tap <span class="ui">Save ranges</span>; <span class="ui">Cancel</span> asks "Discard the range changes?" if you edited anything. The default bands: Blood Glucose in mg/dL is Low below 70, Normal from 70, Elevated from 140 and High from 200. Hemoglobin in g/dL is Severe Anemia below 7, Moderate Anemia from 7, Mild Anemia from 10 and Normal from 12.</p>
+      <ol class="steps">
+        <li><p>On a Number test, tap <span class="ui">Ranges</span>. On a row not saved yet it is off: "Save lab tests first, then set the reference ranges for this test."</p><p class="what-you-see">The editor opens, headed <span class="ui">Reference ranges</span>.</p></li>
+        <li><p>Edit the rows: a <span class="ui">Label</span> (for example "Normal"), <span class="ui">From (at least)</span>, <span class="ui">Up to (below)</span>, and a <span class="ui">Color</span> of None, Green (normal), Amber (caution), Red (critical) or Gray (neutral). An empty bound is open. <span class="ui">Add range</span>, the arrows and <span class="ui">Remove</span> manage rows.</p></li>
+        <li><p>Read the box "Check these before saving (saving is still allowed):" if it appears: a range with no label, one that can never match, two that overlap, a gap, or a bound that is not a number.</p></li>
+        <li><p>Use <span class="ui">Try a value</span> at the bottom.</p><p class="what-you-see">For example "Would record 182 mg/dL with interpretation Elevated".</p></li>
+        <li><p>Tap <span class="ui">Save ranges</span>. <span class="ui">Cancel</span> asks "Discard the range changes?" if you edited anything.</p></li>
+      </ol>
+      <p>The matching rule: "Ranges are checked top to bottom and the first match wins. A value equal to "from" is inside the range; a value equal to "up to" is not - it belongs to the next range up."</p>
+      <table class="guide-table">
+        <tr><th>Default bands</th><th>Ranges</th></tr>
+        <tr><td>Blood Glucose, mg/dL</td><td>Low below 70, Normal from 70, Elevated from 140, High from 200</td></tr>
+        <tr><td>Hemoglobin, g/dL</td><td>Severe Anemia below 7, Moderate Anemia from 7, Mild Anemia from 10, Normal from 12</td></tr>
+      </table>
 
       <h2 id="presets">9. Diagnosis quick-picks and prescription presets</h2>
-      <p>Both live in their own cards under Settings, and both belong to the organization: "a change reaches everyone on the next sync." <strong>Diagnosis quick-picks</strong> are the buttons under the Diagnosis box on the visit form; each tap appends to the diagnosis text. <strong>Prescription presets</strong> are one-tap bundles in the Medications section; applying one adds its medication lines and its treatment notes to the visit, and only ever adds.</p>
-      <p>In both cards each entry is one row with <span class="ui">↑</span> and <span class="ui">↓</span>, a <span class="ui">Hide</span> or <span class="ui">Show</span> button, and <span class="ui">Remove</span>. <strong>Hide</strong> keeps the entry in your list but takes its button off the visit form; the quick-picks card's hover text says it plainly: "Hidden entries stay in the list but do not appear on the visit form." <span class="ui">Show</span> reverses it. <strong>Remove</strong> deletes the entry from the list; saved visits are never touched, and the confirm says so: "Diagnoses already saved on visits keep their text - only the quick-pick button goes away." and, for a preset, "Prescriptions already saved on visits are kept, and the formulary is not changed - only the one-tap preset goes away." Removing a built-in adds one more line: "This is a built-in preset, so once saved it stays removed for your organization after sync." Nothing is written until you tap <span class="ui">Save diagnosis quick-picks</span> or <span class="ui">Save prescription presets</span>, and neither list can be saved empty; the quick-picks card refuses with "Hide entries instead if you do not want them on the visit form." and the presets card says the same of presets.</p>
-      <p>Add a quick-pick by typing it in the box with the hint "Add a diagnosis" and tapping <span class="ui">Add diagnosis</span>. Build a preset with <span class="ui">Add preset</span> (or <span class="ui">Edit</span> on an existing one): an editor opens with a <span class="ui">Preset name</span> box, medication lines picked from the formulary (or "Other drug (type a name)"), a dose, a frequency and a duration per line, <span class="ui">+ Add medication</span>, and a <span class="ui">Treatment notes added with this preset (optional)</span> box. Finish with <span class="ui">Add this preset</span> or <span class="ui">Apply changes</span>. Under each line the editor says what the preset will record, for example "14 tabs", or "Not in the formulary - prescriptions from this line record no dispensing quantity." Check those lines before saving: they are what the pharmacy screen will show.</p>
+      <p>Both have cards under Settings and belong to the organization: "a change reaches everyone on the next sync." <span class="ui">Diagnosis quick-picks</span> are the buttons under the Diagnosis box; each tap appends to the diagnosis text. <span class="ui">Prescription presets</span> are one-tap bundles in Medications; applying one adds its medication lines and treatment notes, and only ever adds.</p>
+      <table class="guide-table">
+        <tr><th>On each entry</th><th>What it does</th></tr>
+        <tr><td><span class="ui">↑</span> <span class="ui">↓</span></td><td>Reorder.</td></tr>
+        <tr><td><span class="ui">Hide</span> / <span class="ui">Show</span></td><td>Hide takes the button off the visit form: "Hidden entries stay in the list but do not appear on the visit form." Show reverses it.</td></tr>
+        <tr><td><span class="ui">Remove</span></td><td>Deletes the entry; saved visits are never touched. The confirm says so: "Diagnoses already saved on visits keep their text - only the quick-pick button goes away." or "Prescriptions already saved on visits are kept, and the formulary is not changed - only the one-tap preset goes away." For a built-in it adds: "This is a built-in preset, so once saved it stays removed for your organization after sync."</td></tr>
+        <tr><td><span class="ui">Save diagnosis quick-picks</span> / <span class="ui">Save prescription presets</span></td><td>Nothing is written until you tap it. Neither list can be saved empty; the quick-picks card refuses with "Hide entries instead if you do not want them on the visit form." and the presets card says the same of presets.</td></tr>
+      </table>
+
+      <h3>Adding a quick-pick</h3>
+      <ol class="steps">
+        <li><p>Type it in the box with the hint "Add a diagnosis" and tap <span class="ui">Add diagnosis</span>.</p></li>
+        <li><p>Tap <span class="ui">Save diagnosis quick-picks</span>.</p></li>
+      </ol>
+
+      <h3>Building a preset</h3>
+      <ol class="steps">
+        <li><p>Tap <span class="ui">Add preset</span>, or <span class="ui">Edit</span> on an existing one, and fill in <span class="ui">Preset name</span>.</p></li>
+        <li><p>Tap <span class="ui">+ Add medication</span> for each line: a drug from the formulary (or "Other drug (type a name)"), a dose, a frequency and a duration.</p><p class="what-you-see">Under each line, what the preset will record, for example "14 tabs" or "Not in the formulary - prescriptions from this line record no dispensing quantity." Check those lines: they are what the pharmacy screen will show.</p></li>
+        <li><p>Optionally fill in <span class="ui">Treatment notes added with this preset (optional)</span>.</p></li>
+        <li><p>Tap <span class="ui">Add this preset</span> or <span class="ui">Apply changes</span>, then <span class="ui">Save prescription presets</span>.</p></li>
+      </ol>
       <p>Clinic ships with 31 quick-picks, from "Malaria" to "Abscess", and 21 presets, from "H. pylori Triple Therapy" to "MSK Pain".</p>
 
       <h2 id="backup">10. Backup and restore</h2>
-      <p>In Clinic the cloud is the live copy, and every device that syncs holds a copy of the organization's records as far as it has synced. The backup file is still the organization's archive: a cloud project can be paused, deleted, or outlive its free tier, and the file is the copy that is yours. The <strong>Backup and restore</strong> card under Settings says what a backup is: "A backup is a single file holding every record on this device plus your form and preset settings. It never contains your cloud key or device identity. Take one at the end of each clinic day - it is the safety net if a device is lost, wiped, or replaced."</p>
-      <p>Make it a habit on one device that has synced: one tap on <span class="ui">Download backup</span> at the end of each clinic day, and the file moved somewhere safe. The app confirms with the count: "Backup downloaded with 140 records. Keep it somewhere safe." If a device ever shows the warning "Back this device up today." above the screen, do it then, on that device.</p>
+      <p>The cloud is the live copy, but the backup file is still the archive: a project can be paused, deleted or outlive its free tier. The file holds every record on the device plus your form and preset settings, and "never contains your cloud key or device identity."</p>
+      <ol class="steps">
+        <li><p>On a device that has synced, tap <span class="ui">Download backup</span> on the <span class="ui">Backup and restore</span> card at the end of each clinic day.</p><p class="what-you-see">"Backup downloaded with 140 records. Keep it somewhere safe."</p></li>
+        <li><p>Move the file somewhere safe.</p></li>
+      </ol>
+      <div class="callout warn">
+        <p>If a device shows the warning "Back this device up today." above the screen, do it then, on that device.</p>
+      </div>
 
       <h3>Restore merges; it never wipes</h3>
-      <p>Tap <span class="ui">Restore from a backup</span> and pick the file. The card's own footer is the rule: "Restoring merges: nothing already on this device is lost, and where the same record exists in both the more recently saved version wins." A restore cannot undo newer work. The app confirms first:</p>
-      <div class="confirm">
-        <p class="lead">The records restore confirm</p>
-        <p>"Restore records from "dh-emr-backup-2026-10-06.json"?</p>
-        <p>Records in the file are merged into this device. Where the same record exists in both, the more recently saved version is kept, so this cannot undo newer work."</p>
+      <ol class="steps">
+        <li><p>Tap <span class="ui">Restore from a backup</span> and pick the file.</p><p class="what-you-see">"Restore records from "dh-emr-backup-2026-10-06.json"? Records in the file are merged into this device. Where the same record exists in both, the more recently saved version is kept, so this cannot undo newer work."</p></li>
+        <li><p>Answer the second question, about settings. Tap Cancel unless you are deliberately restoring configuration.</p><p class="what-you-see">"Also restore the settings from this file? That replaces this device's form layout, sites, providers and formulary with the ones in the backup. If you are an administrator account those settings go out to the whole team on the next sync. Choose Cancel to restore records only. That is almost always what you want."</p></li>
+        <li><p>Read the result.</p><p class="what-you-see">For example "Restored: 12 added, 3 updated, 125 already newer here. 140 records on this device. Settings were left as they are. Restored records will upload on the next sync."</p></li>
+      </ol>
+      <p>The card's footer is the rule: "Restoring merges: nothing already on this device is lost, and where the same record exists in both the more recently saved version wins." Restored records upload like any other, so a restore on one device reaches every device.</p>
+      <div class="callout warn">
+        <p><strong>Take the settings question seriously on an admin account:</strong> restoring months-old settings and syncing would roll the whole organization's forms, lists and formulary back.</p>
       </div>
-      <p>Then a second question, about settings:</p>
-      <div class="confirm">
-        <p class="lead">The settings restore confirm</p>
-        <p>"Also restore the settings from this file?</p>
-        <p>That replaces this device's form layout, sites, providers and formulary with the ones in the backup. If you are an administrator account those settings go out to the whole team on the next sync.</p>
-        <p>Choose Cancel to restore records only. That is almost always what you want."</p>
-      </div>
-      <p>In Clinic, read "admin device" in that question as "a device where an administrator is signed in": that is when restored settings go out to the organization. Take the last line seriously there: restoring months-old settings and syncing would roll the whole organization's forms, lists and formulary back. Tap Cancel unless you are deliberately restoring configuration. The result message tells you exactly what happened, for example "Restored: 12 added, 3 updated, 125 already newer here. 140 records on this device. Settings were left as they are. Restored records will upload on the next sync." Restored records upload to the cloud like any other, so a restore on one device reaches every device.</p>
-      <p>The separate <strong>Moving from another cloud project</strong> card is for one job: bringing records across from a project this device is not connected to, for example after moving to a new Supabase project. Export the records from the old project as JSON, then tap <span class="ui">Import records from a file</span>. The card's warning: "Export as JSON, not CSV. CSV flattens lab results and medication lists into text and they cannot be read back reliably."</p>
 
-      <h2 id="recovery">11. Recovery: locked out, no admin left, forgotten passwords</h2>
-      <p>The Staff screen's footer points here: "If you ever lock yourself out entirely, the recovery steps live in the setup guide (SETUP.md), using the project dashboard." The schema has no self-service admin path on purpose, so exactly these situations need the dashboard, and nothing else does.</p>
+      <h3>Moving from another cloud project</h3>
+      <p>The <span class="ui">Moving from another cloud project</span> card brings records across from a project this device is not connected to, for example after moving to a new Supabase project.</p>
+      <ol class="steps">
+        <li><p>Export the records from the old project as JSON.</p></li>
+        <li><p>Tap <span class="ui">Import records from a file</span> and pick it.</p></li>
+      </ol>
+      <div class="callout warn">
+        <p>"Export as JSON, not CSV. CSV flattens lab results and medication lists into text and they cannot be read back reliably."</p>
+      </div>
+
+      <h2 id="recovery">11. Recovery</h2>
+      <p>Locked out, no admin left, forgotten passwords: the Staff screen's footer points to the setup guide (SETUP.md) and the project dashboard. The schema has no self-service admin path on purpose; exactly these situations need the dashboard, and nothing else does.</p>
 
       <h3>A staff member forgot their password</h3>
-      <p>There is no password reset in the app. The sign-in screen says why: "Forgot your password? Your administrator can set up a fresh account for you - password reset emails are not reliable on most clinic projects." Two ways to give them a fresh account:</p>
-      <ul>
-        <li>They tap <span class="ui">New here? Create an account</span> on the sign-in screen and create a new account with a <em>different</em> email address. It appears on your Staff list as Pending; set the role and approve it.</li>
-        <li>Or you create it for them in the dashboard: Authentication, then Users, then Add user, choose "Create new user" and set a temporary password. Do not use "Send invitation"; it depends on the same unreliable mailer. The account appears on your Staff list as Pending, named after the part of the email before the @ sign; set the role and approve it.</li>
-      </ul>
-      <p>Then <span class="ui">Revoke</span> the old account. Nothing it recorded is lost; visits stay with the organization. The old account can be restored later if the password turns up.</p>
+      <p>There is no password reset in the app: "Forgot your password? Your administrator can set up a fresh account for you - password reset emails are not reliable on most clinic projects."</p>
+      <ol class="steps">
+        <li><p>Give them a fresh account: they tap <span class="ui">New here? Create an account</span> with a different email address, or you create it in the dashboard (Authentication, Users, Add user, "Create new user", with a temporary password; not "Send invitation", which depends on the same unreliable mailer).</p><p class="what-you-see">The account appears on your Staff list as Pending; a dashboard-made one is named after the part of the email before the @ sign.</p></li>
+        <li><p>Set the role and tap <span class="ui">Approve</span>.</p></li>
+        <li><p><span class="ui">Revoke</span> the old account. Nothing it recorded is lost, and it can be restored if the password turns up.</p></li>
+      </ol>
 
-      <h3>The only admin forgot their password, or the organization has no admin left</h3>
-      <p>Create a replacement admin, or promote a trusted existing account, from the dashboard. First, if a new account is needed: Authentication, then Users, then Add user, "Create new user", with a temporary password. Then, in the SQL Editor, one line; it must return exactly one row (zero rows means the email did not match or the account does not exist yet):</p>
+      <h3>The only admin forgot their password, or no admin is left</h3>
+      <ol class="steps">
+        <li><p>If a new account is needed, create it in the dashboard as above. A trusted existing account works too.</p></li>
+        <li><p>In the SQL Editor, run one line. It must return exactly one row; zero rows means the email did not match or the account does not exist yet.</p>
 <pre><code>UPDATE users_profiles SET is_admin = true, activated_at = now(), revoked_at = NULL
 WHERE id = (SELECT id FROM auth.users WHERE lower(email) = lower('NEW@EXAMPLE.ORG'))
-RETURNING id, is_admin, activated_at;</code></pre>
-      <p>The <code>revoked_at = NULL</code> part matters: promoting a once-revoked account without clearing the revocation does nothing, silently. Sign in with that account on a Clinic device; it opens on the Board with the Staff tab. This is the same line the setup guide uses for the <a href="setup.html#first-admin">very first admin</a>, and its <a href="setup.html#recovery">recovery section</a> repeats these steps.</p>
-
-      <h3>A revoked device</h3>
-      <p>Accounts are restored from the Staff screen (<a href="#staff">section 2</a>). Devices are not: the app can never un-revoke a device, and the SQL editor line in <a href="#fleet">section 4</a> is the only way back.</p>
+RETURNING id, is_admin, activated_at;</code></pre></li>
+        <li><p>Sign in with that account on a Clinic device.</p><p class="what-you-see">It opens on the Board with the Staff tab.</p></li>
+      </ol>
+      <div class="callout warn">
+        <p>The <code>revoked_at = NULL</code> part matters: promoting a once-revoked account without clearing the revocation does nothing, silently.</p>
+      </div>
+      <p>The setup guide uses the same line for the <a href="setup.html#first-admin">very first admin</a>; its <a href="setup.html#recovery">recovery section</a> repeats these steps. A revoked device is different: accounts are restored from the Staff screen, devices only by the SQL line in <a href="#fleet">section 4</a>.</p>
 
       <h3>Where the SQL and the setup guide live</h3>
-      <p>The setup guide, <code>SETUP.md</code>, and the two SQL files that set up and check a project, <code>setup.sql</code> and <code>verify.sql</code>, live in the <code>supabase</code> folder of the DH EMR source code until they are published on this site. The setup guide also has a row-count check to run before and after any change to the project, and a note on free-tier pausing: a project that goes a week without traffic is paused, and one paused long enough can stop being restorable in place. A clinic that runs all day is never idle that long; a seasonal one is. Keep the backup files either way.</p>
+      <p><code>SETUP.md</code> and the two SQL files that set up and check a project, <code>setup.sql</code> and <code>verify.sql</code>, live in the <code>supabase</code> folder of the DH EMR source code until they are published here. The setup guide also has a row-count check to run before and after any change to the project.</p>
+      <div class="callout warn">
+        <p><strong>Free-tier pausing.</strong> A project that goes a week without traffic is paused, and one paused long enough can stop being restorable in place. A seasonal clinic is idle that long; keep the backup files either way.</p>
+      </div>
 
       <h2 id="demo">12. The demo</h2>
-      <p>The <a href="../../demo/clinic/">Clinic demo</a> is a fictional clinic day already in progress: patients waiting at check-in, in triage, with the provider, at the lab and at the pharmacy, and simulated colleagues who keep working while you watch. A demo stays in the browser and never syncs anywhere. It refuses every cloud connection on purpose, so nothing done in a demo can touch a real organization, and a demo cannot be used to run a clinic.</p>
-      <p>A side panel headed <span class="ui">You are simulating</span> is where you pick the role you are trying: Reception, Triage, Provider, Lab, Pharmacy or Admin, each landing on its own workspace. Pick <strong>Admin</strong> to rehearse this guide: the Staff screen over a fictional roster (approve, set roles, revoke, make admin), and every Settings editor as the real thing: clinic lists and stations, formulary, lab tests and ranges, quick-picks and presets, and the template editor with the Roles grid. Then switch to Triage or Pharmacy in the panel and open a visit to see what your Roles grid change did. Build a preset, set a reference range, add a section, break things freely; <span class="ui">Reset demo</span> in the banner puts the clinic day back. The panel's <span class="ui">Act now</span> makes a colleague act at once, and <span class="ui">Pause activity</span> stops them while you look at something.</p>
-      <p>What the demo cannot show is anything that needs a real backend: the sync chip, Cloud sync, and the Invite a device card are turned off there, and sign-in and sign-out are simulated through the panel. The <a href="../../demo/field/">Field demo</a> is the separate product's demo, with the same Settings editors and no accounts.</p>
+      <p>The <a href="../../demo/clinic/">Clinic demo</a> is a fictional clinic day in progress, with simulated colleagues who keep working while you watch. It stays in the browser, never syncs, and refuses every cloud connection, so nothing done there can touch a real organization; it cannot be used to run a clinic.</p>
+      <ol class="steps">
+        <li><p>In the panel headed <span class="ui">You are simulating</span>, pick <span class="ui">Admin</span> (the other seats are Reception, Triage, Provider, Lab and Pharmacy).</p><p class="what-you-see">The Staff screen over a fictional roster, and every Settings editor as the real thing, Roles grid included.</p></li>
+        <li><p>Build a preset, set a range, add a section, change a Roles grid cell; break things freely.</p></li>
+        <li><p>Switch to Triage or Pharmacy in the panel and open a visit to see what your change did.</p></li>
+        <li><p>Tap <span class="ui">Reset demo</span> in the banner to put the clinic day back.</p></li>
+      </ol>
+      <p><span class="ui">Act now</span> makes a colleague act at once; <span class="ui">Pause activity</span> stops them. Anything that needs a real backend is off: the sync chip, Cloud sync and the Invite a device card, with sign-in and sign-out simulated through the panel. The <a href="../../demo/field/">Field demo</a> is the separate product's, with the same editors and no accounts.</p>
 
       <h2 id="limits">13. Honest limits</h2>
-      <ul>
-        <li><strong>Roles are a workflow layer, not a security wall.</strong> The Roles grid decides what each role's form shows and saves. Any approved account can read the organization's records, and the server cannot enforce field-level permissions. Approve only people you trust with the whole chart.</li>
-        <li><strong>The publishable key in the join link is public by design.</strong> It unlocks nothing on its own, because every read and write needs an approved account. A link cannot be expired from the app; it works for as long as the project's key does. Share it with staff, not the public, and approve only people you know.</li>
-        <li><strong>Revocation waits for the device to reconnect.</strong> A device that is offline keeps its last confirmed account and is cut off the moment it reconnects. After a week without reaching the server, the app shows the banner "Reconnect to confirm your account." but keeps working.</li>
-        <li><strong>A lost device keeps its data.</strong> Every device that syncs holds a local copy of the organization's records as far as it has synced. Revoking the device and its account stops uploads and sign-ins; it does nothing to what is already on the device, and that data is not encrypted at rest.</li>
-        <li><strong>Settings follow the account, not the device.</strong> Any device where an admin account is signed in, including one that joined by link, can change the organization's lists, formulary, lab tests, presets and forms for everyone. A non-admin sees the editors turned off with the note "Only an administrator account can change this. Ask your clinic's admin." Make admins sparingly, and revoke an admin's account, not just their device, when they leave.</li>
-        <li><strong>Clinic needs the internet.</strong> A device keeps working on what it has while the connection is down and syncs when it returns, but nothing new from other devices arrives in the meantime. For days when the backend is down, DH EMR Field is the paper-chart entry app, and there is no way to move Field records into a Clinic organization today.</li>
-        <li><strong>DH EMR is not a certified EHR and is not HIPAA-compliant.</strong> It must not be used where a certified EHR is required. It is intended for global-health use outside the US.</li>
-      </ul>
+      <table class="guide-table">
+        <tr><th>Limit</th><th>What it means for you</th></tr>
+        <tr><td>Roles are a workflow layer, not a security wall</td><td>Any approved account can read the organization's records; the server cannot enforce field-level permissions (<a href="#templates">section 5</a>).</td></tr>
+        <tr><td>The publishable key in the join link is public by design</td><td>It unlocks nothing on its own, and a link cannot be expired from the app (<a href="#invite">section 3</a>).</td></tr>
+        <tr><td>Revocation waits for the device to reconnect</td><td>An offline device keeps its last confirmed account (<a href="#staff">section 2</a>). After a week without reaching the server, the app shows "Reconnect to confirm your account." but keeps working.</td></tr>
+        <tr><td>A lost device keeps its data</td><td>Revoking the device and its account stops uploads and sign-ins; it does nothing to what is already on the device, and that data is not encrypted at rest (<a href="#fleet">section 4</a>).</td></tr>
+        <tr><td>Settings follow the account, not the device</td><td>Any device where an admin is signed in, including one that joined by link, can change the organization's settings for everyone. Make admins sparingly, and revoke an admin's account, not just their device, when they leave.</td></tr>
+        <tr><td>Clinic needs the internet</td><td>A device keeps working on what it has while the connection is down and syncs when it returns, but nothing new from other devices arrives meanwhile. For days when the backend is down, DH EMR Field is the paper-chart entry app, and there is no way to move Field records into a Clinic organization today.</td></tr>
+        <tr><td>DH EMR is not a certified EHR and is not HIPAA-compliant</td><td>It must not be used where a certified EHR is required. It is intended for global-health use outside the US.</td></tr>
+      </table>
 
       <p class="backlink"><a href="./">Back to the Clinic guides</a></p>
     </div>

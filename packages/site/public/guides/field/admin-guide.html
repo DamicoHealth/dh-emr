@@ -53,27 +53,8 @@
       padding: 0.05rem 0.35rem;
       font-size: 0.92em;
     }
-    .toc {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-1);
-      padding: 1rem 1.25rem;
-      margin: 1.25rem 0 0.5rem;
-    }
-    .toc p { margin: 0 0 0.4rem; font-weight: 700; }
-    .toc ol {
-      margin: 0;
-      padding-left: 1.3rem;
-      columns: 2;
-      column-gap: 2rem;
-    }
     @media (max-width: 34rem) {
-      .toc ol { columns: 1; }
     }
-    .toc li { margin: 0.25rem 0; }
-    .toc a { color: var(--primary); text-decoration: none; }
-    .toc a:hover { text-decoration: underline; }
     .guide table {
       width: 100%;
       border-collapse: collapse;
@@ -91,46 +72,6 @@
     .guide tr:last-child td { border-bottom: 0; }
     .guide th { font-size: 0.9rem; background: var(--bg); }
     .table-scroll { overflow-x: auto; }
-    .callout {
-      background: var(--warn-bg);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-      margin: 0.9rem 0;
-      color: var(--warn-ink);
-    }
-    .callout p { color: var(--warn-ink); margin: 0.35rem 0; }
-    .callout p:first-child { margin-top: 0; }
-    .callout p:last-child { margin-bottom: 0; }
-    .callout strong { color: var(--warn-ink); }
-    .tip {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--primary);
-      border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-      margin: 0.9rem 0;
-    }
-    .tip p { margin: 0.35rem 0; }
-    .tip p:first-child { margin-top: 0; }
-    .tip p:last-child { margin-bottom: 0; }
-    .confirm {
-      margin: 1rem 0;
-      padding: 0.85rem 1.1rem;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--primary);
-      border-radius: var(--radius);
-    }
-    .confirm .lead {
-      margin: 0 0 0.4rem;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-    }
-    .confirm p { margin: 0.4rem 0; }
     .backlink { margin-top: 2.5rem; }
   </style>
 </head>
@@ -155,15 +96,15 @@
 
 <main>
   <div class="wrap">
-    <div class="guide">
+    <div class="page guide">
       <p class="kicker">DH EMR Field guides</p>
       <h1>Admin guide</h1>
-      <p class="muted">This guide is for the person who runs DH EMR Field for a team: the one who holds the admin device, keeps the clinic lists and forms right, and looks after backups. For everyday entry, read the <a href="user-guide.html">user guide</a>. For setting up one device, read <a href="getting-started.html">Getting started</a>. For standing up the organization's own cloud project, read the <a href="cloud-sync.html">cloud sync guide</a>.</p>
-      <p class="muted">Field has no accounts. The admin is a device, not a person, and every setting described here is changed from that device under <span class="ui">Settings</span>.</p>
+      <p class="muted">For the person who runs DH EMR Field for a team: holds the admin device, keeps the clinic lists and forms right, looks after backups. Everyday entry is in the <a href="user-guide.html">user guide</a>, one device in <a href="getting-started.html">Getting started</a>, the organization's own cloud project in the <a href="cloud-sync.html">cloud sync guide</a>.</p>
+      <p class="muted">Field has no accounts. The admin is a device, not a person, and every setting here is changed on that device under <span class="ui">Settings</span>.</p>
 
-      <nav class="toc" aria-label="On this page">
-        <p>On this page</p>
-        <ol>
+      <nav class="guide-toc" aria-label="Contents">
+        <p>Contents</p>
+        <ul>
           <li><a href="#roles">Admin device, standard device</a></li>
           <li><a href="#lists">Clinic lists</a></li>
           <li><a href="#templates">Form templates</a></li>
@@ -173,220 +114,290 @@
           <li><a href="#fleet">The device fleet</a></li>
           <li><a href="#backup">Backup and restore</a></li>
           <li><a href="#demo">The demo</a></li>
-          <li><a href="#clinic-backup">Using Field as the backup for a Clinic organization</a></li>
+          <li><a href="#clinic-backup">Field as the backup for a Clinic organization</a></li>
           <li><a href="#limits">Honest limits</a></li>
-        </ol>
+        </ul>
       </nav>
 
-      <h2 id="roles">1. Admin device, standard device</h2>
-      <p>The setup wizard asks "What is this device allowed to do?" with two choices: <span class="ui">Enter and view records (most devices)</span> and <span class="ui">Also change the form and clinic settings for everyone</span>. The first makes a standard device, the second an admin device. Settings shows which one a device is on the <strong>This device</strong> card, on the <span class="ui">Role</span> row: "Admin" or "Standard". Keep one or two admin devices with the people who run the clinic, and make every other device standard.</p>
-      <p>Only an admin device can change:</p>
-      <ul>
-        <li>The clinic lists: sites, clinicians, complaints, procedures and referral destinations</li>
-        <li>The formulary and the lab test panel, including reference ranges</li>
-        <li>Diagnosis quick-picks and prescription presets</li>
-        <li>Form templates, in the template editor</li>
-      </ul>
-      <p>Everything else in Settings works on any device: renaming the device, connecting to a cloud, syncing, backup, restore and import.</p>
-      <p>On a standard device none of the admin controls are hidden. They are visible but turned off, and the reason is written right there, in the hover text of every disabled control: "Only an admin device can change this. This device is set to standard." Each card also carries a short note saying the same in its own words. The template editor and the reference range editor open read-only with a "Read only" banner and the same reason. This is deliberate: a clinician can always see what exists and knows who to ask.</p>
-      <div class="callout">
-        <p><strong>There is no control in the app to change a device's role after setup.</strong> On a cloud device, the role stored in the project's device list is what counts: change the device's row in the <code>devices</code> table of your Supabase project and the device adopts the new role on its next sync. The <a href="cloud-sync.html#fleet">cloud sync guide</a> shows the query. On a device set up on its own, the choice made in the wizard stands.</p>
+      <h2 id="roles">Admin device, standard device</h2>
+      <p>The setup wizard asks "What is this device allowed to do?". The <strong>This device</strong> card under Settings shows the answer on its <span class="ui">Role</span> row.</p>
+      <table class="guide-table">
+        <tr><th>Wizard choice</th><th>Role row</th></tr>
+        <tr><td><span class="ui">Enter and view records (most devices)</span></td><td>Standard</td></tr>
+        <tr><td><span class="ui">Also change the form and clinic settings for everyone</span></td><td>Admin</td></tr>
+      </table>
+      <p>Keep one or two admin devices with the people who run the clinic; make every other device standard.</p>
+      <table class="guide-table">
+        <tr><th>Admin device only</th><th>Any device</th></tr>
+        <tr><td>Clinic lists (sites, clinicians, complaints, procedures, referral destinations); the formulary and lab test panel, including reference ranges; diagnosis quick-picks and prescription presets; form templates</td><td>Renaming the device, connecting to a cloud, syncing, backup, restore, import</td></tr>
+      </table>
+      <p>On a standard device the admin controls are visible but off, with the reason in every disabled control's hover text: "Only an admin device can change this. This device is set to standard." Each card says the same in a note, and the template editor and reference range editor open with a "Read only" banner.</p>
+      <div class="callout warn">
+        <p><strong>No control in the app changes a device's role after setup.</strong> On a cloud device the role in the project's <code>devices</code> table counts: change the row and the device adopts it on its next sync (the <a href="cloud-sync.html#fleet">cloud sync guide</a> has the query). A device set up on its own keeps the wizard's choice.</p>
       </div>
 
-      <h2 id="lists">2. Clinic lists</h2>
-      <p>The <strong>Clinic lists</strong> card under Settings explains itself: "These fill the pick lists on the visit form: sites, clinicians, complaints, procedures and referral destinations. On a cloud device your organization's lists replace these on the next sync. One entry per line, and commas belong inside an entry - "Grace N., clinical officer" is one clinician."</p>
-      <p>There are five lists that matter in Field, each a text box with its own save button:</p>
-      <ul>
-        <li><span class="ui">Clinic or site names</span>, saved with <span class="ui">Save sites</span></li>
-        <li><span class="ui">Clinicians</span>, saved with <span class="ui">Save clinicians</span></li>
-        <li><span class="ui">Complaints</span>, saved with <span class="ui">Save complaints</span>. These are the buttons under the Chief concern box.</li>
-        <li><span class="ui">Procedures</span>, saved with <span class="ui">Save procedures</span></li>
-        <li><span class="ui">Referral destinations</span>, saved with <span class="ui">Save referral destinations</span></li>
-      </ul>
-      <p class="muted">The card also shows a sixth box, <span class="ui">Patient flow stations (clinic mode board)</span>. It has no effect in Field, which has no board. Leave it alone.</p>
-      <p>The format is the same everywhere: <strong>one entry per line, and commas belong inside an entry</strong>. The app never splits on commas. Blank lines are dropped and duplicates are removed. After a save the app confirms, for example "Saved 3 sites. Reopen the visit form to see them." A visit form that is already open keeps the old list until it is closed and opened again.</p>
-      <p>Two lists can never be empty, because every visit needs a site and the form would never be able to save. The app refuses with "You need at least one site. An empty list would block every save." and the same for clinicians. The other lists cannot be saved empty either: "This list cannot be saved empty. One complaint per line."</p>
-      <p>Until real sites and clinicians are set, every visit is filed under the placeholders "Site A" and "Physician A", and the Settings screen shows a red warning above the card: "This device is still filing records under placeholder names." Fix this before the first day of entry; placeholder names are no use in a report.</p>
-      <p>On a cloud team, edit the lists on an admin device and let sync carry them to everyone. The lists on a standard device are replaced by the organization's lists on its next sync, so there is no point editing them there even if you could.</p>
+      <h2 id="lists">Clinic lists</h2>
+      <p>The <strong>Clinic lists</strong> card fills the pick lists on the visit form. Each list is a text box with its own save button.</p>
+      <table class="guide-table">
+        <tr><th>List</th><th>Save button</th></tr>
+        <tr><td><span class="ui">Clinic or site names</span></td><td><span class="ui">Save sites</span></td></tr>
+        <tr><td><span class="ui">Clinicians</span></td><td><span class="ui">Save clinicians</span></td></tr>
+        <tr><td><span class="ui">Complaints</span> (the buttons under the Chief concern box)</td><td><span class="ui">Save complaints</span></td></tr>
+        <tr><td><span class="ui">Procedures</span></td><td><span class="ui">Save procedures</span></td></tr>
+        <tr><td><span class="ui">Referral destinations</span></td><td><span class="ui">Save referral destinations</span></td></tr>
+      </table>
+      <ol class="steps">
+        <li><p>On an admin device, edit the box: <strong>one entry per line, and commas belong inside an entry</strong>. "Grace N., clinical officer" is one clinician. Blank lines are dropped and duplicates removed.</p></li>
+        <li><p>Tap the list's save button.</p><p class="what-you-see">"Saved 3 sites. Reopen the visit form to see them." A visit form already open keeps the old list until it is reopened.</p></li>
+      </ol>
+      <div class="callout warn">
+        <p>Sites and clinicians can never be empty, or no visit could save: "You need at least one site. An empty list would block every save.", and the same for clinicians. The other lists refuse too: "This list cannot be saved empty. One complaint per line."</p>
+      </div>
+      <div class="callout warn">
+        <p>Until real sites and clinicians are set, every visit is filed under "Site A" and "Physician A", and Settings shows a red warning: "This device is still filing records under placeholder names." Fix this before the first day of entry; placeholder names are no use in a report.</p>
+      </div>
+      <p>On a cloud team, edit the lists on an admin device. A standard device's lists are replaced by the organization's on its next sync, so there is no point editing them there.</p>
 
-      <h2 id="templates">3. Form templates</h2>
-      <p>The visit form itself belongs to your organization: which forms are offered, their sections, and your own questions. The <strong>Form templates</strong> card under Settings lists each form with "On" or "Off" next to it and has one button, <span class="ui">Open the template editor</span>. A brand-new organization has one form, already on.</p>
-      <p>The editor is a panel headed <span class="ui">Form templates</span>. Every change is saved as you make it; the header reads "Saving…" and then "Saved". The editor's own note applies to everything in it: "These belong to your organization. A change here reaches everyone on the next sync." Tap <span class="ui">Close</span> when you are done. There is nothing to discard.</p>
-      <p>On a cloud device that has not synced yet, the editor refuses to open for writing: "Form settings have not reached this device yet" followed by "Your organization's form has not synced to this device yet. Editing is turned off until it arrives, because saving now would replace your organization's real form with an empty one. Sync this device, then come back." That guard protects the whole team; do not work around it.</p>
+      <h2 id="templates">Form templates</h2>
+      <p>The <strong>Form templates</strong> card lists each form as "On" or "Off" and has one button, <span class="ui">Open the template editor</span>. A brand-new organization has one form, already on.</p>
+      <p>The editor is a panel headed <span class="ui">Form templates</span>. Every change saves as you make it (the header reads "Saving…", then "Saved") and reaches everyone on the next sync. Tap <span class="ui">Close</span> when done; there is nothing to discard.</p>
+      <div class="callout warn">
+        <p>On a cloud device that has not synced yet, the editor refuses to write: "Form settings have not reached this device yet".</p>
+        <p>"Your organization's form has not synced to this device yet. Editing is turned off until it arrives, because saving now would replace your organization's real form with an empty one. Sync this device, then come back." That guard protects the whole team; do not work around it.</p>
+      </div>
 
-      <h3>The Forms card</h3>
-      <p>Each form has an editable name box, a checkbox captioned <span class="ui">On</span>, and three buttons: <span class="ui">Sections</span>, <span class="ui">Duplicate</span> and <span class="ui">Delete</span>. The card says what "On" means: "Turn a form on to offer it for new visits; with more than one on, the visit form shows a selector. Every visit keeps the name of the form it was filed under."</p>
-      <ul>
-        <li><strong>Create:</strong> type a name in the <span class="ui">New form name</span> box and tap <span class="ui">Add form</span>. The button stays off until you have typed a name.</li>
-        <li><strong>Duplicate:</strong> makes a copy named "<em>name</em> (copy)". Duplicating first is the safe way to experiment with a working form.</li>
-        <li><strong>Rename:</strong> edit the name box; the change is kept when you leave the box or press Enter. Old visits are not affected: every visit keeps the name of the form it was filed under.</li>
-        <li><strong>Turn on or off:</strong> the <span class="ui">On</span> checkbox decides whether the form is offered for new visits. With more than one form on, a new visit shows a <span class="ui">Form template</span> list at the top.</li>
-        <li><strong>Delete:</strong> the app confirms, and the confirm says exactly what deleting keeps:</li>
-      </ul>
-      <div class="confirm">
-        <p class="lead">The form delete confirm</p>
+      <h3>Forms</h3>
+      <p>Each form has an editable name box, an <span class="ui">On</span> checkbox, and the buttons <span class="ui">Sections</span>, <span class="ui">Duplicate</span> and <span class="ui">Delete</span>. Every visit keeps the name of the form it was filed under, so old visits are never affected by what follows.</p>
+      <table class="guide-table">
+        <tr><th>Action</th><th>How</th></tr>
+        <tr><td>Create</td><td>Type a name in <span class="ui">New form name</span>, tap <span class="ui">Add form</span> (off until a name is typed).</td></tr>
+        <tr><td>Duplicate</td><td><span class="ui">Duplicate</span> makes "<em>name</em> (copy)": the safe way to experiment with a working form.</td></tr>
+        <tr><td>Rename</td><td>Edit the name box; kept when you leave it or press Enter.</td></tr>
+        <tr><td>Turn on or off</td><td>The <span class="ui">On</span> checkbox decides whether the form is offered for new visits. With more than one on, a new visit shows a <span class="ui">Form template</span> list at the top.</td></tr>
+        <tr><td>Delete</td><td><span class="ui">Delete</span>, then confirm.</td></tr>
+      </table>
+      <div class="callout">
         <p>"Delete the "Mobile Outreach" form?</p>
         <p>Visits already filed under it keep their answers and their template name. The form just stops being offered for new visits."</p>
       </div>
-      <p>The editor never lets you strand the team without a visit form. It refuses to delete the last form: "At least one form must remain. Add another form before deleting this one." It refuses to turn off the last form that is on: "At least one form must stay on, or there is no visit form to open. Turn another form on first." If deleting a form would leave nothing on, the editor turns another form on for you and says so: "Deleted. "General Clinic" was turned on so there is always a visit form."</p>
+      <p>The editor never strands the team without a visit form. Deleting the last form: "At least one form must remain. Add another form before deleting this one." Turning off the last form that is on: "At least one form must stay on, or there is no visit form to open. Turn another form on first."</p>
+      <p>If a delete would leave nothing on, another form is turned on for you: "Deleted. "General Clinic" was turned on so there is always a visit form."</p>
 
       <h3>Sections</h3>
-      <p>Tap <span class="ui">Sections</span> on a form. The card is headed "Sections of" and the form's name, and explains: "Reorder with the arrows, hide sections you do not use, rename them, and add your own sections with questions. The lists the built-in sections offer, like medications and lab tests, are edited on the Settings screen."</p>
-      <p>Each section is one row with <span class="ui">↑</span> and <span class="ui">↓</span> arrows, an editable title box, a chip reading "Built in" or the number of questions, and a <span class="ui">Hide</span> or <span class="ui">Show</span> button. A built-in section you have renamed gets a <span class="ui">Reset name</span> button to go back to its original title. Two sections can never be hidden: Visit and Patient show a disabled <span class="ui">Always shown</span> button, because every visit needs them.</p>
-      <p><span class="ui">Add a section</span> adds your own section, named "New section", at the end. Custom sections get two more buttons, <span class="ui">Questions</span> and <span class="ui">Delete</span>, and a checkbox <span class="ui">Starts collapsed on the visit form</span>. Once the section contains a required question that checkbox is locked, with the reason: "This section has a required question, so it always starts open. A collapsed section would hide an answer Save demands."</p>
-      <p>Deleting a custom section confirms with the same promise as forms:</p>
-      <div class="confirm">
-        <p class="lead">The section delete confirm</p>
-        <p>"Delete "Social History" and its 3 questions?</p>
+      <p>Tap <span class="ui">Sections</span> on a form. The card is headed "Sections of" and the form's name. The lists the built-in sections offer, like medications and lab tests, are edited on the Settings screen, not here.</p>
+      <table class="guide-table">
+        <tr><th>On each section row</th><th>What it does</th></tr>
+        <tr><td><span class="ui">↑</span> <span class="ui">↓</span></td><td>Reorder.</td></tr>
+        <tr><td>Title box</td><td>Rename. A renamed built-in section gets <span class="ui">Reset name</span> to go back to its original title.</td></tr>
+        <tr><td>Chip</td><td>"Built in", or the number of questions on a custom section.</td></tr>
+        <tr><td><span class="ui">Hide</span> / <span class="ui">Show</span></td><td>Take the section off the visit form, or put it back. Visit and Patient show a disabled <span class="ui">Always shown</span> instead: every visit needs them.</td></tr>
+        <tr><td><span class="ui">Roles</span></td><td>Which DH EMR Clinic staff roles see the section. Field has no accounts, so it changes nothing on the Field visit form.</td></tr>
+      </table>
+      <p><span class="ui">Add a section</span> adds "New section" at the end. Custom sections get <span class="ui">Questions</span>, <span class="ui">Delete</span> and a checkbox <span class="ui">Starts collapsed on the visit form</span>, locked once a required question exists: "This section has a required question, so it always starts open. A collapsed section would hide an answer Save demands."</p>
+      <div class="callout">
+        <p>Deleting a custom section: "Delete "Social History" and its 3 questions?</p>
         <p>Answers already saved on existing records are kept, but will no longer appear on the form."</p>
       </div>
-      <p class="muted">A footnote under the list names a few sections kept for compatibility with the older app (Access to Care, Rx Presets, Provider) that do not appear on the visit form and so are not listed. Ignore them.</p>
+      <p class="muted">A footnote names sections kept for compatibility with the older app (Access to Care, Rx Presets, Provider) that do not appear on the visit form and so are not listed. Ignore them.</p>
 
       <h3>Questions</h3>
-      <p>Tap <span class="ui">Questions</span> on a custom section. Each question is one row with arrows, an editable label box, a type list, a <span class="ui">Required</span> checkbox, and <span class="ui">Remove</span>. The types are: Short text, Long text, Single choice, Multiple choice, Number, Scale (0-N), Yes / No, and Date. Choice questions get a <span class="ui">Choices</span> button that opens a box labelled "Choices, one per line"; a question must keep at least one choice. Scale questions get a <span class="ui">Scale</span> button with <span class="ui">Lowest</span> and <span class="ui">Highest</span> bounds; a new scale runs 0 to 10. To add a question, type its label in the <span class="ui">New question</span> box, pick a type, and tap <span class="ui">Add question</span>. Tap <span class="ui">Done</span> when finished.</p>
-      <p>Under every question the editor shows its field id with the note "The field id is permanent; saved answers stay linked to it." That is why removing a question is safe for old records:</p>
-      <div class="confirm">
-        <p class="lead">The question remove confirm</p>
+      <ol class="steps">
+        <li><p>Tap <span class="ui">Questions</span> on a custom section.</p></li>
+        <li><p>Type the label in the <span class="ui">New question</span> box.</p></li>
+        <li><p>Pick a type: Short text, Long text, Single choice, Multiple choice, Number, Scale (0-N), Yes / No, or Date.</p></li>
+        <li><p>Tap <span class="ui">Add question</span>.</p><p class="what-you-see">A row with arrows, a label box, the type list, a <span class="ui">Required</span> checkbox and <span class="ui">Remove</span>. Under it, the field id: "The field id is permanent; saved answers stay linked to it."</p></li>
+        <li><p>Choice question: tap <span class="ui">Choices</span> and fill "Choices, one per line". It must keep at least one: "A question needs at least one choice. The previous choices have been kept."</p></li>
+        <li><p>Scale question: tap <span class="ui">Scale</span> and set <span class="ui">Lowest</span> and <span class="ui">Highest</span>. A new scale runs 0 to 10.</p></li>
+        <li><p>Tap <span class="ui">Done</span>.</p></li>
+      </ol>
+      <p>Because the field id never changes, removing a question is safe for old records:</p>
+      <div class="callout">
         <p>"Remove "Smokes"?</p>
         <p>Answers already saved on existing records are kept, but this question will no longer appear."</p>
       </div>
       <p>If a change cannot be written, the editor says "That change was not saved:" with the reason, and "Your form is unchanged."</p>
 
-      <h2 id="formulary">4. Formulary</h2>
-      <p>The <strong>Formulary</strong> card under Settings holds the medications offered on the visit form: a table with the columns <span class="ui">Medication</span>, <span class="ui">Dose</span>, <span class="ui">Unit</span>, <span class="ui">Category</span> and <span class="ui">Controlled</span>, a <span class="ui">Remove</span> button on each row, and the buttons <span class="ui">Add medication</span> and <span class="ui">Save formulary</span>.</p>
-      <div class="callout">
-        <p><strong>One rule matters more than the rest.</strong> The card's own words: "Edit carefully: saved prescriptions keep pointing at the same entry, so never reuse a row for a different drug - add a new row instead." Editing a row to become a different drug silently changes what old prescriptions appear to say. Add new rows; remove rows you no longer stock.</p>
+      <h2 id="formulary">Formulary</h2>
+      <p>The <strong>Formulary</strong> card is a table with the columns <span class="ui">Medication</span>, <span class="ui">Dose</span>, <span class="ui">Unit</span>, <span class="ui">Category</span> and <span class="ui">Controlled</span>, a <span class="ui">Remove</span> button per row, and the buttons <span class="ui">Add medication</span> and <span class="ui">Save formulary</span>.</p>
+      <div class="callout warn">
+        <p><strong>One rule matters more than the rest.</strong> "Edit carefully: saved prescriptions keep pointing at the same entry, so never reuse a row for a different drug - add a new row instead."</p>
+        <p>Editing a row into a different drug silently changes what old prescriptions appear to say. Add new rows; remove rows you no longer stock.</p>
       </div>
-      <p>The dose in the formulary is what fills the dose box on the visit form when a drug is picked. The unit decides whether the app can count a dispensing quantity: it counts "tabs", "caps" and "sachet"; a line with another unit, for example "ml" or "cream", records no quantity. The formulary cannot be saved empty. After a save, the app confirms, for example "Saved 38 medications. Reopen the visit form to see them."</p>
+      <table class="guide-table">
+        <tr><th>Column</th><th>What it does</th></tr>
+        <tr><td>Dose</td><td>Fills the dose box on the visit form when the drug is picked.</td></tr>
+        <tr><td>Unit</td><td>Decides whether a dispensing quantity is counted: "tabs", "caps" and "sachet" count; "ml", "cream" or another unit records no quantity.</td></tr>
+      </table>
+      <p>The formulary cannot be saved empty. After a save: "Saved 38 medications. Reopen the visit form to see them."</p>
 
-      <h2 id="labs">5. Lab tests and reference ranges</h2>
-      <p>The <strong>Lab tests</strong> card defines the lab panel on the visit form: a table with the columns <span class="ui">Test</span>, <span class="ui">Type</span>, <span class="ui">Unit</span>, <span class="ui">On by default</span> and <span class="ui">Ranges</span>, a <span class="ui">Remove</span> button on each row, and the buttons <span class="ui">Add lab test</span> and <span class="ui">Save lab tests</span>. A test's type is "Positive / negative" (POS and NEG buttons on the form) or "Number" (a number box with the unit as its hint). The card says: "Saving replaces the whole panel for your organization." The list cannot be saved empty.</p>
-      <p>Which tests appear on the visit form:</p>
-      <ul>
-        <li>A test you add with <span class="ui">Add lab test</span> and save appears on the form.</li>
-        <li><span class="ui">Remove</span> followed by <span class="ui">Save lab tests</span> takes a test off the form.</li>
-        <li>The <span class="ui">On by default</span> checkbox on each row is the control for whether a test is on the visit form. Untick it and tap <span class="ui">Save lab tests</span> to take a test off the form while keeping it in the panel, with its saved results untouched; tick and save to put it back.</li>
-        <li>Three built-in tests ship unticked: "Hepatitis C (Anti-HCV)", "COVID-19 Rapid" and "TB (AFB Smear)". If your clinic runs one of them, tick its box and save, and it is on the visit form like any other test.</li>
-      </ul>
+      <h2 id="labs">Lab tests and reference ranges</h2>
+      <p>The <strong>Lab tests</strong> card defines the lab panel: a table with the columns <span class="ui">Test</span>, <span class="ui">Type</span>, <span class="ui">Unit</span>, <span class="ui">On by default</span> and <span class="ui">Ranges</span>, a <span class="ui">Remove</span> button per row, and the buttons <span class="ui">Add lab test</span> and <span class="ui">Save lab tests</span>.</p>
+      <p>A type is "Positive / negative" (POS and NEG buttons on the form) or "Number" (a number box with the unit as its hint). "Saving replaces the whole panel for your organization." The list cannot be saved empty.</p>
+      <table class="guide-table">
+        <tr><th>To</th><th>Do this</th></tr>
+        <tr><td>Put a new test on the form</td><td><span class="ui">Add lab test</span>, fill the row, <span class="ui">Save lab tests</span>.</td></tr>
+        <tr><td>Take a test off the form, keep it in the panel</td><td>Untick <span class="ui">On by default</span>, then <span class="ui">Save lab tests</span>. Saved results are untouched; tick and save to put it back.</td></tr>
+        <tr><td>Remove a test</td><td><span class="ui">Remove</span>, then <span class="ui">Save lab tests</span>.</td></tr>
+        <tr><td>Turn on a built-in test that ships off</td><td>"Hepatitis C (Anti-HCV)", "COVID-19 Rapid" and "TB (AFB Smear)" ship unticked. Tick and save.</td></tr>
+      </table>
 
       <h3>Reference ranges: new results only</h3>
-      <p>On a Number test, the <span class="ui">Ranges</span> button opens the reference range editor, headed <span class="ui">Reference ranges</span>. On a row that has not been saved yet the button is off, with the reason: "Save lab tests first, then set the reference ranges for this test." The card explains what ranges do: "On a numeric test, Ranges sets the bands that interpret a value as it is entered; changing them affects new results only, and visits already saved keep the interpretation recorded at the time."</p>
-      <p>The editor repeats the rule in a blue note, and it governs everything here:</p>
-      <div class="confirm">
-        <p class="lead">The editor's standing notice</p>
-        <p>"Changing ranges affects new results only.</p>
+      <p>On a Number test, <span class="ui">Ranges</span> opens the editor headed <span class="ui">Reference ranges</span>. On a row not yet saved the button is off: "Save lab tests first, then set the reference ranges for this test."</p>
+      <div class="callout">
+        <p><strong>The editor's standing notice governs everything here.</strong> "Changing ranges affects new results only.</p>
         <p>Visits already saved keep the interpretation that was recorded at the time; editing ranges never rewrites a recorded result. Only new results entered after this change use the new ranges."</p>
       </div>
-      <p>Each range is one row: a <span class="ui">Label</span> (for example "Normal"), <span class="ui">From (at least)</span>, <span class="ui">Up to (below)</span>, and a <span class="ui">Color</span>: None, Green (normal), Amber (caution), Red (critical) or Gray (neutral). An empty bound is open. Add rows with <span class="ui">Add range</span>, reorder with the arrows, and remove with <span class="ui">Remove</span>. The editor explains the matching rule: "Ranges are checked top to bottom and the first match wins. A value equal to "from" is inside the range; a value equal to "up to" is not - it belongs to the next range up."</p>
-      <p>Before you save, a warnings box lists anything odd: a bound that is not a number, a range with no label, a range that can never match, two ranges that overlap, or a gap that no range covers. The box is headed "Check these before saving (saving is still allowed):" and means it; read the warnings. Use <span class="ui">Try a value</span> at the bottom to see exactly what a new result would record, for example "Would record 182 mg/dL with interpretation Elevated". Then tap <span class="ui">Save ranges</span>; <span class="ui">Cancel</span> asks "Discard the range changes?" if you have edited anything.</p>
-      <p>The default bands, if you have not changed them: Blood Glucose in mg/dL is Low below 70, Normal from 70, Elevated from 140 and High from 200. Hemoglobin in g/dL is Severe Anemia below 7, Moderate Anemia from 7, Mild Anemia from 10 and Normal from 12.</p>
+      <ol class="steps">
+        <li><p>Tap <span class="ui">Ranges</span> on a saved Number test.</p></li>
+        <li><p>Add rows with <span class="ui">Add range</span>: a <span class="ui">Label</span> (for example "Normal"), <span class="ui">From (at least)</span>, <span class="ui">Up to (below)</span> and a <span class="ui">Color</span>: None, Green (normal), Amber (caution), Red (critical) or Gray (neutral). An empty bound is open.</p></li>
+        <li><p>Order the rows with the arrows; <span class="ui">Remove</span> drops one. "Ranges are checked top to bottom and the first match wins. A value equal to "from" is inside the range; a value equal to "up to" is not - it belongs to the next range up."</p></li>
+        <li><p>Read the box headed "Check these before saving (saving is still allowed):". It lists a bound that is not a number, a range with no label, a range that can never match, two ranges that overlap, or a gap no range covers.</p></li>
+        <li><p>Type a number under <span class="ui">Try a value</span>.</p><p class="what-you-see">Exactly what a new result would record: "Would record 182 mg/dL with interpretation Elevated".</p></li>
+        <li><p>Tap <span class="ui">Save ranges</span>. <span class="ui">Cancel</span> asks "Discard the range changes?" if you have edited anything.</p></li>
+      </ol>
+      <table class="guide-table">
+        <tr><th>Default bands</th><th>Ranges</th></tr>
+        <tr><td>Blood Glucose, mg/dL</td><td>Low below 70, Normal from 70, Elevated from 140, High from 200</td></tr>
+        <tr><td>Hemoglobin, g/dL</td><td>Severe Anemia below 7, Moderate Anemia from 7, Mild Anemia from 10, Normal from 12</td></tr>
+      </table>
 
-      <h2 id="presets">6. Diagnosis quick-picks and prescription presets</h2>
-      <p>Both live in their own cards under Settings, and both belong to the organization: "a change reaches everyone on the next sync."</p>
-      <p><strong>Diagnosis quick-picks</strong> are the buttons under the Diagnosis box on the visit form; each tap appends to the diagnosis text. <strong>Prescription presets</strong> are one-tap bundles in the Medications section; applying one adds its medication lines and its treatment notes to the visit. Applying a preset only ever adds; it never removes lines a clinician already entered.</p>
+      <h2 id="presets">Diagnosis quick-picks and prescription presets</h2>
+      <p>Both have their own cards under Settings, and both reach everyone on the next sync. <strong>Diagnosis quick-picks</strong> are the buttons under the Diagnosis box; each tap appends to the diagnosis text. <strong>Prescription presets</strong> are one-tap bundles in the Medications section: applying one adds its medication lines and treatment notes, and never removes lines already entered.</p>
 
       <h3>Hide or remove</h3>
-      <p>In both cards each entry is one row with <span class="ui">↑</span> and <span class="ui">↓</span>, a <span class="ui">Hide</span> or <span class="ui">Show</span> button, and <span class="ui">Remove</span>. A hidden entry shows the word "hidden" on its row. These are two very different actions:</p>
-      <ul>
-        <li><strong>Hide</strong> keeps the entry in your list but takes its button off the visit form. The hover text on the quick-picks card says it plainly: "Hidden entries stay in the list but do not appear on the visit form." The presets card says the same: "Hidden presets stay in the list but do not appear on the visit form." It is reversible with <span class="ui">Show</span>.</li>
-        <li><strong>Remove</strong> deletes the entry from the list. Saved visits are never touched, and the confirm says so:</li>
-      </ul>
-      <div class="confirm">
-        <p class="lead">Removing a diagnosis quick-pick</p>
+      <p>Each entry is one row with <span class="ui">↑</span> and <span class="ui">↓</span>, <span class="ui">Hide</span> or <span class="ui">Show</span>, and <span class="ui">Remove</span>. A hidden entry shows the word "hidden" on its row.</p>
+      <table class="guide-table">
+        <tr><th>Button</th><th>Effect</th></tr>
+        <tr><td><span class="ui">Hide</span></td><td>Keeps the entry, takes its button off the visit form; reversible with <span class="ui">Show</span>. Hover text: "Hidden entries stay in the list but do not appear on the visit form." (presets: "Hidden presets stay in the list but do not appear on the visit form.")</td></tr>
+        <tr><td><span class="ui">Remove</span></td><td>Deletes the entry. Saved visits are never touched, and the confirm says so.</td></tr>
+      </table>
+      <div class="callout">
         <p>"Remove "Dental Pain" from the diagnosis quick-picks?</p>
         <p>Diagnoses already saved on visits keep their text - only the quick-pick button goes away."</p>
       </div>
-      <div class="confirm">
-        <p class="lead">Removing a prescription preset</p>
+      <div class="callout">
         <p>"Remove the prescription preset "UTI"?</p>
         <p>Prescriptions already saved on visits are kept, and the formulary is not changed - only the one-tap preset goes away."</p>
       </div>
-      <p>Field ships with built-in entries in both lists: 31 quick-picks, from "Malaria" to "Abscess", and 21 presets, from "H. pylori Triple Therapy" to "MSK Pain". You can remove the built-ins too, and the confirm adds one more line: "This is a built-in preset, so once saved it stays removed for your organization after sync." If you only want a cleaner form, hide instead of removing; the app says so itself when you try to save an empty list: "The diagnosis quick-picks cannot be saved empty. Hide entries instead if you do not want them on the visit form."</p>
+      <p>Field ships with 31 quick-picks, "Malaria" to "Abscess", and 21 presets, "H. pylori Triple Therapy" to "MSK Pain". Built-ins can be removed too; the confirm adds "This is a built-in preset, so once saved it stays removed for your organization after sync."</p>
+      <div class="callout warn">
+        <p>For a cleaner form, hide instead of removing. An empty list is refused: "The diagnosis quick-picks cannot be saved empty. Hide entries instead if you do not want them on the visit form."</p>
+      </div>
       <p>Nothing is written until you tap <span class="ui">Save diagnosis quick-picks</span> or <span class="ui">Save prescription presets</span>.</p>
 
       <h3>Adding a quick-pick</h3>
-      <p>Type it in the box with the hint "Add a diagnosis" and tap <span class="ui">Add diagnosis</span> (or press Enter). The name box on each row is editable, so a typo can be fixed in place.</p>
+      <ol class="steps">
+        <li><p>Type it in the box with the hint "Add a diagnosis".</p></li>
+        <li><p>Tap <span class="ui">Add diagnosis</span> or press Enter. The name box on each row is editable, so a typo can be fixed in place.</p></li>
+        <li><p>Tap <span class="ui">Save diagnosis quick-picks</span>.</p></li>
+      </ol>
 
       <h3>Building a prescription preset</h3>
-      <p>Tap <span class="ui">Add preset</span>, or <span class="ui">Edit</span> on an existing one. An editor opens under the list, headed "New preset" or "Edit preset", with a <span class="ui">Preset name</span> box, one or more medication lines, and a <span class="ui">Treatment notes added with this preset (optional)</span> box. Each line has the drug list (the formulary, plus a last entry "Other drug (type a name)" that opens a <span class="ui">Drug name</span> box), a dose box, a frequency and a duration, and a <span class="ui">×</span> button. <span class="ui">+ Add medication</span> adds a line. Finish with <span class="ui">Add this preset</span> or <span class="ui">Apply changes</span>; a preset needs a name.</p>
-      <p>Under each line the editor tells you what the preset will record, so check it before you save:</p>
-      <div class="table-scroll">
-      <table>
+      <ol class="steps">
+        <li><p>Tap <span class="ui">Add preset</span>, or <span class="ui">Edit</span> on an existing one.</p><p class="what-you-see">An editor under the list, headed "New preset" or "Edit preset".</p></li>
+        <li><p>Type a <span class="ui">Preset name</span>; without one the editor says "The preset needs a name."</p></li>
+        <li><p>Tap <span class="ui">+ Add medication</span> per line. Pick the drug from the formulary list or the last entry, <span class="ui">Other drug (type a name)</span>, which opens a <span class="ui">Drug name</span> box. Enter a dose, frequency and duration; <span class="ui">×</span> removes a line.</p></li>
+        <li><p>Check the note under each line (table below).</p></li>
+        <li><p>Fill <span class="ui">Treatment notes added with this preset (optional)</span> if wanted.</p></li>
+        <li><p>Tap <span class="ui">Add this preset</span> or <span class="ui">Apply changes</span>, then <span class="ui">Save prescription presets</span>.</p></li>
+      </ol>
+      <table class="guide-table">
         <tr><th>Under the line</th><th>What it means</th></tr>
-        <tr><td>"14 tabs"</td><td>The dose was understood. This quantity is recorded when the preset is applied.</td></tr>
+        <tr><td>"14 tabs"</td><td>The dose was understood; this quantity is recorded when the preset is applied.</td></tr>
         <tr><td>"The dose "..." could not be read, so the quantity assumes 1 per dose (14 tabs). Write it as a number of tabs or in mg."</td><td>Fix the dose so the quantity is right.</td></tr>
         <tr><td>"Not in the formulary - prescriptions from this line record no dispensing quantity."</td><td>Add the drug to the formulary first if you want a quantity.</td></tr>
         <tr><td>"Ongoing - no quantity is recorded."</td><td>The duration is Ongoing.</td></tr>
         <tr><td>"No dispensing quantity will be recorded for this line."</td><td>The unit cannot be counted (for example a cream).</td></tr>
       </table>
-      </div>
       <p>A preset with no medication lines is allowed; its summary reads "See treatment notes".</p>
 
-      <h2 id="fleet">7. The device fleet</h2>
-      <p>This section is for teams whose devices sync through the organization's cloud project. A device set up on its own is not in any fleet.</p>
-      <p>A device registers itself with your project the first time it connects: in the setup wizard's cloud path, or later under Settings with <span class="ui">Connect this device to a cloud</span>. Its name, role and last sync time land in the project's <code>devices</code> table. The <strong>This device</strong> card shows the name, the <span class="ui">Role</span>, the first part of the <span class="ui">Device ID</span>, and the <span class="ui">Mode</span> ("Offline only" or "Cloud sync").</p>
-      <ul>
-        <li><strong>Renaming is safe and never re-registers.</strong> <span class="ui">Rename this device</span> on the This device card opens a <span class="ui">Device name</span> box with <span class="ui">Save name</span>. The card says why it is safe: "Renaming keeps this device's identity: records it has already filed stay its own." A rename changes the label only. It never mints a new identity and never orphans records.</li>
-        <li><strong>Review the fleet regularly</strong> in the project's SQL editor. The <a href="cloud-sync.html#fleet">cloud sync guide</a> has the one-query listing: recognize every row; revoke strangers.</li>
-        <li><strong>Revoking a lost or stolen device</strong> is done in the SQL editor, not in the app. Records the device already pushed are kept. The app can never un-revoke a device; that also lives only in the SQL editor, on purpose.</li>
-        <li><strong>Changing a device's role</strong>, standard to admin or back, is done in the <code>devices</code> table. The cloud's role is authoritative: the device adopts it on its next sync.</li>
-      </ul>
-      <p>To replace a device, follow the <strong>Moving to a new device</strong> card under Settings. Its four steps: on the old device tap <span class="ui">Download backup</span> and save the file somewhere you can reach it; on the new device open the app and connect it to the same cloud project (or choose offline only); tap <span class="ui">Restore from a backup</span> and pick the file; check the record count matches before wiping the old device.</p>
-      <div class="callout">
-        <p><strong>Honest limit:</strong> revoking a device does nothing to the data already on a lost device, and that data is not encrypted at rest. Treat a lost device as a disclosure, not just an access problem.</p>
+      <h2 id="fleet">The device fleet</h2>
+      <p>For teams whose devices sync through the organization's cloud project; a device set up on its own is in no fleet.</p>
+      <p>A device registers itself the first time it connects, in the wizard's cloud path or later with <span class="ui">Connect this device to a cloud</span> under Settings. Its name, role and last sync time land in the project's <code>devices</code> table.</p>
+      <p>The <strong>This device</strong> card shows the name, the <span class="ui">Role</span>, the first part of the <span class="ui">Device ID</span>, and the <span class="ui">Mode</span> ("Offline only" or "Cloud sync").</p>
+      <table class="guide-table">
+        <tr><th>Task</th><th>Where</th><th>What to know</th></tr>
+        <tr><td>Rename a device</td><td><span class="ui">Rename this device</span> on the This device card: a <span class="ui">Device name</span> box with <span class="ui">Save name</span>.</td><td>"Renaming keeps this device's identity: records it has already filed stay its own." It never re-registers, never orphans records.</td></tr>
+        <tr><td>Review the fleet</td><td>The project's SQL editor; the <a href="cloud-sync.html#fleet">cloud sync guide</a> has the one-query listing.</td><td>Do it regularly: recognize every row, revoke strangers.</td></tr>
+        <tr><td>Revoke a lost or stolen device</td><td>The SQL editor, not the app.</td><td>Records already pushed are kept. The app can never un-revoke a device; that lives only in the SQL editor, on purpose.</td></tr>
+        <tr><td>Change a device's role</td><td>The <code>devices</code> table.</td><td>The cloud's role is authoritative: the device adopts it on its next sync.</td></tr>
+      </table>
+      <p>To replace a device, follow the <strong>Moving to a new device</strong> card under Settings:</p>
+      <ol class="steps">
+        <li><p>On the old device, tap <span class="ui">Download backup</span> and save the file somewhere you can reach it.</p></li>
+        <li><p>On the new device, open the app and connect it to the same cloud project (or choose offline only).</p></li>
+        <li><p>Tap <span class="ui">Restore from a backup</span> and pick the file.</p></li>
+        <li><p>Check the record count matches before wiping the old device.</p></li>
+      </ol>
+      <div class="callout warn">
+        <p><strong>Honest limit:</strong> revoking does nothing to the data already on a lost device, and that data is not encrypted at rest. Treat a lost device as a disclosure, not just an access problem.</p>
       </div>
 
-      <h2 id="backup">8. Backup and restore</h2>
-      <p>The <strong>Backup and restore</strong> card under Settings says what a backup is: "A backup is a single file holding every record on this device plus your form and preset settings. It never contains your cloud key or device identity. Take one at the end of each clinic day - it is the safety net if a device is lost, wiped, or replaced." As the admin, make that habit stick on every device: one tap on <span class="ui">Download backup</span>, one file named dh-emr-backup and the date, moved somewhere safe. The app confirms with the count: "Backup downloaded with 140 records. Keep it somewhere safe."</p>
-      <p>Where a team has no cloud, the backup files are the organization's archive. Where a team has a cloud, the backup is still the true archive and the cloud is a convenience copy for the devices; see the <a href="cloud-sync.html#pausing">cloud sync guide</a> on why.</p>
+      <h2 id="backup">Backup and restore</h2>
+      <p>A backup is a single file holding every record on the device plus the form and preset settings. It never contains the cloud key or device identity.</p>
+      <p>Take one at the end of each clinic day: it is the safety net if a device is lost, wiped or replaced. The admin's job is to make that habit stick on every device.</p>
+      <ol class="steps">
+        <li><p>Tap <span class="ui">Download backup</span> on the <strong>Backup and restore</strong> card.</p><p class="what-you-see">"Backup downloaded with 140 records. Keep it somewhere safe."</p></li>
+        <li><p>Move the file (named dh-emr-backup and the date) somewhere safe.</p></li>
+      </ol>
+      <p>With no cloud, the backup files are the organization's archive. With a cloud, the backup is still the true archive and the cloud a convenience copy for the devices; the <a href="cloud-sync.html#pausing">cloud sync guide</a> says why.</p>
 
       <h3>Restore merges; it never wipes</h3>
-      <p>Tap <span class="ui">Restore from a backup</span> and pick the file. The card's own footer is the rule: "Restoring merges: nothing already on this device is lost, and where the same record exists in both the more recently saved version wins." A restore cannot undo newer work. The app confirms first:</p>
-      <div class="confirm">
-        <p class="lead">The records restore confirm</p>
-        <p>"Restore records from "dh-emr-backup-2026-10-06.json"?</p>
-        <p>Records in the file are merged into this device. Where the same record exists in both, the more recently saved version is kept, so this cannot undo newer work."</p>
+      <p>The card's own rule: "Restoring merges: nothing already on this device is lost, and where the same record exists in both the more recently saved version wins." A restore cannot undo newer work.</p>
+      <ol class="steps">
+        <li><p>Tap <span class="ui">Restore from a backup</span> and pick the file.</p></li>
+        <li><p>Confirm the records restore.</p><p class="what-you-see">"Restore records from "dh-emr-backup-2026-10-06.json"? Records in the file are merged into this device. Where the same record exists in both, the more recently saved version is kept, so this cannot undo newer work."</p></li>
+        <li><p>Answer the second, separate question about settings. Tap Cancel unless you are deliberately restoring configuration.</p><p class="what-you-see">"Also restore the settings from this file? That replaces this device's form layout, sites, providers and formulary with the ones in the backup. If this is an admin device those settings go out to the whole team on the next sync. Choose Cancel to restore records only. That is almost always what you want."</p></li>
+        <li><p>Read the result.</p><p class="what-you-see">"Restored: 12 added, 3 updated, 125 already newer here. 140 records on this device. Settings were left as they are. Restored records will upload on the next sync."</p></li>
+      </ol>
+      <div class="callout warn">
+        <p>On an admin device, restoring months-old settings and syncing would roll the whole team's forms, lists and formulary back.</p>
       </div>
-
-      <h3>Settings restore is separate and opt-in</h3>
-      <p>After you confirm the records, the app asks a second question:</p>
-      <div class="confirm">
-        <p class="lead">The settings restore confirm</p>
-        <p>"Also restore the settings from this file?</p>
-        <p>That replaces this device's form layout, sites, providers and formulary with the ones in the backup. If this is an admin device those settings go out to the whole team on the next sync.</p>
-        <p>Choose Cancel to restore records only. That is almost always what you want."</p>
-      </div>
-      <p>Take that last line seriously, especially on an admin device: restoring old settings from a months-old backup and syncing would roll the whole team's forms, lists and formulary back. Tap Cancel unless you are deliberately restoring configuration.</p>
-      <p>The result message tells you exactly what happened, for example "Restored: 12 added, 3 updated, 125 already newer here. 140 records on this device. Settings were left as they are. Restored records will upload on the next sync."</p>
-      <p>Four things can stop a restore, each with its own message: the file is not valid JSON; it is not a DH EMR backup file; it was made by a newer version of the app, so update this device first; or the device is reporting no records while it previously held some, in which case the app refuses because restoring now could overwrite them, and tells you to close and reopen the app, check the records list, and try again.</p>
+      <table class="guide-table">
+        <tr><th>A restore stops when</th><th>The app says</th></tr>
+        <tr><td>The file is not valid JSON</td><td>"That file is not valid JSON."</td></tr>
+        <tr><td>It is not a backup file</td><td>"That is not a DH EMR backup file."</td></tr>
+        <tr><td>It came from a newer app</td><td>"That backup was made by a newer version of the app. Update this device first."</td></tr>
+        <tr><td>The device reports no records but previously held some</td><td>"This device is reporting no records, but it previously held 140. Restoring now could overwrite them. Close and reopen the app, check the records list, and try again."</td></tr>
+      </table>
 
       <h3>Moving records from another cloud project</h3>
-      <p>The separate <strong>Moving from another cloud project</strong> card is for one job: bringing records across from a project this device is not connected to, for example after moving to a new Supabase project. Export the records from the old project as JSON, then tap <span class="ui">Import records from a file</span> and pick the file. They are merged in and upload to your current project on the next sync. The card's warning: "Export as JSON, not CSV. CSV flattens lab results and medication lists into text and they cannot be read back reliably."</p>
+      <p>The <strong>Moving from another cloud project</strong> card brings records across from a project this device is not connected to, for example after moving to a new Supabase project.</p>
+      <ol class="steps">
+        <li><p>Export the records from the old project as JSON.</p></li>
+        <li><p>Tap <span class="ui">Import records from a file</span> and pick the file.</p><p class="what-you-see">The records are merged in and upload to your current project on the next sync.</p></li>
+      </ol>
+      <div class="callout warn">
+        <p>"Export as JSON, not CSV. CSV flattens lab results and medication lists into text and they cannot be read back reliably."</p>
+      </div>
 
-      <h2 id="demo">9. The demo</h2>
-      <p>The <a href="../../demo/field/">Field demo</a> is a fictional clinic with sample patients, running entirely in the browser. Its banner states the laws: "A fictional clinic with sample patients. Everything stays in this browser and never syncs anywhere." It refuses every cloud connection on purpose, with the message "Cloud sync is not available in the demo. This demo clinic is fictional and everything stays in this browser." so nothing done in the demo can ever touch your organization's records or settings.</p>
-      <p>The demo skips the wizard and opens as an admin device named "Demo iPad" in offline-only mode, with three sites, three clinicians, two forms on ("General Clinic" and "Mobile Outreach", each with its own custom sections) and ten visits for eight fictional patients, one of whom has a name written in Amharic. That makes it the right place to rehearse: try the template editor, build a preset, set a reference range, break things freely. <span class="ui">Reset Demo</span> in the banner puts the original sample patients back after a confirm.</p>
+      <h2 id="demo">The demo</h2>
+      <p>The <a href="../../demo/field/">Field demo</a> runs entirely in the browser. Its banner: "A fictional clinic with sample patients. Everything stays in this browser and never syncs anywhere." It refuses every cloud connection: "Cloud sync is not available in the demo. This demo clinic is fictional and everything stays in this browser."</p>
+      <p>It skips the wizard and opens as an admin device named "Demo iPad" in offline-only mode: three sites, three clinicians, two forms on ("General Clinic" and "Mobile Outreach", each with its own custom sections) and ten visits for eight fictional patients, one with a name written in Amharic.</p>
+      <p>Rehearse here: try the template editor, build a preset, set a reference range, break things freely. <span class="ui">Reset Demo</span> in the banner puts the original sample patients back after a confirm.</p>
 
-      <h2 id="clinic-backup">10. Using Field as the backup for a Clinic organization</h2>
-      <p>An organization that runs DH EMR Clinic depends on its internet connection. When the connection or the backend is down, the clinic keeps seeing patients on paper. Field is the app for entering those paper charts afterward, at the end of the day, on any device with the Field app.</p>
-      <p>What this gives you: the day's visits are typed up, searchable, counted in Analytics, and backed up in a file. The charts are not lost in a drawer.</p>
-      <p>What it does not give you, said plainly: <strong>there is no way to move Field records into a Clinic organization today.</strong> Data import from Field into Clinic is not available yet. Visits entered in Field stay in Field. They do not appear on the Clinic board, in Clinic search, or in Clinic analytics.</p>
-      <p>Plan for that:</p>
-      <ul>
-        <li>Set up the Field device on its own, or give the Field devices their own separate cloud project. Do not point a Field device at the Clinic organization's project: a Clinic project only accepts signed-in accounts, so a Field device's uploads are refused there.</li>
-        <li>Keep the paper charts. If the organization later needs those visits in Clinic, the charts are the source, and the Field records are the typed copy.</li>
-        <li>Download a backup from the Field device after every day of entry, and keep the files with the organization's archive.</li>
-        <li>Field and Clinic keep separate records even when both are installed on the same device. Nothing crosses between them.</li>
-      </ul>
+      <h2 id="clinic-backup">Field as the backup for a Clinic organization</h2>
+      <p>DH EMR Clinic depends on its internet connection. When the connection or the backend is down, the clinic sees patients on paper, and Field enters those charts afterward, at the end of the day, on any device with the Field app: typed up, searchable, counted in Analytics and backed up in a file.</p>
+      <div class="callout warn">
+        <p><strong>There is no way to move Field records into a Clinic organization today.</strong> Data import from Field into Clinic is not available yet. Visits entered in Field stay in Field: not on the Clinic board, not in Clinic search, not in Clinic analytics.</p>
+      </div>
+      <table class="guide-table">
+        <tr><th>Plan for that</th><th>Why</th></tr>
+        <tr><td>Set up the Field device on its own, or give the Field devices their own cloud project. Never point one at the Clinic organization's project.</td><td>A Clinic project only accepts signed-in accounts, so a Field device's uploads are refused there.</td></tr>
+        <tr><td>Keep the paper charts.</td><td>If those visits are later needed in Clinic, the charts are the source and the Field records the typed copy.</td></tr>
+        <tr><td>Download a backup from the Field device after every day of entry.</td><td>The files belong with the organization's archive.</td></tr>
+        <tr><td>Expect separate records even on one device.</td><td>Field and Clinic keep separate records when both are installed on the same device. Nothing crosses between them.</td></tr>
+      </table>
 
-      <h2 id="limits">11. Honest limits</h2>
-      <ul>
-        <li><strong>The shared key is the whole fence.</strong> On a cloud team every device shares one project key, the database cannot tell devices apart, and anyone holding the key can read everything. Revoking a device stops an honest revoked device, not a determined person who still has the key. If someone leaves on bad terms, the key they carry still works until you move the organization to a new project. DH EMR Clinic, with per-user accounts, is the fix; there is no path between the two products today.</li>
-        <li><strong>A lost device keeps its data.</strong> Revoking does nothing to records already on the device, and they are not encrypted at rest.</li>
-        <li><strong>A device set up on its own has one copy.</strong> Its backup files are the only other copy that exists. Lose the device and the files, and the records are gone.</li>
-        <li><strong>Field cannot feed Clinic.</strong> Visits entered in Field stay in Field. See <a href="#clinic-backup">section 10</a>.</li>
-        <li><strong>DH EMR is not a certified EHR and is not HIPAA-compliant.</strong> It must not be used where a certified EHR is required. It is intended for global-health use outside the US.</li>
-      </ul>
+      <h2 id="limits">Honest limits</h2>
+      <table class="guide-table">
+        <tr><th>Limit</th><th>What it means</th></tr>
+        <tr><td>The shared key is the whole fence.</td><td>On a cloud team every device shares one project key, the database cannot tell devices apart, and anyone holding the key can read everything. Revoking stops an honest revoked device, not a determined person who still has the key; someone who leaves on bad terms keeps a working key until you move the organization to a new project. DH EMR Clinic, with per-user accounts, is the fix, and there is no path between the two products today.</td></tr>
+        <tr><td>A lost device keeps its data.</td><td>Revoking does nothing to records already on the device, and they are not encrypted at rest.</td></tr>
+        <tr><td>A device set up on its own has one copy.</td><td>Its backup files are the only other copy. Lose the device and the files, and the records are gone.</td></tr>
+        <tr><td>Field cannot feed Clinic.</td><td>Visits entered in Field stay in Field. See <a href="#clinic-backup">Field as the backup for a Clinic organization</a>.</td></tr>
+        <tr><td>Not a certified EHR, not HIPAA-compliant.</td><td>DH EMR must not be used where a certified EHR is required. It is intended for global-health use outside the US.</td></tr>
+      </table>
 
       <p class="backlink"><a href="../">Back to all guides</a></p>
     </div>

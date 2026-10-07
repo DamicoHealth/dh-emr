@@ -46,27 +46,8 @@
       border-radius: 6px;
       padding: 0 0.3rem;
     }
-    .toc {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-1);
-      padding: 1rem 1.25rem;
-      margin: 1.25rem 0 0.5rem;
-    }
-    .toc p { margin: 0 0 0.4rem; font-weight: 700; }
-    .toc ol {
-      margin: 0;
-      padding-left: 1.3rem;
-      columns: 2;
-      column-gap: 2rem;
-    }
     @media (max-width: 34rem) {
-      .toc ol { columns: 1; }
     }
-    .toc li { margin: 0.25rem 0; }
-    .toc a { color: var(--primary); text-decoration: none; }
-    .toc a:hover { text-decoration: underline; }
     .guide table {
       width: 100%;
       border-collapse: collapse;
@@ -84,45 +65,6 @@
     .guide tr:last-child td { border-bottom: 0; }
     .guide th { font-size: 0.9rem; background: var(--bg); }
     .table-scroll { overflow-x: auto; }
-    .callout {
-      background: var(--warn-bg);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-      margin: 0.9rem 0;
-      color: var(--warn-ink);
-    }
-    .callout p { color: var(--warn-ink); margin: 0.35rem 0; }
-    .callout p:first-child { margin-top: 0; }
-    .callout p:last-child { margin-bottom: 0; }
-    .tip {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--primary);
-      border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-      margin: 0.9rem 0;
-    }
-    .tip p { margin: 0.35rem 0; }
-    .tip p:first-child { margin-top: 0; }
-    .tip p:last-child { margin-bottom: 0; }
-    .confirm {
-      margin: 1rem 0;
-      padding: 0.85rem 1.1rem;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--primary);
-      border-radius: var(--radius);
-    }
-    .confirm .lead {
-      margin: 0 0 0.4rem;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-    }
-    .confirm p { margin: 0.4rem 0; }
     .backlink { margin-top: 2.5rem; }
   </style>
 </head>
@@ -147,225 +89,306 @@
 
 <main>
   <div class="wrap">
-    <div class="guide">
+    <div class="guide page">
       <p class="kicker">DH EMR Field guides</p>
       <h1>User guide</h1>
-      <p class="muted">The day-to-day reference for everyone who enters paper charts into DH EMR Field: the visit form section by section, saving, finding patients, returning patients, deleting, analytics, the sync chip, the warning banners, and updates. Setting up a device is in <a href="getting-started.html">Getting started</a>. Changing the clinic's lists and forms is admin work and lives in the <a href="admin-guide.html">admin guide</a>.</p>
-      <p class="muted">Two words the app uses everywhere: a <strong>visit</strong> is one patient seen on one day, and the <strong>patient number</strong> is the short code the app creates for each patient. The app makes the patient number by itself from the name and date of birth. You never type it.</p>
+      <p class="muted">For everyone who enters paper charts into DH EMR Field: the visit form, saving, finding and returning patients, deleting, analytics, the sync chip, the warning banners and updates. Device setup is in <a href="getting-started.html">Getting started</a>; the clinic's lists and forms are admin work, in the <a href="admin-guide.html">admin guide</a>.</p>
+      <p class="muted">A <strong>visit</strong> is one patient seen on one day. The <strong>patient number</strong> is the short code the app builds by itself from the name and date of birth; you never type it.</p>
 
-      <nav class="toc" aria-label="On this page">
-        <p>On this page</p>
-        <ol>
-          <li><a href="#screens">The screens</a></li>
-          <li><a href="#entering">Entering a visit</a></li>
-          <li><a href="#saving">Saving a visit</a></li>
-          <li><a href="#drafts">If the app closes mid-visit</a></li>
-          <li><a href="#finding">Finding a patient</a></li>
-          <li><a href="#chart">The patient chart</a></li>
-          <li><a href="#returning">A returning patient</a></li>
-          <li><a href="#deleting">Deleting a visit</a></li>
-          <li><a href="#analytics">Analytics</a></li>
-          <li><a href="#sync">The sync chip</a></li>
-          <li><a href="#banners">Warning banners and what to do</a></li>
-          <li><a href="#updates">Updating the app</a></li>
-        </ol>
+      <nav class="guide-toc" aria-label="Contents">
+        <p>Contents</p>
+        <ul>
+          <li><a href="#screens">1. The screens</a></li>
+          <li><a href="#entering">2. Entering a visit</a></li>
+          <li><a href="#saving">3. Saving a visit</a></li>
+          <li><a href="#drafts">4. If the app closes mid-visit</a></li>
+          <li><a href="#finding">5. Finding a patient</a></li>
+          <li><a href="#chart">6. The patient chart</a></li>
+          <li><a href="#returning">7. A returning patient</a></li>
+          <li><a href="#deleting">8. Deleting a visit</a></li>
+          <li><a href="#analytics">9. Analytics</a></li>
+          <li><a href="#sync">10. The sync chip</a></li>
+          <li><a href="#banners">11. Warning banners and what to do</a></li>
+          <li><a href="#updates">12. Updating the app</a></li>
+        </ul>
       </nav>
 
       <h2 id="screens">1. The screens</h2>
-      <p>Field has four tabs. On a phone they sit at the bottom of the screen; on a tablet or computer they are in the top bar next to the name "DH EMR Field".</p>
-      <ul>
-        <li><span class="ui">Visits</span>: every visit saved on this device, with search and filters. This is where you find a patient. It is the tab the app opens on.</li>
-        <li><span class="ui">New visit</span>: opens the visit form on top of whatever screen you are on.</li>
-        <li><span class="ui">Analytics</span>: counts and charts built from the visits on the device.</li>
-        <li><span class="ui">Settings</span>: device name, cloud sync, backups, and the clinic's lists and forms. Most of it is for admins.</li>
-      </ul>
-      <p>At the right of the top bar is a small chip that tells you whether records are backed up to your cloud. It is explained in <a href="#sync">section 10</a>. There is no sign-in and no account: the device itself is the identity.</p>
+      <p>Four tabs: at the bottom of the screen on a phone, in the top bar beside the name "DH EMR Field" on a tablet or computer. No sign-in, no account: the device itself is the identity.</p>
+      <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Tab</th><th>What it is for</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ui">Visits</span></td><td>Every visit on this device, with search and filters. The app opens here; find patients here.</td></tr>
+          <tr><td><span class="ui">New visit</span></td><td>Opens the visit form over whatever screen you are on.</td></tr>
+          <tr><td><span class="ui">Analytics</span></td><td>Counts and charts built from the visits on the device.</td></tr>
+          <tr><td><span class="ui">Settings</span></td><td>Device name, cloud sync, backups, and the clinic's lists and forms. Mostly for admins.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>The small chip at the right of the top bar says whether records are backed up to your cloud (<a href="#sync">section 10</a>).</p>
 
       <h2 id="entering">2. Entering a visit</h2>
-      <p>Tap <span class="ui">New visit</span> in the tab bar, or <span class="ui">+ New visit</span> on the Visits screen. The visit form slides in as a panel. On a phone it fills the screen; on a wider screen it opens on the right. Tapping outside the panel does not close it, on purpose. Only <span class="ui">Cancel</span> closes it, and if you have typed anything the app asks first: "Discard this visit? Anything you have entered will be lost." Tap OK to discard, or Cancel to keep working.</p>
-      <p>At the top of the panel is the title, for example "New visit", and under it the patient number. It first says "Patient number generates from name + date of birth" and changes to "Patient number" followed by the number once you have entered both, with the age after it.</p>
-      <p>The form is a list of sections. Five of them start closed: Procedures, Referral, Imaging, Surgery and Notes. A closed section shows a "+" on its header; tap the header to open it. Your clinic may have renamed, hidden or reordered sections, and may have added its own, so the order below is the default. Required fields show a red "*" after the label.</p>
-      <p class="muted">If your clinic offers more than one form, a <span class="ui">Form template</span> list appears at the top of a new visit so you can pick the right one. Every visit remembers which form it was filed under.</p>
-
-      <h3>Visit</h3>
-      <p><span class="ui">Site</span> (required), <span class="ui">Date</span> (required), and <span class="ui">Provider</span>. The date starts as today. When you enter a paper chart, change it to the date on the chart. The app refuses a date in the future: "Visit date is in the future." The site you pick is remembered for the next patient.</p>
-
-      <h3>Patient</h3>
-      <ul>
-        <li><span class="ui">Given name</span> and <span class="ui">Family name</span>, both required. The patient number is built from these plus the date of birth, so spell them the same way every time the patient comes back. Both need at least two letters. Names in any script work.</li>
-        <li><span class="ui">Sex</span>, required: tap <span class="ui">M</span> or <span class="ui">F</span>. Tap again to clear it.</li>
-        <li><span class="ui">Date of birth</span>, typed as DD/MM/YYYY. If the patient does not know it, tick <span class="ui">Estimate from age</span> next to "Date of birth unknown" and enter an <span class="ui">Estimated age</span> in years instead. A date of birth in the future is refused.</li>
-        <li><span class="ui">Phone</span>, optional.</li>
-        <li><span class="ui">Patient number</span>, read only, with the hint "generated automatically". The app fills it in.</li>
-      </ul>
-
-      <h3>Vitals</h3>
-      <p><span class="ui">Temperature</span> is in °C. If you enter a number outside 25 to 45, the save is refused and the message asks whether it was entered in Fahrenheit. <span class="ui">Blood pressure</span> is written like 120/80. <span class="ui">Weight</span> is in kg. When Sex is not M, two more questions appear: <span class="ui">Pregnant</span> and <span class="ui">Breastfeeding</span>, each answered with <span class="ui">Yes</span> or <span class="ui">No</span>. Choosing M clears both.</p>
-
-      <h3>History</h3>
-      <p><span class="ui">Allergies</span>, <span class="ui">Current medications</span> and <span class="ui">Past medical history</span>. For a returning patient these can be carried forward instead of retyped; see <a href="#returning">section 7</a>.</p>
-
-      <h3>Chief Concern</h3>
-      <p>Type the concern in the <span class="ui">Chief concern</span> box, or tap the complaint buttons under it, for example "Fever", "Cough" or "Abdominal Pain". Tapping a button adds that complaint to the text; tapping it again removes just that entry. You can mix buttons and your own typing.</p>
-
-      <h3>Labs</h3>
-      <p>One tile per test your clinic offers. A positive/negative test has <span class="ui">POS</span> and <span class="ui">NEG</span> buttons. A number test, for example "Blood Glucose" or "Hemoglobin", has a number box with the unit shown inside it, and the app records a label with the value, such as "Normal" or "High", using the ranges your admin set. There is a <span class="ui">Lab comments</span> box, and a <span class="ui">Urinalysis</span> block with one row of buttons per parameter (leukocytes, nitrite, protein and so on). Only record tests that were actually done; empty tiles are simply left empty.</p>
-
-      <h3>Diagnosis</h3>
-      <p>Type in the <span class="ui">Diagnosis</span> box, or tap the quick-pick buttons under it, for example "Malaria" or "URTI". They work like the complaint buttons: tap to add, tap again to remove that entry.</p>
-
-      <h3>Medications</h3>
-      <p>Each medication is one line: pick the drug from the list (its first entry reads "Select medication"), type the dose (for example "500mg" or "2 tabs"), then pick a frequency and a duration. Picking a drug fills the dose box from the formulary if the box is still empty. Tap <span class="ui">+ Add medication</span> for another line and the <span class="ui">×</span> at the end of a line to remove it. There is a <span class="ui">Treatment notes</span> box at the bottom of the section.</p>
-      <p>If your clinic has set up prescription presets, a row headed <span class="ui">Prescription presets</span> appears at the top of the section, with one button per preset, for example "UTI" or "Malaria &gt;35kg". Tapping one adds its medication lines and its treatment notes in one go. It only ever adds; it never removes lines, and you can edit or delete the added lines like any others.</p>
-      <p>Next to each line, once a drug is chosen, the app shows the quantity to hand out:</p>
+      <ol class="steps">
+        <li>Tap <span class="ui">New visit</span> in the tab bar, or <span class="ui">+ New visit</span> on the Visits screen.
+          <p class="what-you-see">A panel slides in (full screen on a phone, on the right on a wider screen), titled "New visit". Under it, "Patient number generates from name + date of birth" becomes "Patient number", the number and the age once both are entered.</p></li>
+        <li>If a <span class="ui">Form template</span> list appears at the top, pick the right form. Every visit remembers which form it was filed under.</li>
+        <li>Fill the sections. Procedures, Referral, Imaging, Surgery and Notes start closed with a "+" on the header; tap the header to open one.</li>
+        <li>Save (<a href="#saving">section 3</a>).</li>
+      </ol>
+      <div class="callout">
+        <p>Tapping outside the panel does not close it, on purpose. Only <span class="ui">Cancel</span> does, and if you have typed anything the app asks: "Discard this visit? Anything you have entered will be lost." OK discards; Cancel keeps working.</p>
+      </div>
+      <p>Your clinic may have renamed, hidden, reordered or added sections; this order is the default. Required fields show a red "*" after the label.</p>
       <div class="table-scroll">
-      <table>
-        <tr><th>Next to the line</th><th>What it means</th></tr>
-        <tr><td>"20 tabs"</td><td>The dose was understood. This is the quantity to dispense for the chosen frequency and duration.</td></tr>
-        <tr><td>"20 tabs?"</td><td>The dose could not be read, so the app assumed 1 per dose. Check it. Writing the dose as a number of tabs or in mg fixes the guess.</td></tr>
-        <tr><td>"ongoing"</td><td>The duration is Ongoing, so no quantity is calculated.</td></tr>
-        <tr><td>"no qty"</td><td>The dose could not be read at all. No quantity will be recorded for this line.</td></tr>
+      <table class="guide-table">
+        <thead><tr><th>Section</th><th>Fields and rules</th></tr></thead>
+        <tbody>
+          <tr><td>Visit</td><td><span class="ui">Site</span> (required), <span class="ui">Date</span> (required), <span class="ui">Provider</span>. The date starts as today; change it to the date on the paper chart. A future date is refused: "Visit date is in the future." The site is remembered for the next patient.</td></tr>
+          <tr><td>Patient</td><td><span class="ui">Given name</span> and <span class="ui">Family name</span>: required, at least two letters each, any script; spell them the same way every time, since the patient number is built from them and the date of birth. <span class="ui">Sex</span> (required): tap <span class="ui">M</span> or <span class="ui">F</span>, again to clear. <span class="ui">Date of birth</span> as DD/MM/YYYY, not in the future; if unknown, tick <span class="ui">Estimate from age</span> beside "Date of birth unknown" and enter an <span class="ui">Estimated age</span> in years. <span class="ui">Phone</span>: optional. <span class="ui">Patient number</span>: read only ("generated automatically").</td></tr>
+          <tr><td>Vitals</td><td><span class="ui">Temperature</span> in °C; outside 25 to 45 the save is refused and the message asks whether it was entered in Fahrenheit. <span class="ui">Blood pressure</span> like 120/80. <span class="ui">Weight</span> in kg. When Sex is not M, <span class="ui">Pregnant</span> and <span class="ui">Breastfeeding</span> appear, each <span class="ui">Yes</span> or <span class="ui">No</span>; choosing M clears both.</td></tr>
+          <tr><td>History</td><td><span class="ui">Allergies</span>, <span class="ui">Current medications</span>, <span class="ui">Past medical history</span>. A returning patient's can be carried forward instead of retyped (<a href="#returning">section 7</a>).</td></tr>
+          <tr><td>Chief Concern</td><td>Type in the <span class="ui">Chief concern</span> box or tap the complaint buttons under it ("Fever", "Cough", "Abdominal Pain"). A tap adds the complaint to the text; a second tap removes just that entry. Mix buttons and typing freely.</td></tr>
+          <tr><td>Labs</td><td>One tile per test your clinic offers: <span class="ui">POS</span> and <span class="ui">NEG</span> for a positive/negative test; for a number test ("Blood Glucose", "Hemoglobin") a box with the unit inside, and the app records a label such as "Normal" or "High" from your admin's ranges. Below: <span class="ui">Lab comments</span>, and a <span class="ui">Urinalysis</span> block with a row of buttons per parameter (leukocytes, nitrite, protein and so on). Record only tests actually done; leave the rest empty.</td></tr>
+          <tr><td>Diagnosis</td><td>Type in the <span class="ui">Diagnosis</span> box or tap the quick-pick buttons under it ("Malaria", "URTI"): tap to add, tap again to remove that entry.</td></tr>
+          <tr><td>Medications</td><td>One line per drug, with the dispensing quantity shown: see <a href="#medications">Medications</a> below.</td></tr>
+          <tr><td>Procedures</td><td>Tap the buttons for what was done, for example "Wound Closure/Sutures".</td></tr>
+          <tr><td>Referral</td><td>Pick a <span class="ui">Referral type</span> (first entry "None"); a <span class="ui">Scheduled date</span> box then appears.</td></tr>
+          <tr><td>Imaging</td><td><span class="ui">Ultrasound type</span> and <span class="ui">Findings</span>.</td></tr>
+          <tr><td>Surgery</td><td>Tick <span class="ui">Yes</span> beside "Surgery performed" to open the <span class="ui">Type</span> and <span class="ui">Notes</span> boxes.</td></tr>
+          <tr><td>Notes</td><td>Free text for anything else.</td></tr>
+          <tr><td>Your clinic's own sections</td><td>Admin-added questions: short and long text, a single choice from a list, several choices with checkboxes, numbers, a slider, Yes / No buttons, dates. They work like built-in fields. A blank required one refuses the save, naming section and question: "Social History: Smokes is required."</td></tr>
+        </tbody>
       </table>
       </div>
 
-      <h3>Procedures, Referral, Imaging, Surgery, Notes</h3>
-      <ul>
-        <li><strong>Procedures</strong>: tap the buttons for what was done, for example "Wound Closure/Sutures".</li>
-        <li><strong>Referral</strong>: pick a <span class="ui">Referral type</span>. The first entry is "None". Once a type is chosen, a <span class="ui">Scheduled date</span> box appears.</li>
-        <li><strong>Imaging</strong>: <span class="ui">Ultrasound type</span> and <span class="ui">Findings</span>.</li>
-        <li><strong>Surgery</strong>: tick <span class="ui">Yes</span> next to "Surgery performed" to open the <span class="ui">Type</span> and <span class="ui">Notes</span> boxes.</li>
-        <li><strong>Notes</strong>: a free text box for anything else.</li>
-      </ul>
-
-      <h3>Your clinic's own sections</h3>
-      <p>An admin can add sections with their own questions: short and long text, a single choice from a list, several choices with checkboxes, numbers, a slider, Yes / No buttons, and dates. They work like the built-in fields. A required question is marked with "*" the same way, and if you leave one blank the save is refused with the section and question named, for example "Social History: Smokes is required."</p>
+      <h3 id="medications">Medications</h3>
+      <ol class="steps">
+        <li>Pick the drug from the list; its first entry reads <span class="ui">Select medication</span>.
+          <p class="what-you-see">The dose box fills from the formulary if it is still empty.</p></li>
+        <li>Type the dose, for example "500mg" or "2 tabs".</li>
+        <li>Pick a <span class="ui">Frequency</span> and a <span class="ui">Duration</span>.</li>
+        <li>Tap <span class="ui">+ Add medication</span> for another line, or the <span class="ui">×</span> at the end of a line to remove it.</li>
+        <li>Put anything else in <span class="ui">Treatment notes</span> at the bottom of the section.</li>
+      </ol>
+      <p>If your clinic has set up prescription presets, a <span class="ui">Prescription presets</span> row at the top of the section offers one button per preset ("UTI", "Malaria &gt;35kg"). A tap adds that preset's medication lines and treatment notes in one go. It only ever adds, never removes; edit or delete the added lines like any others.</p>
+      <p>Once a drug is chosen, the quantity to hand out appears beside the line:</p>
+      <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Beside the line</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td>"20 tabs"</td><td>The dose was understood: dispense this quantity for the chosen frequency and duration.</td></tr>
+          <tr><td>"20 tabs?"</td><td>The dose could not be read, so the app assumed 1 per dose. Check it; writing the dose as a number of tabs or in mg fixes the guess.</td></tr>
+          <tr><td>"ongoing"</td><td>The duration is Ongoing, so no quantity is calculated.</td></tr>
+          <tr><td>"no qty"</td><td>The dose could not be read at all; no quantity will be recorded for this line.</td></tr>
+        </tbody>
+      </table>
+      </div>
 
       <h2 id="saving">3. Saving a visit</h2>
-      <p>At the bottom of the form there are two save buttons. Both read "Saving…" while the visit is written.</p>
-      <ul>
-        <li><span class="ui">Save</span> files the visit and closes the panel.</li>
-        <li><span class="ui">Save &amp; next patient</span> files the visit and keeps the form open for the next chart. Site, Date and Provider stay filled in; everything else clears. A green note confirms the save for a few seconds, for example "Saved Grace Auma (GRAU03021988). Ready for the next patient." This button only appears on new visits, never while editing an old one.</li>
-      </ul>
-      <p>If something is missing or wrong, the visit is not saved. A red summary appears, for example "Check 2 fields", listing each problem in plain words ("Family name is required.", "Site is required.", "Visit date is in the future.") and the form jumps to the first field that needs attention. Fix the fields and save again.</p>
-      <p>Very rarely the device itself refuses to save, and the form shows a red "Not saved" notice with the reason. One reason reads: "Your existing records could not be read from this device right now, so saving was blocked to avoid overwriting them. Please close and reopen the app; if it keeps happening, restart the device before entering more data." Do what it says. The other reason says the device may be out of space or in a private-browsing window, and that your entry was not saved. Nothing already saved is touched in either case.</p>
+      <p>Two save buttons sit at the bottom of the form; both read "Saving…" while the visit is written.</p>
+      <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Button</th><th>What happens</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ui">Save</span></td><td>Files the visit and closes the panel.</td></tr>
+          <tr><td><span class="ui">Save &amp; next patient</span></td><td>Files the visit and keeps the form open for the next chart: Site, Date and Provider stay, everything else clears. A green note confirms for a few seconds, for example "Saved Grace Auma (GRAU03021988). Ready for the next patient." New visits only, never while editing.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>If something is missing or wrong, nothing is saved: a red summary such as "Check 2 fields" lists each problem ("Family name is required.", "Site is required.", "Visit date is in the future.") and the form jumps to the first field needing attention. Fix them and save again.</p>
+      <div class="callout warn">
+        <p>Rarely the device itself refuses to save; a red "Not saved" notice says why. One reads: "Your existing records could not be read from this device right now, so saving was blocked to avoid overwriting them. Please close and reopen the app; if it keeps happening, restart the device before entering more data."</p>
+        <p>Do what it says. The other reason says the device may be out of space or in a private-browsing window, and that your entry was not saved. Nothing already saved is touched in either case.</p>
+      </div>
 
       <h2 id="drafts">4. If the app closes mid-visit</h2>
-      <p>While you type, the form keeps a working copy on the device. If the app reloads or gets pushed out of memory before you save, because of a phone call, opening the camera, or the screen locking for a long time, your typing is not gone. The next time the same visit form opens, a blue notice appears: "Recovered from where you left off." It says who the draft is for and the time you last typed, for example "Recovered for Amara Nakato, last typed at" followed by the time, and ends "Check every field before saving, then save as usual." Do exactly that.</p>
-      <p>The recovered copy only comes back on the visit it belongs to. It is never offered on a different patient's form, it does not survive closing the app completely, and it is cleared the moment you save or discard.</p>
-      <div class="tip">
+      <p>While you type, the form keeps a working copy on the device. If the app reloads or is pushed out of memory before you save (a phone call, the camera, a long screen lock), your typing is not gone.</p>
+      <ol class="steps">
+        <li>Open the same visit form again.
+          <p class="what-you-see">A blue notice, "Recovered from where you left off.", names the patient and when you last typed ("Recovered for Amara Nakato, last typed at" and the time) and ends "Check every field before saving, then save as usual."</p></li>
+        <li>Check every field.</li>
+        <li>Save as usual.</li>
+      </ol>
+      <p>It returns only on the visit it belongs to, never on another patient's form; it does not survive closing the app completely, and is cleared the moment you save or discard.</p>
+      <div class="callout">
         <p>Do not lean on this net. It covers interruptions, not everything. Save each visit as soon as it is complete.</p>
       </div>
 
       <h2 id="finding">5. Finding a patient</h2>
-      <p>Open the <span class="ui">Visits</span> tab. Across the top are four counts for the whole device: <span class="ui">Visits</span>, <span class="ui">Patients</span>, <span class="ui">Today</span> and <span class="ui">Pediatric (&lt;18)</span>. They always cover everything on the device, even while you search.</p>
-      <p>Type in the search box (its hint reads "Search name, patient number, concern, diagnosis...") to find someone by name, patient number, concern, diagnosis, site or provider. Tap <span class="ui">Filters</span> to narrow the list by <span class="ui">Site</span>, <span class="ui">Provider</span>, <span class="ui">Referral</span>, or a date range with <span class="ui">From</span> and <span class="ui">To</span>; <span class="ui">Reset</span> clears them. When filters are active the button shows how many, for example "Filters (2)".</p>
-      <p>Each patient is one card, most recently seen first: the name, then the latest site, the latest date, sex and age, and "No." followed by the patient number, then the latest diagnosis. Badges flag a positive lab ("Lab+"), a referral ("Referred"), pregnancy ("Pregnant"), and how many visits the patient has, for example "3 visits".</p>
-      <p>Three messages can replace the list. "No visits recorded on this device yet." means the device is empty. "No visits match those filters." means your search or filters excluded everything; tap Reset. On a device with more than 150 patients the list shows the first 150 and says so; type a name to narrow it.</p>
-
-      <h2 id="chart">6. The patient chart</h2>
-      <p>Tap a card to open the patient's chart, a panel over the list. Here tapping outside the panel does close it, because there is nothing typed to lose. The header shows the name, then "Patient number" with the number, sex and age, and "DOB" with the date of birth when known ("(est.)" after it when the age was estimated). There are two buttons: <span class="ui">+ New visit</span> to start a new visit for this patient, and <span class="ui">Close</span>.</p>
-      <p>The body starts with the visit count. Once a patient has two or more visits, a <span class="ui">Vitals trend</span> card appears: small graphs for temperature and weight, and a table of Temp, BP and Weight across the visits, oldest first as V1, V2 and so on, with the date under each.</p>
-      <p>Below that, every visit is its own card, newest first: "Visit 3" and so on, then the date, site and provider, and the name of the form it was filed under. Each visit card has an <span class="ui">Edit</span> button and a <span class="ui">Delete</span> button, then blocks for Vitals, History, Labs (positive results in red), Urinalysis, Clinical (diagnosis, each medication line with its quantity, treatment notes, procedures, imaging, surgery, referral, notes) and Additional (your clinic's own questions). Empty rows are not shown.</p>
-
-      <h2 id="returning">7. A returning patient</h2>
-      <p>When a patient comes back, do not edit their old visit. Start a new one. The easiest way: find them on the <span class="ui">Visits</span> tab, open their chart, and tap <span class="ui">+ New visit</span>. The form opens headed "New visit for" their name, with their identity already filled in: name, sex, date of birth, phone, patient number. Today's vitals, labs, diagnosis and medications start blank, because today's findings must be entered for today.</p>
-      <p>If you instead start a blank visit and type a name and date of birth the app already knows, a blue <span class="ui">Returning patient</span> notice appears. It shows how many previous visits there are, when the patient was last seen, and the last diagnosis, with one button: <span class="ui">Copy allergies, history and medications forward</span>. Tap it to pull the allergies, past medical history, current medications and phone from the last visit instead of retyping them. It fills only boxes you have left empty.</p>
-
-      <h3>Editing an old visit</h3>
-      <p><span class="ui">Edit</span> on a visit card opens that visit, headed "Edit visit", and <span class="ui">Save</span> overwrites it. Use it to fix a mistake in that day's record: a wrong weight, a missed lab result. A new visit records a new day. If you edit last month's visit to document today, last month's record is gone, and the patient's visit count and history become wrong. When in doubt: fixing the past is Edit, documenting today is a new visit.</p>
-      <p>On a cloud device, two warnings can appear when you save an edit, because another device may have touched the same visit while you had it open:</p>
-      <div class="confirm">
-        <p class="lead">If the visit was deleted elsewhere</p>
-        <p>"This visit was DELETED on another device while you had it open.</p>
-        <p>Saving now brings it back for everyone. Cancel instead if the deletion was correct."</p>
-      </div>
-      <div class="confirm">
-        <p class="lead">If the visit was changed elsewhere</p>
-        <p>"This visit was changed on another device while you had it open.</p>
-        <p>Saving now replaces those changes with what is on your screen. Cancel instead to close without saving and reopen the visit to see them first."</p>
-      </div>
-      <p>Read the message and choose. Cancel never loses anything that is already saved.</p>
-
-      <h2 id="deleting">8. Deleting a visit</h2>
-      <p>Open the patient's chart and tap <span class="ui">Delete</span> on the visit card. The app asks first, and the warning means exactly what it says:</p>
-      <div class="confirm">
-        <p class="lead">The delete confirm</p>
-        <p>"Delete the 12/04/2026 visit for Amara Nakato?</p>
-        <p>The visit is removed from this device and from every device that syncs with it. This cannot be undone from inside the app - only a backup taken before now can bring it back."</p>
-      </div>
-      <p>After you tap OK, the Visits tab shows a bar: "Deleted the 12/04/2026 visit for Amara Nakato." with a <span class="ui">Dismiss</span> button. A deleted visit does not come back on the next sync; on a cloud device the deletion itself syncs, so the visit disappears from every device and stays gone. The only way back is restoring a backup file made before the deletion. So before tapping OK, be sure you have the right visit for the right patient.</p>
-
-      <h2 id="analytics">9. Analytics</h2>
-      <p>The <span class="ui">Analytics</span> tab is built from the visits stored on the device you are holding. On a cloud device that includes the whole team's visits once sync has run. Filter by date range (<span class="ui">From</span> and <span class="ui">To</span>), <span class="ui">Site</span> (first entry "All sites") and <span class="ui">Provider</span> (first entry "All providers"); <span class="ui">Reset</span> clears everything. On an empty device it says "No visits recorded on this device yet. Charts appear here once visits are saved."</p>
-      <p>The tiles across the top:</p>
-      <ul>
-        <li><span class="ui">Visits</span>: visits matching the filters.</li>
-        <li><span class="ui">Patients</span>: how many different patients those visits belong to.</li>
-        <li><span class="ui">New patients</span>: patients seen for the first time, with the number of return visits underneath.</li>
-        <li><span class="ui">Referrals</span>: visits with a referral recorded.</li>
-        <li><span class="ui">Lab positive</span>: visits with at least one positive test.</li>
-        <li><span class="ui">Median age</span>: the middle age across those visits, in years. It shows "-" when no visit has a date of birth or estimated age.</li>
-      </ul>
-      <p>The panels below:</p>
-      <ul>
-        <li><span class="ui">Visits over time</span>: daily visits and unique patients. Tap <span class="ui">View data</span> under a chart to see the numbers as a table.</li>
-        <li><span class="ui">Age and sex</span>: who you are seeing, split female and male by age band.</li>
-        <li><span class="ui">Lab positivity</span>: for each test, what share of the tests ordered came back positive, for example "32% (8 of 25 tested)".</li>
-        <li><span class="ui">Top diagnoses</span> and <span class="ui">Top medications</span>: the most recorded diagnoses and the most dispensed drugs.</li>
-        <li><span class="ui">Visits by site</span> and <span class="ui">Visits by provider</span>: where the work happened and who did it.</li>
-        <li><span class="ui">Data quality</span>: the share of visits with no diagnosis, no vitals, or no provider recorded. A share above 25% is highlighted. Check this before a donor report, and tighten up entry where a number is high.</li>
-      </ul>
-
-      <h2 id="sync">10. The sync chip</h2>
-      <p>The chip at the right of the top bar tells you whether records are backed up to your organization's cloud. On a device set up on its own it reads <span class="ui">Offline only</span> and cannot be tapped. On a cloud device, tapping it runs a sync by hand, and the label reads "Syncing…" while it runs. A small badge like "3 pending" means records are waiting to upload. The badge is not shown on a phone-sized screen; there, the <span class="ui">Waiting to sync</span> row on the Cloud sync card in Settings always shows the count.</p>
+      <p>Open the <span class="ui">Visits</span> tab. Four counts across the top cover the whole device, even while you search: <span class="ui">Visits</span>, <span class="ui">Patients</span>, <span class="ui">Today</span> and <span class="ui">Pediatric (&lt;18)</span>.</p>
+      <ol class="steps">
+        <li>Type in the search box (hint: "Search name, patient number, concern, diagnosis...") to search by name, patient number, concern, diagnosis, site or provider.</li>
+        <li>Tap <span class="ui">Filters</span> to narrow the list by <span class="ui">Site</span>, <span class="ui">Provider</span>, <span class="ui">Referral</span>, or a date range with <span class="ui">From</span> and <span class="ui">To</span>; <span class="ui">Reset</span> clears them.
+          <p class="what-you-see">With filters active the button shows how many, for example "Filters (2)".</p></li>
+        <li>Tap a card to open that patient's chart.</li>
+      </ol>
+      <p>One card per patient, most recently seen first: name, latest site, latest date, sex and age, "No." with the patient number, then the latest diagnosis. Badges flag a positive lab ("Lab+"), a referral ("Referred"), pregnancy ("Pregnant") and the visit count ("3 visits").</p>
       <div class="table-scroll">
-      <table>
-        <tr><th>Chip says</th><th>What it means</th><th>What to do</th></tr>
-        <tr><td><span class="ui">Offline only</span></td><td>This device does not use cloud sync. Records stay on the device.</td><td>Take a backup at the end of every day of entry: Settings, then <span class="ui">Download backup</span>.</td></tr>
-        <tr><td><span class="ui">Connected</span></td><td>The cloud is set up but no sync has run yet this session.</td><td>Tap the chip to sync.</td></tr>
-        <tr><td><span class="ui">Offline</span></td><td>No internet right now. Everything still works; records save to the device.</td><td>Nothing. It syncs when the connection returns.</td></tr>
-        <tr><td><span class="ui">Syncing</span></td><td>Records are being sent and received.</td><td>Wait a moment.</td></tr>
-        <tr><td><span class="ui">Synced</span></td><td>All records are backed up to your cloud.</td><td>Nothing.</td></tr>
-        <tr><td><span class="ui">Sync error</span></td><td>The last sync failed.</td><td>Tap the chip to retry and check the connection. If it stays red, tell your admin.</td></tr>
+      <table class="guide-table">
+        <thead><tr><th>Instead of the list</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>"No visits recorded on this device yet."</td><td>The device is empty.</td></tr>
+          <tr><td>"No visits match those filters."</td><td>Your search or filters excluded everything. Tap Reset.</td></tr>
+          <tr><td>Only the first 150 patients, with a note saying so</td><td>More than 150 patients match. Type a name to narrow the list.</td></tr>
+        </tbody>
       </table>
       </div>
-      <p>If you sync by hand and records still cannot upload, the app says so plainly: "Not backed up." followed by how many records are still waiting and why, for example "This device is offline." or "The cloud rejected the upload or could not be reached." It ends: "Try again when you have signal. Do not wipe or hand on this device until this clears." The waiting records exist only on that device, so until the message stops appearing, do not wipe the device, hand it to someone else, or delete the app.</p>
+
+      <h2 id="chart">6. The patient chart</h2>
+      <p>A card opens the patient's chart, a panel over the list. Here tapping outside does close it: there is nothing typed to lose.</p>
+      <p>The header shows the name, then "Patient number" with the number, sex and age, and "DOB" with the date of birth when known ("(est.)" after it when the age was estimated). Two buttons: <span class="ui">+ New visit</span> starts a new visit for this patient; <span class="ui">Close</span> closes the chart.</p>
+      <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>In the chart</th><th>What it shows</th></tr></thead>
+        <tbody>
+          <tr><td>Visit count</td><td>The first line: how many visits the patient has.</td></tr>
+          <tr><td><span class="ui">Vitals trend</span></td><td>From two visits on: small graphs for temperature and weight, and a table of Temp, BP and Weight across the visits, oldest first as V1, V2 and so on, with the date under each.</td></tr>
+          <tr><td>Visit cards</td><td>One per visit, newest first: "Visit 3" and so on, the date, site and provider, and the form it was filed under. Each has <span class="ui">Edit</span> and <span class="ui">Delete</span>, then blocks for Vitals, History, Labs (positive results in red), Urinalysis, Clinical (diagnosis, each medication line with its quantity, treatment notes, procedures, imaging, surgery, referral, notes) and Additional (your clinic's own questions). Empty rows are not shown.</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h2 id="returning">7. A returning patient</h2>
+      <p>When a patient comes back, do not edit their old visit. Start a new one.</p>
+      <ol class="steps">
+        <li>Find the patient on the <span class="ui">Visits</span> tab and open their chart.</li>
+        <li>Tap <span class="ui">+ New visit</span>.
+          <p class="what-you-see">The form opens headed "New visit for" and their name, with name, sex, date of birth, phone and patient number already filled in. Vitals, labs, diagnosis and medications start blank: today's findings must be entered for today.</p></li>
+      </ol>
+      <p>If you instead start a blank visit and type a name and date of birth the app already knows, a blue <span class="ui">Returning patient</span> notice shows the number of previous visits, when the patient was last seen, and the last diagnosis.</p>
+      <p>Its button, <span class="ui">Copy allergies, history and medications forward</span>, pulls allergies, past medical history, current medications and phone from the last visit into boxes you have left empty.</p>
+
+      <h3>Editing an old visit</h3>
+      <p><span class="ui">Edit</span> on a visit card opens that visit, headed "Edit visit", and <span class="ui">Save</span> overwrites it. Use it to fix a mistake in that day's record: a wrong weight, a missed lab result. A new visit records a new day.</p>
+      <div class="callout warn">
+        <p>Edit last month's visit to document today and last month's record is gone; the patient's visit count and history become wrong. When in doubt: fixing the past is Edit, documenting today is a new visit.</p>
+      </div>
+      <p>On a cloud device, saving an edit can raise one of two warnings, because another device may have touched the visit while you had it open. Read it and choose; Cancel never loses anything already saved.</p>
+      <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Situation</th><th>The app asks</th></tr></thead>
+        <tbody>
+          <tr><td>The visit was deleted elsewhere</td><td>"This visit was DELETED on another device while you had it open. Saving now brings it back for everyone. Cancel instead if the deletion was correct."</td></tr>
+          <tr><td>The visit was changed elsewhere</td><td>"This visit was changed on another device while you had it open. Saving now replaces those changes with what is on your screen. Cancel instead to close without saving and reopen the visit to see them first."</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h2 id="deleting">8. Deleting a visit</h2>
+      <ol class="steps">
+        <li>Open the patient's chart.</li>
+        <li>Tap <span class="ui">Delete</span> on the visit card.
+          <p class="what-you-see">The app asks: "Delete the 12/04/2026 visit for Amara Nakato? The visit is removed from this device and from every device that syncs with it. This cannot be undone from inside the app - only a backup taken before now can bring it back."</p></li>
+        <li>Be sure it is the right visit for the right patient, then tap OK.
+          <p class="what-you-see">The Visits tab shows a bar: "Deleted the 12/04/2026 visit for Amara Nakato." with a <span class="ui">Dismiss</span> button.</p></li>
+      </ol>
+      <div class="callout warn">
+        <p>A deleted visit does not come back on the next sync. On a cloud device the deletion itself syncs: the visit disappears from every device and stays gone. The only way back is restoring a backup file made before the deletion.</p>
+      </div>
+
+      <h2 id="analytics">9. Analytics</h2>
+      <p>The <span class="ui">Analytics</span> tab is built from the visits on the device you are holding; on a cloud device that includes the whole team's once sync has run. An empty device says "No visits recorded on this device yet. Charts appear here once visits are saved."</p>
+      <p>Filter by date range (<span class="ui">From</span> and <span class="ui">To</span>), <span class="ui">Site</span> (first entry "All sites") and <span class="ui">Provider</span> (first entry "All providers"); <span class="ui">Reset</span> clears everything.</p>
+      <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Tile</th><th>What it counts</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ui">Visits</span></td><td>Visits matching the filters.</td></tr>
+          <tr><td><span class="ui">Patients</span></td><td>How many different patients those visits belong to.</td></tr>
+          <tr><td><span class="ui">New patients</span></td><td>Patients seen for the first time, with the number of return visits underneath.</td></tr>
+          <tr><td><span class="ui">Referrals</span></td><td>Visits with a referral recorded.</td></tr>
+          <tr><td><span class="ui">Lab positive</span></td><td>Visits with at least one positive test.</td></tr>
+          <tr><td><span class="ui">Median age</span></td><td>The middle age across those visits, in years; "-" when no visit has a date of birth or estimated age.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Panel</th><th>What it shows</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ui">Visits over time</span></td><td>Daily visits and unique patients. <span class="ui">View data</span> under a chart shows the numbers as a table.</td></tr>
+          <tr><td><span class="ui">Age and sex</span></td><td>Who you are seeing, split female and male by age band.</td></tr>
+          <tr><td><span class="ui">Lab positivity</span></td><td>For each test, the share of tests ordered that came back positive, for example "32% (8 of 25 tested)".</td></tr>
+          <tr><td><span class="ui">Top diagnoses</span>, <span class="ui">Top medications</span></td><td>The most recorded diagnoses and the most dispensed drugs.</td></tr>
+          <tr><td><span class="ui">Visits by site</span>, <span class="ui">Visits by provider</span></td><td>Where the work happened and who did it.</td></tr>
+          <tr><td><span class="ui">Data quality</span></td><td>The share of visits with no diagnosis, no vitals, or no provider recorded; above 25% is highlighted. Check this before a donor report, and tighten up entry where a number is high.</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h2 id="sync">10. The sync chip</h2>
+      <p>The chip at the right of the top bar says whether records are backed up to your organization's cloud. A device set up on its own reads <span class="ui">Offline only</span>, and the chip cannot be tapped. On a cloud device a tap runs a sync by hand; the label reads "Syncing…" meanwhile.</p>
+      <p>A small badge like "3 pending" means records are waiting to upload. It is hidden on a phone-sized screen; there, the <span class="ui">Waiting to sync</span> row on the Cloud sync card in Settings always shows the count.</p>
+      <div class="table-scroll">
+      <table class="guide-table">
+        <thead><tr><th>Chip says</th><th>What it means</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ui">Offline only</span></td><td>This device does not use cloud sync. Records stay on the device.</td><td>Take a backup at the end of every day of entry: Settings, then <span class="ui">Download backup</span>.</td></tr>
+          <tr><td><span class="ui">Connected</span></td><td>The cloud is set up but no sync has run yet this session.</td><td>Tap the chip to sync.</td></tr>
+          <tr><td><span class="ui">Offline</span></td><td>No internet right now. Everything still works; records save to the device.</td><td>Nothing. It syncs when the connection returns.</td></tr>
+          <tr><td><span class="ui">Syncing</span></td><td>Records are being sent and received.</td><td>Wait a moment.</td></tr>
+          <tr><td><span class="ui">Synced</span></td><td>All records are backed up to your cloud.</td><td>Nothing.</td></tr>
+          <tr><td><span class="ui">Sync error</span></td><td>The last sync failed.</td><td>Tap the chip to retry and check the connection. If it stays red, tell your admin.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="callout warn">
+        <p>If you sync by hand and records still cannot upload, the app says "Not backed up." with how many records are still waiting and why, for example "This device is offline." or "The cloud rejected the upload or could not be reached."</p>
+        <p>It ends: "Try again when you have signal. Do not wipe or hand on this device until this clears." Those records exist only on that device: until the message stops appearing, do not wipe the device, hand it to someone else, or delete the app.</p>
+      </div>
 
       <h2 id="banners">11. Warning banners and what to do</h2>
-      <p>Sometimes a colored banner appears at the top of the app. Each one means something specific, and each one has a right response.</p>
+      <p>A colored banner at the top of the app means something specific and has a right response.</p>
 
       <h3>Amber: "Back this device up today."</h3>
-      <p>The device is down to a single copy of its records: the app's own on-device safety copy has never been written or is out of date. The records you can see are fine, but there is no second copy behind them. The banner itself says what to do: "Download a backup now and at the end of every clinic day, and ask your admin to archive older visits off this device." So:</p>
-      <ol>
+      <p>The device is down to a single copy of its records: the app's own on-device safety copy has never been written or is out of date. What you can see is fine, but no second copy stands behind it.</p>
+      <p>The banner itself says what to do: "Download a backup now and at the end of every clinic day, and ask your admin to archive older visits off this device."</p>
+      <ol class="steps">
         <li>Go to Settings and tap <span class="ui">Download backup</span> now. Keep the file somewhere safe, off the device.</li>
         <li>Tell your admin.</li>
       </ol>
 
       <h3>Red: "This device cannot read its records. Do not enter more patients here."</h3>
-      <p>Stop entering patients on this device and use another device for today. Your records are not gone. The banner appears because the app found an older on-device copy, decided it is out of date, and refused to load it so nothing overwrites anything. Saving is blocked while the banner shows. Then:</p>
-      <ol>
+      <p>Stop entering patients here; use another device today. Your records are not gone: the app found an older on-device copy, decided it is out of date, and refused to load it so nothing overwrites anything. Saving is blocked while the banner shows.</p>
+      <ol class="steps">
         <li>If you have a backup file anywhere, tap <span class="ui">Go to Settings to restore a backup</span> and restore it. This is the safest way back.</li>
-        <li>Only if there is no backup file at all, tap <span class="ui">Use the older copy instead</span>. The app asks first and tells you how many records the older copy holds, how many this device last had, and that anything entered after that copy was made will not come back. Read it carefully before tapping OK. If it works, the app says "Loaded 140 records from the older copy. Take a backup now, before entering anything else." Do that.</li>
+        <li>Only if there is no backup file at all, tap <span class="ui">Use the older copy instead</span>.
+          <p class="what-you-see">The app first says how many records the older copy holds, how many this device last had, and that anything entered after that copy was made will not come back. Read it before tapping OK. If it works: "Loaded 140 records from the older copy. Take a backup now, before entering anything else." Do that.</p></li>
         <li>Tell your admin either way.</li>
       </ol>
 
       <h3>Red: "Close the other tabs."</h3>
-      <p>The app is open in more than one browser tab or window on this device, and this browser cannot keep them in step. Close the extra tabs right away. Records entered in one tab can overwrite the other.</p>
+      <p>The app is open in more than one browser tab or window on this device, and this browser cannot keep them in step. Close the extra tabs right away: records entered in one tab can overwrite the other.</p>
 
       <h3>"Something went wrong displaying this screen."</h3>
-      <p>A screen failed to draw. The message says: "Your records are still on this device. Nothing has been deleted, and anything you had already saved is safe." Tap <span class="ui">Try again</span>. If it happens again, close the app completely and reopen it. If it still happens, take a backup from Settings on a working device before doing anything else.</p>
+      <p>A screen failed to draw. The message says: "Your records are still on this device. Nothing has been deleted, and anything you had already saved is safe."</p>
+      <ol class="steps">
+        <li>Tap <span class="ui">Try again</span>.</li>
+        <li>If it happens again, close the app completely and reopen it.</li>
+        <li>If it still happens, take a backup from Settings on a working device before doing anything else.</li>
+      </ol>
 
       <h3>"The app could not start"</h3>
-      <p>The device could not open its records store at all. The screen says "Your records have not been changed or deleted." and lists three steps: close the app completely and open it again; if that fails, restart the device; if it still will not start, use a different device for today and tell your admin. There is a <span class="ui">Reload</span> button.</p>
+      <p>The device could not open its records store at all. The screen says "Your records have not been changed or deleted." and has a <span class="ui">Reload</span> button.</p>
+      <ol class="steps">
+        <li>Close the app completely and open it again.</li>
+        <li>If that fails, restart the device.</li>
+        <li>If it still will not start, use a different device for today and tell your admin.</li>
+      </ol>
 
-      <div class="callout">
+      <div class="callout warn">
         <p>Whatever goes wrong, never "fix" it by clearing the browser's data or deleting and reinstalling the app. That erases any records that have not synced or been backed up, and nothing can bring them back. Every error screen in the app repeats this warning for a reason.</p>
       </div>
 
       <h2 id="updates">12. Updating the app</h2>
-      <p>The app never updates itself. An update reloads the app, and a reload in the middle of a visit is exactly the interruption you do not need, so updating is always your choice, at your moment.</p>
-      <p>When a new version is ready, a bar appears: "A new version of DH EMR is ready." with the note "Updating reloads the app, so finish and save any open visit first. Saved records are not affected." Finish the visit, then tap <span class="ui">Update now</span>. <span class="ui">Not now</span> hides the bar until the next time the app starts, when it offers again.</p>
-      <p>Take updates when they are offered, between charts or at the end of the day. Fixes only reach the device when someone taps <span class="ui">Update now</span>.</p>
+      <p>The app never updates itself: an update reloads it, and a reload mid-visit is exactly the interruption you do not need, so updating is always your choice, at your moment.</p>
+      <ol class="steps">
+        <li>When the bar "A new version of DH EMR is ready." appears, finish and save any open visit.
+          <p class="what-you-see">Its note reads "Updating reloads the app, so finish and save any open visit first. Saved records are not affected."</p></li>
+        <li>Tap <span class="ui">Update now</span>.</li>
+      </ol>
+      <p><span class="ui">Not now</span> hides the bar until the app next starts, when it offers again. Take updates when offered, between charts or at the end of the day: fixes only reach the device when someone taps <span class="ui">Update now</span>.</p>
 
       <p class="backlink"><a href="../">Back to all guides</a></p>
     </div>

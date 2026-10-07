@@ -560,3 +560,44 @@ from the overall board.
 - Follow-ups: the guides still describe the provider landing on the Board
   and view-only sections as disabled forms (rewrite in progress); the lab
   grid could list ordered tests first for the lab role.
+
+## Landing page redesign (2026-10-07, commit 9527ffd)
+
+Alec: the new landing was "a lot of words"; the old site "looked better,
+more graphical". Method: a three-design panel (product-first, flow-first,
+old-site-faithful; CSS and inline SVG only) scored by three independent
+judges on visual richness, two-product clarity, word density, mobile
+robustness, factual traceability, rules and accessibility. product-first
+won unanimously (34/33/34); an integration agent merged the runner-up's
+paper-chart-to-phone Field story, ownership diagram and phone-width board
+restack, fixed every judge finding, and I verified in the built-in browser
+at 375, 768 and 1100 px (fixed one real defect myself: the headline broke
+mid-word at tablet width). Copy stays in index.html; the page CSS is the
+lp- prefixed block at the end of site.css. The old landing is in the old
+repo (DamicoHealth/damicohealth-com) for reference; its device-mockup idea
+is what came back. Candidate files are untracked under
+packages/site/public/_lp/ (gitignored) and can be deleted.
+
+## Guides rewrite (2026-10-07)
+
+Alec: content "really good" but must be "more user friendly, easier to
+read through". Method: one writer per page (7 pages) with a style brief
+(opener, contents box, h2 sections, every procedure as <ol class="steps">
+with one action per step and the UI label in <span class="ui">, reference
+material as <table class="guide-table">, warnings as .callout / .callout
+.warn, no paragraph over 55 words), each page then verified by an
+independent agent against the UI source (every label verbatim), against
+the committed page (no fact, limit, warning or quoted message lost without
+a stated reason) and against the rules; one page needed a fix pass. The
+Clinic pages describe today's role-view changes (station queues, summary
+sections, lab-results rule). The guide kit CSS lives in site.css (.guide-toc,
+ol.steps, .callout, table.guide-table, .what-you-see, .page .ui, .page
+.muted); the pages' old inline .callout/.toc/.tip/.confirm rules were
+removed because they fought the kit (brown text on teal boxes).
+
+Word counts landed at 74-88% of the originals, not the 45-60% asked for:
+verbatim app messages, labels and SQL make up a third to a half of each
+page and the rules forbade cutting them. The gain is structure (per page
+5-21 step lists, 5-15 tables, 7-21 callouts, a contents box), not length.
+Verified in the built-in browser at phone width (fixed first-column table
+labels breaking mid-word with a keep-all rule).

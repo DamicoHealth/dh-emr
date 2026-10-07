@@ -68,27 +68,8 @@
       padding: 0;
       font-size: inherit;
     }
-    .toc {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-1);
-      padding: 1rem 1.25rem;
-      margin: 1.25rem 0 0.5rem;
-    }
-    .toc p { margin: 0 0 0.4rem; font-weight: 700; }
-    .toc ol {
-      margin: 0;
-      padding-left: 1.3rem;
-      columns: 2;
-      column-gap: 2rem;
-    }
     @media (max-width: 34rem) {
-      .toc ol { columns: 1; }
     }
-    .toc li { margin: 0.25rem 0; }
-    .toc a { color: var(--primary); text-decoration: none; }
-    .toc a:hover { text-decoration: underline; }
     .guide table {
       width: 100%;
       border-collapse: collapse;
@@ -106,29 +87,6 @@
     .guide tr:last-child td { border-bottom: 0; }
     .guide th { font-size: 0.9rem; background: var(--bg); }
     .table-scroll { overflow-x: auto; }
-    .callout {
-      background: var(--warn-bg);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-      margin: 0.9rem 0;
-      color: var(--warn-ink);
-    }
-    .callout p { color: var(--warn-ink); margin: 0.35rem 0; }
-    .callout p:first-child { margin-top: 0; }
-    .callout p:last-child { margin-bottom: 0; }
-    .callout strong { color: var(--warn-ink); }
-    .tip {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-left: 4px solid var(--primary);
-      border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-      margin: 0.9rem 0;
-    }
-    .tip p { margin: 0.35rem 0; }
-    .tip p:first-child { margin-top: 0; }
-    .tip p:last-child { margin-bottom: 0; }
     .backlink { margin-top: 2.5rem; }
   </style>
 </head>
@@ -153,298 +111,374 @@
 
 <main>
   <div class="wrap">
-    <div class="guide">
+    <div class="guide page">
       <p class="kicker">DH EMR Clinic guides</p>
       <h1>Setting up DH EMR Clinic for your organization</h1>
-      <p class="muted">For the person who will run the organization's records: the organization lead, who becomes the first administrator. This guide goes from nothing to a live clinic. You create a cloud project that your organization owns, set up your own device, make yourself the first administrator, invite the staff devices with a link or a QR code, approve each staff account and give it a role, and watch the board come alive. Most of it is done once. Plan an hour the first time, plus a few minutes per staff device. No command line is needed.</p>
+      <p class="muted">For the organization lead, who becomes the first administrator. It goes from nothing to a live clinic: a cloud project your organization owns, your own device, the first administrator, staff devices joined by link or QR code, and accounts approved with a role. Plan an hour, plus a few minutes per staff device; no command line is needed.</p>
 
-      <nav class="toc" aria-label="On this page">
-        <p>On this page</p>
-        <ol>
-          <li><a href="#shape">What you are setting up</a></li>
-          <li><a href="#need">What you need</a></li>
-          <li><a href="#create">Create the project</a></li>
-          <li><a href="#schema">Run the schema</a></li>
-          <li><a href="#credentials">Get the app credentials</a></li>
-          <li><a href="#signin">Turn on sign-in</a></li>
-          <li><a href="#first-admin">Create the first administrator</a></li>
-          <li><a href="#admin-device">Set up your own device</a></li>
-          <li><a href="#invite">Invite the staff devices</a></li>
-          <li><a href="#accounts">Staff create their accounts</a></li>
-          <li><a href="#approve">Approve accounts and set roles</a></li>
-          <li><a href="#live">The board comes alive</a></li>
-          <li><a href="#before">Before the first clinic day</a></li>
-          <li><a href="#offline">If the internet goes down</a></li>
-          <li><a href="#recovery">If you get locked out</a></li>
-          <li><a href="#limits">Honest limits</a></li>
-        </ol>
+      <nav class="guide-toc" aria-label="Contents">
+        <p>Contents</p>
+        <ul>
+          <li><a href="#shape">1. What you are setting up</a></li>
+          <li><a href="#need">2. What you need</a></li>
+          <li><a href="#create">3. Create the project</a></li>
+          <li><a href="#schema">4. Run the schema</a></li>
+          <li><a href="#credentials">5. Get the app credentials</a></li>
+          <li><a href="#signin">6. Turn on sign-in</a></li>
+          <li><a href="#first-admin">7. Create the first administrator</a></li>
+          <li><a href="#admin-device">8. Set up your own device</a></li>
+          <li><a href="#invite">9. Invite the staff devices</a></li>
+          <li><a href="#accounts">10. Staff create their accounts</a></li>
+          <li><a href="#approve">11. Approve accounts and set roles</a></li>
+          <li><a href="#live">12. The board comes alive</a></li>
+          <li><a href="#before">13. Before the first clinic day</a></li>
+          <li><a href="#offline">14. If the internet goes down</a></li>
+          <li><a href="#recovery">15. If you get locked out</a></li>
+          <li><a href="#limits">16. Honest limits</a></li>
+        </ul>
       </nav>
 
       <h2 id="shape">1. What you are setting up</h2>
-      <p>DH EMR Clinic is one app that every device in the clinic opens in its browser, at <a href="../../clinic/">damicohealth.com/clinic/</a>. Behind it sits one cloud project that your organization creates and owns. Damico Health hosts nothing and sees nothing: there is no central server, no account with us, and no subscription. Your records live on your devices and in your project.</p>
-      <p>The pieces, in the order you will build them:</p>
-      <ul>
-        <li><strong>The project.</strong> A Supabase project, set up from its dashboard in a browser. It holds the records, the staff accounts and the organization's settings.</li>
-        <li><strong>Your own device.</strong> The one device where the project address and key are typed by hand. Every other device gets them inside a join link.</li>
-        <li><strong>The first administrator: you.</strong> Administrators see a <span class="ui">Staff</span> tab, approve accounts and set roles, and are the only accounts that can change the organization's lists, formulary, lab tests, presets and form templates. The first one is made from the project dashboard, once. After that, administrators make other administrators from the app.</li>
-        <li><strong>The staff devices.</strong> Each one opens the join link from your Staff screen, or scans its QR code, and the app sets itself up and shows sign-in. Nobody types a project address or key.</li>
-        <li><strong>The staff accounts.</strong> Each person creates their own account on their device. A new account can see nothing until you approve it and give it a role: Reception, Triage, Provider, Lab or Pharmacy.</li>
-        <li><strong>The board.</strong> <span class="ui">Patient flow</span> shows today's visits as cards moving across stations. Every device sees a change within seconds.</li>
-      </ul>
-      <div class="tip">
-        <p><strong>Admin means the account, not the device.</strong> In Clinic there is one kind of admin: the <span class="ui">Admin</span> flag on a staff account. It unlocks the Staff tab, it unlocks the organization's settings editors (the clinic lists, formulary, lab tests, presets and form templates) under <span class="ui">Settings</span> on whichever device that account is signed in on, and the server enforces it. Devices have no admin role in Clinic: a device that joined by link is as good as any other, and what a person can change follows the account they sign in with. On a device where a non-administrator is signed in, the editors are visible but turned off, with the note "Only an administrator account can change this. Ask your clinic's admin."</p>
+      <p>DH EMR Clinic is one app that every device opens in its browser at <a href="../../clinic/">damicohealth.com/clinic/</a>, backed by one cloud project your organization creates and owns. Damico Health hosts nothing and sees nothing: no central server, no account with us, no subscription.</p>
+      <table class="guide-table">
+        <tr><th>Piece</th><th>What it is</th></tr>
+        <tr><td>The project</td><td>A Supabase project, set up from its dashboard; it holds the records, the staff accounts and the settings.</td></tr>
+        <tr><td>Your own device</td><td>Where the address and key are typed by hand, once; every other device gets them in a join link.</td></tr>
+        <tr><td>The first administrator: you</td><td>Sees the <span class="ui">Staff</span> tab, approves accounts, sets roles, and alone changes the lists, formulary, lab tests, presets and form templates. Made from the dashboard once; later administrators are made in the app.</td></tr>
+        <tr><td>The staff devices</td><td>Open the join link or scan its QR code; the app sets itself up and shows sign-in. Nobody types an address or key.</td></tr>
+        <tr><td>The staff accounts</td><td>Each person creates their own; it sees nothing until you approve it with a role: Reception, Triage, Provider, Lab or Pharmacy.</td></tr>
+        <tr><td>The board</td><td><span class="ui">Patient flow</span>: today's visits as cards moving across stations, on every device within seconds.</td></tr>
+      </table>
+      <div class="callout">
+        <p><strong>Admin means the account, not the device.</strong> The <span class="ui">Admin</span> flag on a staff account unlocks the Staff tab and the editors under <span class="ui">Settings</span> on whichever device it signs in on; the server enforces it. Devices have no admin role in Clinic.</p>
+        <p>With a non-administrator signed in, the editors are visible but turned off: "Only an administrator account can change this. Ask your clinic's admin."</p>
       </div>
 
       <h2 id="need">2. What you need</h2>
-      <ul>
-        <li><strong>Internet all day, for every device.</strong> Clinic is built for a constant connection: the board, the Lab and Pharmacy screens and staff sign-in all depend on it. <a href="#offline">Section 14</a> says what happens when it goes down.</li>
-        <li><strong>A Supabase account</strong>, at supabase.com. The free tier is enough for a small clinic.</li>
-        <li><strong>One administrator to start: you.</strong> An email address and a password you will remember. The app has no password reset of its own, so write the password down somewhere safe.</li>
-        <li><strong>A computer with a browser</strong> for the project dashboard. It is easier on a large screen.</li>
-        <li><strong>The two SQL files</strong> that set up and check the project: <code>setup.sql</code> and <code>verify.sql</code>. They live in the <code>supabase</code> folder of the DH EMR source code, next to the full step-by-step in <code>SETUP.md</code>. Until they are published on this site, that is where they live.</li>
-        <li><strong>Your own device</strong>: a tablet, a laptop or a phone with a modern browser. On most tablets and phones the browser can add the app to the home screen so it opens like an app.</li>
-        <li><strong>About an hour</strong>, plus a few minutes per staff device.</li>
-      </ul>
+      <table class="guide-table">
+        <tr><th>Item</th><th>Notes</th></tr>
+        <tr><td>Internet all day, on every device</td><td>The board, the Lab and Pharmacy screens and sign-in depend on it. <a href="#offline">Section 14</a> covers outages.</td></tr>
+        <tr><td>A Supabase account</td><td>At supabase.com; the free tier is enough for a small clinic.</td></tr>
+        <tr><td>One administrator to start: you</td><td>An email and a password you will remember. The app has no password reset, so write it down somewhere safe.</td></tr>
+        <tr><td>A computer with a browser</td><td>For the project dashboard; easier on a large screen.</td></tr>
+        <tr><td>The two SQL files</td><td><code>setup.sql</code> and <code>verify.sql</code>, in the <code>supabase</code> folder of the DH EMR source code next to <code>SETUP.md</code>, until they are published on this site.</td></tr>
+        <tr><td>Your own device</td><td>A tablet, laptop or phone with a modern browser. Most can add the app to the home screen so it opens like an app.</td></tr>
+        <tr><td>About an hour</td><td>Plus a few minutes per staff device.</td></tr>
+      </table>
 
       <h2 id="create">3. Create the project</h2>
-      <ol>
-        <li>On supabase.com, choose New project. Any name. Pick the region closest to the clinic.</li>
+      <ol class="steps">
+        <li>On supabase.com, choose New project. Any name; pick the region closest to the clinic.</li>
         <li>Generate a strong database password and store it in a password manager. It is rarely needed again.</li>
         <li>Wait for the project to finish provisioning.</li>
       </ol>
 
       <h2 id="schema">4. Run the schema</h2>
-      <ol>
+      <ol class="steps">
         <li>In the left sidebar, open SQL Editor, then New query.</li>
-        <li>Paste the entire contents of <code>setup.sql</code> and click Run.</li>
-        <li>It is safe to run twice; re-running is the documented upgrade path.</li>
-        <li>Recommended: paste and run <code>verify.sql</code> next. Every row of its output must say PASS. It changes nothing; it ends by rolling itself back.</li>
+        <li>Paste all of <code>setup.sql</code> and click Run. It is safe to run twice; re-running is the upgrade path.</li>
+        <li>Recommended: run <code>verify.sql</code> next.
+          <p class="what-you-see">Every row must say PASS. It changes nothing and ends by rolling itself back.</p></li>
       </ol>
-      <p>The schema creates the tables, the security rules that make every read and write need an approved account, and the server-side checks behind the Staff screen. It also turns on live updates for the records and settings tables; that is what lets every device see a change within seconds.</p>
-      <p class="muted">If you are upgrading a project that is already in use, run it after clinic hours. The run briefly locks the records table, and a device syncing during those seconds shows a sync error, retries, and succeeds afterward. Nothing is lost either way; it is just alarming to watch mid-clinic.</p>
+      <p>The schema creates the tables, the rules that make every read and write need an approved account, the server-side checks behind the Staff screen, and the live updates that reach every device within seconds.</p>
+      <div class="callout warn">
+        <p><strong>Upgrading a project already in use?</strong> Run it after clinic hours: the run briefly locks the records table, so a device syncing then shows a sync error, retries, and succeeds. Nothing is lost, but it is alarming mid-clinic.</p>
+      </div>
 
       <h2 id="credentials">5. Get the app credentials</h2>
-      <ol>
-        <li><strong>Project URL:</strong> Project Settings, then Data API. It is also shown in the Connect dialog at the top of the dashboard. It looks like https://yourproject.supabase.co.</li>
-        <li><strong>Publishable key</strong> (<code>sb_publishable_...</code>): Project Settings, then API Keys.</li>
-      </ol>
-      <p>You will type these two values exactly once, on your own device in <a href="#admin-device">section 8</a>. Every other device gets them inside the join link in <a href="#invite">section 9</a>.</p>
-      <div class="callout">
-        <p><strong>The key rule.</strong> Devices get the publishable key, or the legacy anon key, and nothing else. Never put the <code>sb_secret_...</code> key or a legacy <code>service_role</code> key on any device, in any chat, or in the app. It bypasses every security rule. The app refuses keys that look like it, on purpose, with the message: "That is a server key (service_role or sb_secret). It bypasses every database security rule and must never go on a field device. Use the Publishable key, or the legacy anon key."</p>
+      <table class="guide-table">
+        <tr><th>Value</th><th>Where to find it</th></tr>
+        <tr><td>Project URL</td><td>Project Settings, then Data API; also in the Connect dialog at the top of the dashboard. It looks like https://yourproject.supabase.co.</td></tr>
+        <tr><td>Publishable key (<code>sb_publishable_...</code>)</td><td>Project Settings, then API Keys.</td></tr>
+      </table>
+      <p>You type these once, on your own device in <a href="#admin-device">section 8</a>. Every other device gets them inside the join link in <a href="#invite">section 9</a>.</p>
+      <div class="callout warn">
+        <p><strong>The key rule.</strong> Devices get the publishable key, or the legacy anon key, and nothing else. Never put the <code>sb_secret_...</code> key or a legacy <code>service_role</code> key on any device, in any chat, or in the app: it bypasses every security rule.</p>
+        <p>The app refuses such keys: "That is a server key (service_role or sb_secret). It bypasses every database security rule and must never go on a field device. Use the Publishable key, or the legacy anon key."</p>
       </div>
 
       <h2 id="signin">6. Turn on sign-in</h2>
       <p>Clinic uses staff accounts, so the project must allow email sign-in. In the dashboard:</p>
-      <ol>
-        <li>Authentication, then Sign In / Up: enable the Email provider.</li>
+      <ol class="steps">
+        <li>Open Authentication, then Sign In / Up, and enable the Email provider.</li>
         <li>Turn off "Confirm email".</li>
       </ol>
-      <p>The second step matters more than it looks. Without your own mail server configured, the project's built-in mailer is restricted and heavily rate limited, so confirmation emails to clinic staff mostly never arrive and accounts strand half-created. Approval inside the app replaces what confirmation was for: a new account starts with no access at all, and only an administrator can open it. For the same reason, do not rely on email password resets; <a href="#recovery">section 15</a> is the way back in.</p>
+      <div class="callout warn">
+        <p><strong>Step 2 matters.</strong> Without your own mail server the built-in mailer is restricted and heavily rate limited: confirmation emails mostly never arrive and accounts strand half-created. Approval in the app replaces confirmation; a new account has no access until an administrator opens it.</p>
+        <p>Do not rely on email password resets either; <a href="#recovery">section 15</a> is the way back in.</p>
+      </div>
 
       <h2 id="first-admin">7. Create the first administrator</h2>
-      <p>There is no self-service way to become the first administrator, on purpose: anyone in the world who obtains the project address and publishable key can create an account, so creating an account must carry no power. The first administrator is made from the dashboard, once.</p>
-      <ol>
-        <li>Create your account: Authentication, then Users, then Add user. Choose "Create new user" and set a password. Do not use "Send invitation": it depends on the same restricted mailer.</li>
-        <li>Make that account the administrator. Back in the SQL Editor, in a new query, run this one statement with your own email in place of <code>LEAD@EXAMPLE.ORG</code>:</li>
-      </ol>
+      <p>There is no self-service first administrator, on purpose: anyone with the project address and publishable key can create an account, so creating one must carry no power. The first administrator is made from the dashboard, once.</p>
+      <ol class="steps">
+        <li>Open Authentication, then Users, then Add user. Choose "Create new user" and set a password; do not use "Send invitation", which depends on the same restricted mailer.</li>
+        <li>In the SQL Editor, run this in a new query with your own email in place of <code>LEAD@EXAMPLE.ORG</code>:
 <pre><code>UPDATE users_profiles
 SET is_admin = true, activated_at = now()
 WHERE id = (SELECT id FROM auth.users WHERE lower(email) = lower('LEAD@EXAMPLE.ORG'))
 RETURNING id, is_admin, activated_at;</code></pre>
-      <p>The editor must show exactly one returned row. Zero rows means the email did not match or the account does not exist yet; check the spelling and run it again. That one row is the whole bootstrap: it approves the account and flags it as an administrator at the same time.</p>
-      <div class="tip">
-        <p><strong>Another way to make the account.</strong> You can also create your account from the app itself, on the sign-in screen in <a href="#admin-device">section 8</a>, with <span class="ui">New here? Create an account</span>. The app then shows "Waiting for approval". Run the same statement above, then tap <span class="ui">Check again</span>. Either way, the statement is what makes the account an administrator.</p>
+          <p class="what-you-see">Exactly one returned row. Zero rows means the email did not match or the account does not exist yet; fix the spelling and run it again.</p></li>
+      </ol>
+      <p>That row is the whole bootstrap: it approves the account and flags it as an administrator at the same time.</p>
+      <div class="callout">
+        <p><strong>Another way to make the account.</strong> Create it on the app's sign-in screen in <a href="#admin-device">section 8</a> with <span class="ui">New here? Create an account</span>. The app shows "Waiting for approval"; run the same statement, then tap <span class="ui">Check again</span>.</p>
       </div>
-      <div class="tip">
-        <p><strong>There is no mode switch step.</strong> Older setup notes had a manual step to set the organization to clinic mode by hand. With DH EMR Clinic that is automatic: the first time an administrator signs in on a Clinic device, the app sets it. There is nothing to run and nothing to tap. The SQL for doing it by hand is still in <code>SETUP.md</code> as a fallback; you do not need it.</p>
+      <div class="callout">
+        <p><strong>There is no mode switch step.</strong> Older setup notes set the organization to clinic mode by hand; DH EMR Clinic sets it the first time an administrator signs in on a Clinic device. The manual SQL stays in <code>SETUP.md</code> as a fallback you do not need.</p>
       </div>
 
       <h2 id="admin-device">8. Set up your own device</h2>
-      <p>Open <a href="../../clinic/">damicohealth.com/clinic/</a> on the device you will use. The first time, the app shows a short wizard. For Clinic it opens straight on the cloud step. There is no choice to use the device on its own, because a Clinic device always belongs to a project.</p>
+      <p>Open <a href="../../clinic/">damicohealth.com/clinic/</a> on the device you will use. The first time, a short wizard opens straight on the cloud step: a Clinic device always belongs to a project, so there is no choice to use it on its own.</p>
 
       <h3>Step one: Connect to your cloud</h3>
-      <p>The step is headed <span class="ui">Connect to your cloud</span>. A note at the top says "Open the link your admin sent you", because that is how every other device will arrive. You are the admin and there is no link yet, so you type instead. The note says so: "No link? Your admin can read you the project address and key instead."</p>
-      <ol>
+      <p>The step is headed <span class="ui">Connect to your cloud</span>. Its note "Open the link your admin sent you" is for every other device; "No link? Your admin can read you the project address and key instead." is you.</p>
+      <ol class="steps">
         <li>In <span class="ui">Project URL</span>, paste the Project URL from <a href="#credentials">section 5</a>.</li>
         <li>In <span class="ui">Project key</span>, paste the publishable key.</li>
-        <li>Tap <span class="ui">Check and continue</span>. The button reads "Checking…" while the app contacts the project and checks that its tables exist.</li>
+        <li>Tap <span class="ui">Check and continue</span>.
+          <p class="what-you-see">"Checking…" while the app contacts the project and checks that its tables exist.</p></li>
       </ol>
-      <div class="table-scroll">
-        <table>
-          <tr><th>The wizard says</th><th>What to do</th></tr>
-          <tr><td>"That does not look like a Supabase project URL. It should look like https://yourproject.supabase.co"</td><td>A typo in the URL. Paste it again from the dashboard.</td></tr>
-          <tr><td>"Paste the project anon key."</td><td>The key box is empty.</td></tr>
-          <tr><td>"That is a server key (service_role or sb_secret). It bypasses every database security rule and must never go on a field device. Use the Publishable key, or the legacy anon key."</td><td>You pasted the wrong key. Go back to Project Settings, API Keys, and copy the publishable key.</td></tr>
-          <tr><td>"Connected, but the records table was not found. Run the setup SQL on this Supabase project first."</td><td><a href="#schema">Section 4</a> was skipped, or ran on a different project.</td></tr>
-          <tr><td>"Could not reach the project tables:" followed by a reason</td><td>The project refused. Read the reason; most often the key belongs to a different project.</td></tr>
-          <tr><td>"Could not reach that project. Check the device is online and the URL is right." followed by a detail</td><td>No connection, or the URL points nowhere. Check the device has signal and try again.</td></tr>
-        </table>
-      </div>
+      <table class="guide-table">
+        <tr><th>The wizard says</th><th>What to do</th></tr>
+        <tr><td>"That does not look like a Supabase project URL. It should look like https://yourproject.supabase.co"</td><td>A typo. Paste the URL again from the dashboard.</td></tr>
+        <tr><td>"Paste the project anon key."</td><td>The key box is empty.</td></tr>
+        <tr><td>"That is a server key (service_role or sb_secret). It bypasses every database security rule and must never go on a field device. Use the Publishable key, or the legacy anon key."</td><td>Wrong key. Copy the publishable key from Project Settings, API Keys.</td></tr>
+        <tr><td>"Connected, but the records table was not found. Run the setup SQL on this Supabase project first."</td><td><a href="#schema">Section 4</a> was skipped, or ran on a different project.</td></tr>
+        <tr><td>"Could not reach the project tables:" followed by a reason</td><td>The project refused; most often the key belongs to a different project.</td></tr>
+        <tr><td>"Could not reach that project. Check the device is online and the URL is right." followed by a detail</td><td>No connection, or the URL points nowhere.</td></tr>
+      </table>
 
       <h3>Step two: Name this device</h3>
-      <p>The step is headed <span class="ui">Name this device</span>. In <span class="ui">Device name</span>, type something the team will recognise; the wizard suggests the form "iPad 2 - triage" or "Grace's tablet". The name shows up in the device list and on the records this device files.</p>
-      <p>The step also asks <span class="ui">What is this device allowed to do?</span>, with <span class="ui">Enter and view records (most devices)</span> and <span class="ui">Also change the form and clinic settings for everyone</span>. In Clinic this choice changes nothing: what a person can change under Settings follows the account they sign in with, not the device, so leave it on the first option. (The same wizard serves DH EMR Field, where the choice does matter.)</p>
-      <p>Tap <span class="ui">Next</span>.</p>
+      <ol class="steps">
+        <li>In <span class="ui">Device name</span>, type what the team will recognise, like the suggested "iPad 2 - triage" or "Grace's tablet". It shows in the device list and on the records this device files.</li>
+        <li>Leave <span class="ui">What is this device allowed to do?</span> on <span class="ui">Enter and view records (most devices)</span>, not <span class="ui">Also change the form and clinic settings for everyone</span>.
+          <p class="what-you-see">In Clinic the choice changes nothing; access follows the account, not the device. The same wizard serves DH EMR Field, where it matters.</p></li>
+        <li>Tap <span class="ui">Next</span>.</li>
+      </ol>
 
       <h3>Step three: Where is this device working?</h3>
-      <p>The step is headed <span class="ui">Where is this device working?</span>. Fill <span class="ui">Clinic or site names</span> and <span class="ui">Clinicians working on this device</span>, one entry per line. These fill the Site and Provider lists on the visit form. Because you will sign in as an administrator on this device, these two lists go out to the organization on the first sync and reach every staff device, so enter the real site names and the real clinicians now. You can change them later under Settings.</p>
-      <p>Both lists need at least one entry. The wizard refuses an empty one: "You need at least one site. An empty list would block every save." and the same for clinicians. Commas belong inside an entry; "Grace N., clinical officer" is one clinician.</p>
-      <p>Tap <span class="ui">Start using the app</span>. The button reads "Finishing…" while the device registers itself in the project. If the project refuses at this moment, the wizard says "Could not finish setup:" with the reason. Nothing was stored; try again.</p>
+      <p>These lists fill the Site and Provider lists on the visit form and, because an administrator signs in here, go out to the whole organization on the first sync. Enter the real names now; you can change them later under Settings.</p>
+      <ol class="steps">
+        <li>Fill <span class="ui">Clinic or site names</span>, one per line.</li>
+        <li>Fill <span class="ui">Clinicians working on this device</span>, one per line. Commas belong inside an entry: "Grace N., clinical officer" is one clinician.</li>
+        <li>Tap <span class="ui">Start using the app</span>.
+          <p class="what-you-see">"Finishing…" while the device registers itself in the project. If the project refuses, "Could not finish setup:" with the reason; nothing was stored, so try again.</p></li>
+      </ol>
+      <div class="callout">
+        <p>Both lists need an entry. The wizard refuses an empty one: "You need at least one site. An empty list would block every save." and the same for clinicians.</p>
+      </div>
 
       <h3>Then: Sign in</h3>
-      <p>The wizard is followed by a screen headed <span class="ui">Sign in</span>: "This organization uses staff accounts. Sign in with the email and password for your account." Enter the <span class="ui">Email</span> and <span class="ui">Password</span> you set in <a href="#first-admin">section 7</a> and tap <span class="ui">Sign in</span>. The button reads "Signing in…" while the project checks the account.</p>
-      <p>What happens next, in order:</p>
-      <ul>
-        <li>The app lands on the <span class="ui">Board</span> tab, headed <span class="ui">Patient flow</span>, with the card "No patients on the board yet". Your tabs are <span class="ui">Board</span>, <span class="ui">Visits</span>, <span class="ui">New visit</span>, <span class="ui">Analytics</span>, <span class="ui">Staff</span> and <span class="ui">Settings</span>. Only administrators see Staff.</li>
-        <li>Because this is the first administrator sign-in, the app sets the organization to clinic mode by itself. Nothing shows on screen for it.</li>
-        <li>The chip in the top bar runs the first sync. Your site and clinician lists go out to the organization. Within a moment the chip reads <span class="ui">Live</span>.</li>
-      </ul>
-      <p>Check it: open <span class="ui">Settings</span>. The <strong>Account</strong> card shows your <span class="ui">Name</span>, your <span class="ui">Role</span> (a new account starts as <code>Provider</code>; you can change it in <a href="#approve">section 11</a>) and <span class="ui">Admin</span> <code>Yes</code>. The <strong>This device</strong> card shows the device's <span class="ui">Name</span>, <span class="ui">Device ID</span> and <span class="ui">Mode</span>; there is no device role in Clinic. Further down, the Clinic lists, Formulary and Lab tests cards are editable, because you are an administrator.</p>
-      <p>If instead of the Board you see a screen headed <span class="ui">Waiting for approval</span>, the statement in <a href="#first-admin">section 7</a> did not return a row. Run it again, check for one returned row, then tap <span class="ui">Check again</span>.</p>
+      <ol class="steps">
+        <li>On the screen headed <span class="ui">Sign in</span>, enter the <span class="ui">Email</span> and <span class="ui">Password</span> from <a href="#first-admin">section 7</a>.</li>
+        <li>Tap <span class="ui">Sign in</span>.
+          <p class="what-you-see">"Signing in…", then the <span class="ui">Board</span> tab, headed <span class="ui">Patient flow</span>, with the card "No patients on the board yet".</p></li>
+      </ol>
+      <p>Your tabs: <span class="ui">Board</span>, <span class="ui">Provider</span> (your role's queue; <a href="#approve">section 11</a>), <span class="ui">Visits</span>, <span class="ui">New visit</span>, <span class="ui">Analytics</span>, <span class="ui">Staff</span> and <span class="ui">Settings</span>; only administrators see Staff. This first administrator sign-in silently sets clinic mode, and the top-bar chip runs the first sync: your lists go out and the chip reads <span class="ui">Live</span>.</p>
+
+      <h3>Check it</h3>
+      <ol class="steps">
+        <li>Open <span class="ui">Settings</span>.
+          <p class="what-you-see">The <strong>Account</strong> card shows your <span class="ui">Name</span>, <span class="ui">Role</span> (new accounts start as <code>Provider</code>; change it in <a href="#approve">section 11</a>) and <span class="ui">Admin</span> <code>Yes</code>. The <strong>This device</strong> card shows <span class="ui">Name</span>, <span class="ui">Device ID</span> and <span class="ui">Mode</span>; there is no device role in Clinic. Below, the Clinic lists, Formulary and Lab tests cards are editable.</p></li>
+      </ol>
+      <div class="callout warn">
+        <p>A screen headed <span class="ui">Waiting for approval</span> instead of the Board means the statement in <a href="#first-admin">section 7</a> returned no row. Run it again, confirm one row, then tap <span class="ui">Check again</span>.</p>
+      </div>
 
       <h2 id="invite">9. Invite the staff devices</h2>
-      <p>Open the <span class="ui">Staff</span> tab. The first card is <strong>Invite a device</strong>. Its own words: "Staff open this link on their device, or scan the code with its camera. The app sets itself up and shows sign-in; they create an account there, and you approve it below. Nobody types a project address or key."</p>
-      <ol>
-        <li>Fill <span class="ui">Organization name</span>, for example the clinic's name. The hint says why to do it first: "Shown on a device when it joins. It travels in the link, so set it before you share." The link regenerates as you type.</li>
-        <li>The <span class="ui">Join link</span> box holds the link. Tap <span class="ui">Copy link</span>; the card says "Link copied. Paste it into a message to your staff." If the device cannot copy, it says "Could not copy automatically. Select the link above and copy it by hand."</li>
-        <li>Below the link is the QR code of the same link. A device in the room can scan it instead of receiving a message.</li>
+      <p>Open the <span class="ui">Staff</span> tab. The first card is <strong>Invite a device</strong>.</p>
+      <ol class="steps">
+        <li>Fill <span class="ui">Organization name</span> first: "Shown on a device when it joins. It travels in the link, so set it before you share." The link regenerates as you type.</li>
+        <li>Tap <span class="ui">Copy link</span> under the <span class="ui">Join link</span> box.
+          <p class="what-you-see">"Link copied. Paste it into a message to your staff.", or "Could not copy automatically. Select the link above and copy it by hand."</p></li>
+        <li>Or let a device in the room scan the QR code below the link.
+          <p class="what-you-see">A very long organization name is refused: "The link is too long for a QR code. Share the link itself instead."</p></li>
       </ol>
-      <p>The link is the same for every device and does not expire. Keep it in a message thread the staff can find. If you change the organization name later, copy the link again, because the name travels inside it. A very long organization name can make the link too long for a QR code; the card then says "The link is too long for a QR code. Share the link itself instead."</p>
-      <div class="callout">
-        <p><strong>Who gets the link.</strong> The card's footer says exactly what it carries: "What the link carries: the project address, its publishable key and the organization name. The publishable key is public by design and unlocks nothing on its own, because every read and write needs an approved account. Anyone with the link can create an account that waits for your approval, so share it with staff, not the public."</p>
+      <p>The link is the same for every device and does not expire; keep it in a message thread the staff can find. Change the organization name later and you must copy the link again, because the name travels inside it.</p>
+      <div class="callout warn">
+        <p><strong>Who gets the link.</strong> The card's footer: "What the link carries: the project address, its publishable key and the organization name. The publishable key is public by design and unlocks nothing on its own, because every read and write needs an approved account. Anyone with the link can create an account that waits for your approval, so share it with staff, not the public."</p>
       </div>
 
       <h3>On each staff device</h3>
-      <p>Open the link in the device's browser, or point the camera app at the QR code and open the link it offers. The app configures the device before any wizard can appear and lands on the <span class="ui">Sign in</span> screen. That is all; there is nothing to type and nothing to choose. The device registers itself in the project, named after its platform and the date, for example "iPad joined 2026-10-06". Rename it later under <span class="ui">Settings</span>, on the <strong>This device</strong> card, with <span class="ui">Rename this device</span>. Renaming is always safe: it changes the label only.</p>
-      <p>A joined device does not ask for sites and clinicians. The organization's lists arrive on its first sync, after its account is approved.</p>
-      <p>If the link cannot be used, the reason shows on the device, never a silent fallback: on the wizard as a red alert, or on the sign-in screen as a banner that starts "That join link could not be used."</p>
-      <div class="table-scroll">
-        <table>
-          <tr><th>The device says</th><th>What to do</th></tr>
-          <tr><td>"That join link is damaged or incomplete. Ask your admin to send it again."</td><td>The link was cut short in the message. Copy it again from the Invite card and send the whole thing.</td></tr>
-          <tr><td>"That join link was made by a newer version of DH EMR Clinic. Update this app, then open the link again."</td><td>The device has an old version of the app open. Reload it, accept the update if the app offers one, then open the link again.</td></tr>
-          <tr><td>"Could not join" with the organization name and a reason, or "the project could not be verified."</td><td>The project refused the device. Most often the schema in <a href="#schema">section 4</a> has not been run.</td></tr>
-          <tr><td>"Could not reach" with the organization name, then "Check the device is online and open the link again."</td><td>No signal. Connect the device and open the link again.</td></tr>
-        </table>
-      </div>
-      <p>Opening the link on a device that is already set up for this project does nothing, which is fine. Opening it on a device that is set up for a <em>different</em> project asks first: "This device is already connected to" the old project, then "Switch it to" the new one, with the explanation that visits already synced to the old project stay there and anything not yet backed up uploads to the new one. Cancel unless that switch is what you want.</p>
+      <ol class="steps">
+        <li>Open the link in the browser, or point the camera app at the QR code and open the link it offers.
+          <p class="what-you-see">The app configures the device before any wizard can appear and lands on <span class="ui">Sign in</span>; nothing to type, nothing to choose. The device registers itself, named by platform and date, like "iPad joined 2026-10-06".</p></li>
+        <li>Optional, later: rename it under <span class="ui">Settings</span>, on the <strong>This device</strong> card, with <span class="ui">Rename this device</span>. That changes the label only.</li>
+      </ol>
+      <p>A joined device never asks for sites and clinicians; the organization's lists arrive on its first sync, after approval. A link that cannot be used says why, never a silent fallback: a red alert on the wizard, or a sign-in banner starting "That join link could not be used."</p>
+      <table class="guide-table">
+        <tr><th>The device says</th><th>What to do</th></tr>
+        <tr><td>"That join link is damaged or incomplete. Ask your admin to send it again."</td><td>The link was cut short in the message. Copy it again from the Invite card and send the whole thing.</td></tr>
+        <tr><td>"That join link was made by a newer version of DH EMR Clinic. Update this app, then open the link again."</td><td>The device has an old version open. Reload, accept the update if offered, then open the link again.</td></tr>
+        <tr><td>"Could not join" with the organization name and a reason, or "the project could not be verified."</td><td>The project refused the device. Most often the schema in <a href="#schema">section 4</a> has not been run.</td></tr>
+        <tr><td>"Could not reach" with the organization name, then "Check the device is online and open the link again."</td><td>No signal. Connect the device and open the link again.</td></tr>
+      </table>
+      <p>On a device already set up for this project the link does nothing. On one set up for a <em>different</em> project it asks first ("This device is already connected to" the old project, "Switch it to" the new): synced visits stay put, unsynced ones upload to the new project. Cancel unless you want that.</p>
 
       <h3>A device that cannot open the link</h3>
-      <p>If a device cannot receive the link and has no camera, read it the Project URL and the publishable key from <a href="#credentials">section 5</a>. On that device the wizard's <span class="ui">Connect to your cloud</span> step takes them, exactly as yours did in <a href="#admin-device">section 8</a>. Leave <span class="ui">What is this device allowed to do?</span> on its first option; on the sites step, type one site and one clinician to satisfy the wizard. The organization's real lists replace them on the first sync.</p>
+      <ol class="steps">
+        <li>Read it the Project URL and publishable key from <a href="#credentials">section 5</a>, typed into the wizard's <span class="ui">Connect to your cloud</span> step as in <a href="#admin-device">section 8</a>.</li>
+        <li>Leave <span class="ui">What is this device allowed to do?</span> on its first option.</li>
+        <li>On the sites step, type one site and one clinician to satisfy the wizard; the organization's real lists replace them on the first sync.</li>
+      </ol>
 
       <h3>Which device can change the organization's settings</h3>
-      <p>Any device, as long as an administrator account is signed in on it. There is no admin device to set up, nothing to run in the dashboard for it, and a device that joined by link is no different from your own. Sign in as an administrator on a joined device and its Settings editors open; sign in as a non-administrator on your own device and they are turned off with the note "Only an administrator account can change this. Ask your clinic's admin." The <a href="admin-guide.html#roles">admin guide</a> explains the gate; <a href="admin-guide.html#fleet">its Devices section</a> covers the device list, renaming and revoking.</p>
+      <p>Any device where an administrator is signed in; one that joined by link is no different from yours, with nothing to set up for it. A non-administrator gets the turned-off editors from <a href="#shape">section 1</a>. The <a href="admin-guide.html#roles">admin guide</a> explains the gate; <a href="admin-guide.html#fleet">its Devices section</a> covers the device list, renaming and revoking.</p>
 
       <h2 id="accounts">10. Staff create their accounts</h2>
-      <p>On the <span class="ui">Sign in</span> screen, each staff member taps <span class="ui">New here? Create an account</span>. The screen changes to <span class="ui">Create your account</span> and explains what will happen: "A new account starts with no access at all. Your administrator approves it from their device, and then you can sign in and work. That usually takes a moment, not a day."</p>
-      <ol>
-        <li><span class="ui">Your name</span>: the name the team knows them by. It shows on the Staff list and on the records they save.</li>
-        <li><span class="ui">Email</span> and <span class="ui">Password</span>.</li>
-        <li>Tap <span class="ui">Create account</span>. The button reads "Creating…" while the project makes the account.</li>
+      <p>On the <span class="ui">Sign in</span> screen, each staff member taps <span class="ui">New here? Create an account</span>; the screen becomes <span class="ui">Create your account</span>.</p>
+      <ol class="steps">
+        <li>Fill <span class="ui">Your name</span>: the name the team knows them by. It shows on the Staff list and on the records they save.</li>
+        <li>Fill <span class="ui">Email</span> and <span class="ui">Password</span>.</li>
+        <li>Tap <span class="ui">Create account</span>.
+          <p class="what-you-see">"Creating…", then a screen headed <span class="ui">Waiting for approval</span>. It names the account, explains that every new account waits for an administrator, and offers <span class="ui">Check again</span> and <span class="ui">Sign out</span>. A waiting account sees no records at all.</p></li>
       </ol>
-      <p>The device then shows a screen headed <span class="ui">Waiting for approval</span>. It names their account and says it "is set up and waiting for your administrator to approve it. That is a normal step for every new account, and it usually takes them only a moment." It tells them what to do: "Ask whoever runs this organization's records to approve you, then tap Check again." The screen has two buttons, <span class="ui">Check again</span> and <span class="ui">Sign out</span>. A waiting account sees no records at all.</p>
-      <p>If the device has no signal at that moment, the heading is <span class="ui">Cannot confirm your account yet</span> instead, and the text says the device could not reach the organization's server. Get signal and tap <span class="ui">Check again</span>.</p>
-      <p>If, after <span class="ui">Create account</span>, the screen goes back to Sign in with the notice "Your account was created. Sign in with the same email and password once your administrator has approved it.", the "Confirm email" setting from <a href="#signin">section 6</a> was left on. Turn it off in the dashboard. The account still exists; approve it as usual, and the person signs in afterwards.</p>
-      <p class="muted">A person who forgets their password cannot reset it from the app. The sign-in screen says so: "Forgot your password? Your administrator can set up a fresh account for you - password reset emails are not reliable on most clinic projects." They create a new account with a different email, and you approve it.</p>
+      <table class="guide-table">
+        <tr><th>If the device shows instead</th><th>What it means</th></tr>
+        <tr><td><span class="ui">Cannot confirm your account yet</span>, saying the device could not reach the organization's server</td><td>No signal at that moment. Get signal and tap <span class="ui">Check again</span>.</td></tr>
+        <tr><td>The Sign in screen again, with "Your account was created. Sign in with the same email and password once your administrator has approved it."</td><td>"Confirm email" from <a href="#signin">section 6</a> is still on. Turn it off; the account exists, so approve it as usual and the person signs in afterwards.</td></tr>
+      </table>
+      <div class="callout">
+        <p><strong>Forgotten passwords.</strong> There is no reset in the app; the sign-in screen says so: "Forgot your password? Your administrator can set up a fresh account for you - password reset emails are not reliable on most clinic projects." They create a new account with a different email, and you approve it.</p>
+      </div>
 
       <h2 id="approve">11. Approve accounts and set roles</h2>
-      <p>On your device, open the <span class="ui">Staff</span> tab and find the <strong>Staff accounts</strong> card. Its own words: "Approve new accounts, set station roles, and revoke access. A new account can see nothing until it is approved here. Changes are enforced by the server: a device that is offline keeps its last confirmed access and is cut off the moment it reconnects."</p>
-      <p>Before anyone has joined, the card says "No one else is here yet." and repeats the invite steps. Once accounts arrive, a note counts them: "1 account is waiting for your approval." or the number. Each account is a row with the person's name, a status chip that reads <span class="ui">Pending</span>, <span class="ui">Active</span> or <span class="ui">Revoked</span>, a chip with the role, and an <span class="ui">Admin</span> chip on administrators. Your own row says "(you)". Oldest accounts are listed first.</p>
-      <p>For each new account:</p>
-      <ol>
-        <li><strong>Set the role first.</strong> The role select on the row offers <code>Reception</code>, <code>Triage</code>, <code>Provider</code>, <code>Lab</code> and <code>Pharmacy</code>. A new account starts as <code>Provider</code>. The card confirms: the name followed by "is now" and the role, for example "Grace N. is now Triage."</li>
-        <li><strong>Then tap <span class="ui">Approve</span>.</strong> The button reads "Approving…" and the card confirms: the name followed by "is approved and can sign in now."</li>
-        <li>The person taps <span class="ui">Check again</span> on their waiting screen and lands on their workspace.</li>
+      <p>On your device, open the <span class="ui">Staff</span> tab and find the <strong>Staff accounts</strong> card. Empty, it says "No one else is here yet."; once accounts arrive, a note counts them: "1 account is waiting for your approval."</p>
+      <p>Each row shows the name, a status chip (<span class="ui">Pending</span>, <span class="ui">Active</span> or <span class="ui">Revoked</span>), a role chip and an <span class="ui">Admin</span> chip on administrators. Your own row says "(you)"; oldest accounts come first.</p>
+      <ol class="steps">
+        <li>Set the role first, from the select on the row: <code>Reception</code>, <code>Triage</code>, <code>Provider</code>, <code>Lab</code> or <code>Pharmacy</code>. New accounts start as <code>Provider</code>.
+          <p class="what-you-see">The card confirms with the name, "is now" and the role: "Grace N. is now Triage."</p></li>
+        <li>Tap <span class="ui">Approve</span>.
+          <p class="what-you-see">"Approving…", then the name followed by "is approved and can sign in now."</p></li>
+        <li>Ask the person to tap <span class="ui">Check again</span> on their waiting screen; they land on their workspace.</li>
       </ol>
-      <p>Setting the role before approving means the person lands on the right workspace from their first sign-in. If you change someone's role later, ask them to sign out and sign in again: <span class="ui">Settings</span>, the <strong>Account</strong> card, <span class="ui">Sign out</span>, which needs a working connection.</p>
+      <p>Role first means they land on the right workspace from their first sign-in. To change a role later, they sign out and in again: <span class="ui">Settings</span>, the <strong>Account</strong> card, <span class="ui">Sign out</span>, which needs a working connection.</p>
 
       <h3>What each role gets</h3>
-      <p>Every account lands on its own workspace, the first tab in its list. The role also decides which sections of the visit form the person edits on the Board, Lab and Pharmacy screens and from <span class="ui">New visit</span>; these defaults can be changed per section in the template editor, which the <a href="admin-guide.html">admin guide</a> covers.</p>
-      <div class="table-scroll">
-        <table>
-          <tr><th>Role</th><th>Tabs</th><th>Edits by default</th></tr>
-          <tr><td>Reception</td><td><span class="ui">Board</span>, <span class="ui">Visits</span>, <span class="ui">New visit</span>, <span class="ui">Settings</span></td><td>Visit and Patient: the short registration form. Views the rest.</td></tr>
-          <tr><td>Triage</td><td><span class="ui">Board</span>, <span class="ui">Visits</span>, <span class="ui">Settings</span></td><td>Vitals, History, Chief Concern and Labs. Views Patient.</td></tr>
-          <tr><td>Provider</td><td><span class="ui">Board</span>, <span class="ui">Visits</span>, <span class="ui">New visit</span>, <span class="ui">Analytics</span>, <span class="ui">Settings</span></td><td>Every section.</td></tr>
-          <tr><td>Lab</td><td><span class="ui">Lab</span>, <span class="ui">Visits</span>, <span class="ui">Settings</span></td><td>Labs. Views Patient and Chief Concern.</td></tr>
-          <tr><td>Pharmacy</td><td><span class="ui">Pharmacy</span>, <span class="ui">Visits</span>, <span class="ui">Settings</span></td><td>Medications. Views Patient and Diagnosis.</td></tr>
-        </table>
-      </div>
-      <p>An administrator gets <span class="ui">Board</span>, <span class="ui">New visit</span>, <span class="ui">Analytics</span> and <span class="ui">Staff</span> on top of their role's tabs, and edits every section of the visit form.</p>
+      <p>Each role lands on its own workspace, the first tab in its list, and edits only its own sections of the visit form. An administrator can change the defaults per section in the template editor's role grid; the <a href="admin-guide.html">admin guide</a> covers it.</p>
+      <table class="guide-table">
+        <tr><th>Role</th><th>Lands on</th><th>Tabs</th><th>Edits by default</th></tr>
+        <tr><td>Reception</td><td>The board</td><td><span class="ui">Board</span>, <span class="ui">Visits</span>, <span class="ui">New visit</span>, <span class="ui">Settings</span></td><td>Visit and Patient, the short registration form. Views the rest.</td></tr>
+        <tr><td>Triage</td><td>Its station queue</td><td><span class="ui">Triage</span>, <span class="ui">Board</span>, <span class="ui">Visits</span>, <span class="ui">Settings</span></td><td>Vitals, History, Chief Concern and Labs. Views Patient.</td></tr>
+        <tr><td>Provider</td><td>Its station queue</td><td><span class="ui">Provider</span>, <span class="ui">Board</span>, <span class="ui">Visits</span>, <span class="ui">New visit</span>, <span class="ui">Analytics</span>, <span class="ui">Settings</span></td><td>Everything except Patient and Vitals, which it views: reception's and triage's work, done before the provider opens the visit.</td></tr>
+        <tr><td>Lab</td><td>The Lab screen</td><td><span class="ui">Lab</span>, <span class="ui">Visits</span>, <span class="ui">Settings</span></td><td>Labs. Views Patient and Chief Concern.</td></tr>
+        <tr><td>Pharmacy</td><td>The Pharmacy screen</td><td><span class="ui">Pharmacy</span>, <span class="ui">Visits</span>, <span class="ui">Settings</span></td><td>Medications. Views Patient and Diagnosis.</td></tr>
+      </table>
+      <p>An administrator keeps their role's screens, adds <span class="ui">Board</span>, <span class="ui">New visit</span>, <span class="ui">Analytics</span> and <span class="ui">Staff</span>, and edits every section. A Triage or Provider administrator lands on the Board, with the queue tab beside it.</p>
+
+      <h3>The station queue</h3>
+      <p>Triage and Provider land on a screen headed with their station, for example <span class="ui">Provider</span>: today's visits waiting at that column, longest-waiting first, under the date, the count waiting and the count at the previous station. <span class="ui">Open the Board</span> switches to the full board to pull someone forward.</p>
+      <p>Each visit offers <span class="ui">Open</span>, the role's own view of it, and a "Next:" button naming the following station. With nobody waiting, the screen says "No one is waiting at" the station.</p>
+
+      <h3>View-only sections and lab results</h3>
+      <p>A view-only section starts collapsed to a summary of what was recorded, as label and value lines such as "Temperature 37.0 °C", with a <span class="ui">View only</span> chip; tapping the header opens the full read-only form. An empty one says "Nothing recorded yet."</p>
+      <p>With a Lab station on the board, every role but Lab orders tests with the <span class="ui">Ordered</span> checkbox and reads results ("Awaiting result" until the lab enters one); the result controls, <span class="ui">Lab comments</span> and urinalysis are read-only for them. Without a Lab station, whoever edits Labs enters results. Administrators are never locked.</p>
 
       <h3>Make a second administrator</h3>
-      <p>Do this before the first clinic day. With one administrator, a forgotten password means the dashboard route in <a href="#recovery">section 15</a>. On a trusted person's row, tap <span class="ui">Make admin</span>. The app asks first, with the name: "Make Grace N. an administrator?" and then "Admins approve and revoke accounts, and edit the organization's lists, formulary and form templates." Confirm, and the card says the name followed by "is now an administrator." The app will not let the last administrator remove themselves: on your own row, <span class="ui">Revoke</span> and <span class="ui">Remove admin</span> are disabled with the note "You are the only administrator. Make someone else an admin first."</p>
+      <p>Do it before the first clinic day: with one administrator, a forgotten password means the dashboard route in <a href="#recovery">section 15</a>.</p>
+      <ol class="steps">
+        <li>On a trusted person's row, tap <span class="ui">Make admin</span>.
+          <p class="what-you-see">The app asks, with the name: "Make Grace N. an administrator?"</p></li>
+        <li>Confirm.
+          <p class="what-you-see">The card says the name followed by "is now an administrator."</p></li>
+      </ol>
+      <p>The last administrator cannot remove themselves: on your own row, <span class="ui">Revoke</span> and <span class="ui">Remove admin</span> are disabled with the note "You are the only administrator. Make someone else an admin first."</p>
 
       <h3>When someone leaves</h3>
-      <p><span class="ui">Revoke</span> on an active row asks first: "Revoke access for" the name, then "They are locked out the next time their device talks to the server. Nothing they recorded is deleted, and you can restore them here later." <span class="ui">Restore</span> on a revoked row turns the account back on. The card's footer is the rule: "Revoking never deletes anything: visits an account recorded stay in the organization." The <a href="admin-guide.html">admin guide</a> covers the Staff screen in full.</p>
+      <p><span class="ui">Revoke</span> on an active row asks "Revoke access for" the name: they are locked out the next time their device talks to the server, and nothing they recorded is deleted. <span class="ui">Restore</span> on a revoked row turns the account back on.</p>
+      <div class="callout">
+        <p>The card's footer is the rule: "Revoking never deletes anything: visits an account recorded stay in the organization." The <a href="admin-guide.html">admin guide</a> covers the Staff screen in full.</p>
+      </div>
 
       <h2 id="live">12. The board comes alive</h2>
-      <p>Once an account is active on a device, two things run on their own. The device syncs every 20 seconds while it is online. And it listens for changes from the project, so a change made on another device arrives within seconds, without waiting for the next sync. The chip in the top bar tells you which state the device is in:</p>
-      <ul>
-        <li><span class="ui">Live</span>: "Connected live. Changes from other devices arrive within seconds." The chip says Live only while the device is actually listening and has nothing waiting.</li>
-        <li><span class="ui">Syncing</span>: "Sending and receiving records..."</li>
-        <li><span class="ui">Synced</span>: "All records are backed up to your cloud."</li>
-        <li><span class="ui">Connected</span>: "Cloud connected. Not synced yet this session."</li>
-        <li><span class="ui">Offline</span>: "Saved on this device. Will sync when you reconnect."</li>
-        <li><span class="ui">Sync error</span>: "Tap to retry, or check your connection and credentials."</li>
-      </ul>
-      <p>Tapping the chip runs a sync by hand. If anything is still waiting to upload, the app says so plainly rather than pretending: "Not backed up." followed by how many records are waiting and why.</p>
+      <p>An active device syncs every 20 seconds while online and listens for changes from the project, so another device's change arrives within seconds. The chip in the top bar shows the state.</p>
+      <table class="guide-table">
+        <tr><th>Chip</th><th>Meaning</th></tr>
+        <tr><td><span class="ui">Live</span></td><td>"Connected live. Changes from other devices arrive within seconds." Shown only while the device is actually listening and has nothing waiting.</td></tr>
+        <tr><td><span class="ui">Syncing</span></td><td>"Sending and receiving records..."</td></tr>
+        <tr><td><span class="ui">Synced</span></td><td>"All records are backed up to your cloud."</td></tr>
+        <tr><td><span class="ui">Connected</span></td><td>"Cloud connected. Not synced yet this session."</td></tr>
+        <tr><td><span class="ui">Offline</span></td><td>"Saved on this device. Will sync when you reconnect."</td></tr>
+        <tr><td><span class="ui">Sync error</span></td><td>"Tap to retry, or check your connection and credentials."</td></tr>
+      </table>
+      <p>Tapping the chip syncs by hand. Anything still waiting to upload is said plainly: "Not backed up." with how many records and why.</p>
 
       <h3>Check it with two devices</h3>
-      <ol>
-        <li>On a reception device, open the <span class="ui">Board</span> tab and tap <span class="ui">+ New patient</span>. Fill the Visit and Patient sections for a test patient and tap <span class="ui">Save</span>. The visit appears as a card in the first column, <span class="ui">Check-in</span>.</li>
-        <li>Watch your own device. Within seconds, the same card appears on your board, with the patient's name and <span class="ui">No.</span> followed by the patient number.</li>
-        <li>On either device, tap <span class="ui">Next: Triage</span> on the card. It moves on both.</li>
-        <li>On a device whose account is still waiting for approval, confirm it shows no records at all. Approve it, tap <span class="ui">Check again</span> on it, and confirm it now sees the test visit. Two minutes, and it exercises the whole access model.</li>
-        <li>Delete the test visit in the app, not in the dashboard: open the <span class="ui">Visits</span> tab, open the patient's chart, and tap <span class="ui">Delete</span> on the visit. Deleting in the app marks the record deleted on every device; rows are never hard-deleted, by design.</li>
+      <ol class="steps">
+        <li>On a reception device, open the <span class="ui">Board</span> tab and tap <span class="ui">+ New patient</span>.</li>
+        <li>Fill the Visit and Patient sections for a test patient and tap <span class="ui">Save</span>.
+          <p class="what-you-see">A card appears in the first column, <span class="ui">Check-in</span>.</p></li>
+        <li>Watch your own device.
+          <p class="what-you-see">Within seconds the same card appears, with the patient's name and <span class="ui">No.</span> followed by the patient number.</p></li>
+        <li>On either device, tap <span class="ui">Next: Triage</span> on the card.
+          <p class="what-you-see">It moves on both.</p></li>
+        <li>On a device still waiting for approval, confirm it shows no records; approve it, tap <span class="ui">Check again</span> there, and confirm it now sees the test visit. Two minutes, and the whole access model is exercised.</li>
+        <li>Delete the test visit in the app, not the dashboard: the <span class="ui">Visits</span> tab, the patient's chart, <span class="ui">Delete</span> on the visit.
+          <p class="what-you-see">It is marked deleted on every device; rows are never hard-deleted, by design.</p></li>
       </ol>
 
       <h2 id="before">13. Before the first clinic day</h2>
-      <p>These are done under <span class="ui">Settings</span> while you are signed in as an administrator, on any device, once, and reach every device on its next sync. Each card says so in its own words; the Form templates card, for example: "These belong to your organization; a change reaches everyone on the next sync." For a non-administrator these editors are turned off with the note "Only an administrator account can change this. Ask your clinic's admin." The <a href="admin-guide.html">admin guide</a> covers each editor in full; this is the short list.</p>
-      <ul>
-        <li><strong>Clinic lists.</strong> Sites and clinicians (you entered them in the wizard; check them), plus complaints, procedures and referral destinations. The same card holds <span class="ui">Patient flow stations (clinic mode board)</span>: the columns of the board, one station per line, in board order. The shipped stations are Check-in, Triage, Provider, Lab, Pharmacy and Done. The card's help text is the rule to read before renaming any: "One station per line, in board order; the last station means done for the day. Station names are how visits point at a station, so renaming one strands today's visits under the old name. To rename mid-day, add the new name first and remove the old one after the day is done."</li>
-        <li><strong>Lab tests.</strong> The tests your lab offers, each with a type and unit, and <span class="ui">Ranges</span> for numeric tests. The <span class="ui">On by default</span> box on each row is the one control for whether a test is on the visit form: untick it and tap <span class="ui">Save lab tests</span> to take a test off the form while keeping it in the panel; tick and save to put it back. The shipped panel has three tests off by default; the <a href="admin-guide.html#labs">admin guide</a> says how to offer one of those.</li>
-        <li><strong>Formulary.</strong> The medications on the visit form. The card's warning: "saved prescriptions keep pointing at the same entry, so never reuse a row for a different drug - add a new row instead."</li>
-        <li><strong>Diagnosis quick-picks and Prescription presets.</strong> One-tap buttons on the visit form. Hide what you do not use rather than deleting it.</li>
-        <li><strong>Form templates.</strong> The visit form itself. <span class="ui">Open the template editor</span>; on each section row, <span class="ui">Roles</span> opens a grid of <span class="ui">View</span> and <span class="ui">Edit</span> checkboxes per role, with the defaults from the table in <a href="#approve">section 11</a> already ticked. The grid's own rule: "Edit includes View; a role with neither does not see the section. Administrators always see and edit every section."</li>
-        <li><strong>A backup habit.</strong> On the <strong>Backup and restore</strong> card, <span class="ui">Download backup</span> saves a single file with every record on the device plus the settings. Take one at the end of each clinic day on at least one device. The cloud is a convenience copy for the devices; the backup file is the organization's own archive.</li>
-      </ul>
+      <p>Done under <span class="ui">Settings</span> as an administrator, on any device, once; a change reaches every device on its next sync. For a non-administrator the editors are turned off. The <a href="admin-guide.html">admin guide</a> covers each editor in full.</p>
+      <table class="guide-table">
+        <tr><th>Card</th><th>What to do</th></tr>
+        <tr><td>Clinic lists</td><td>Check the wizard's sites and clinicians; add complaints, procedures and referral destinations. <span class="ui">Patient flow stations (clinic mode board)</span> holds the board's columns, one per line, in board order: Check-in, Triage, Provider, Lab, Pharmacy and Done as shipped.</td></tr>
+        <tr><td>Lab tests</td><td>Each test has a type, a unit and <span class="ui">Ranges</span> for numeric tests. <span class="ui">On by default</span> is the one control for whether a test is on the visit form: untick and <span class="ui">Save lab tests</span> to remove it while keeping it in the panel; tick and save to restore it. Three shipped tests are off; the <a href="admin-guide.html#labs">admin guide</a> says how to offer one.</td></tr>
+        <tr><td>Formulary</td><td>The visit form's medications. The card's warning: "saved prescriptions keep pointing at the same entry, so never reuse a row for a different drug - add a new row instead."</td></tr>
+        <tr><td>Diagnosis quick-picks and Prescription presets</td><td>One-tap buttons on the visit form. Hide what you do not use rather than deleting it.</td></tr>
+        <tr><td>Form templates</td><td>The visit form itself. <span class="ui">Open the template editor</span>; on each section row, <span class="ui">Roles</span> opens a grid of <span class="ui">View</span> and <span class="ui">Edit</span> checkboxes per role, with the defaults from <a href="#approve">section 11</a> ticked. Its rule: "Edit includes View; a role with neither does not see the section. Administrators always see and edit every section."</td></tr>
+        <tr><td>Backup and restore</td><td><span class="ui">Download backup</span> saves one file with every record on the device plus the settings. Take one at the end of each clinic day on at least one device: the cloud is a convenience copy for the devices; the backup file is the organization's own archive.</td></tr>
+      </table>
+      <div class="callout warn">
+        <p><strong>Read before renaming any station.</strong> The card's help text: "One station per line, in board order; the last station means done for the day. Station names are how visits point at a station, so renaming one strands today's visits under the old name. To rename mid-day, add the new name first and remove the old one after the day is done."</p>
+      </div>
 
       <h2 id="offline">14. If the internet goes down</h2>
-      <p>Clinic is built for a constant connection, and this guide will not pretend otherwise. What actually happens depends on how long the outage lasts.</p>
+      <p>Clinic is built for a constant connection, and this guide will not pretend otherwise. What happens depends on how long the outage lasts.</p>
       <h3>A short outage</h3>
-      <p>A device that is signed in keeps working on what it has. The chip reads <span class="ui">Offline</span>; visits saved on the device stay there and upload when the signal returns. What stops is the sharing: the board on each device stops receiving the others' changes, a lab result entered on one device does not reach the provider's device, and a visit registered at reception does not appear on the triage device until the connection is back. A device that has never signed in cannot start until it is online, because the account has to be confirmed once.</p>
-      <p>Do not sign anyone out during an outage. The Account card says why: "Records saved on this device stay here when you sign out - nothing is deleted. But signing back in needs a working connection, so do not sign out on a device that is offline mid-clinic." A device that stays disconnected for over a week shows a banner, "Reconnect to confirm your account.", and keeps working.</p>
+      <p>A signed-in device keeps working on what it has: the chip reads <span class="ui">Offline</span>, and visits saved on it upload when the signal returns. A device that has never signed in cannot start until it is online, because the account must be confirmed once.</p>
+      <p>What stops is the sharing: boards stop receiving each other's changes, a lab result entered on one device does not reach the provider's, and a visit registered at reception does not reach the triage device until the connection is back.</p>
+      <div class="callout warn">
+        <p><strong>Do not sign anyone out during an outage.</strong> The Account card says why: "Records saved on this device stay here when you sign out - nothing is deleted. But signing back in needs a working connection, so do not sign out on a device that is offline mid-clinic."</p>
+        <p>After a week disconnected, a banner says "Reconnect to confirm your account." and the device keeps working.</p>
+      </div>
       <h3>A long outage</h3>
-      <p>The clinic keeps seeing patients on paper. Afterwards, the paper charts are typed up in <strong>DH EMR Field</strong>, the separate offline product, on any device with the Field app. The day's visits are then searchable, counted in Field's analytics and backed up in a file, instead of lost in a drawer. The <a href="../field/admin-guide.html#clinic-backup">Field admin guide</a> explains that setup.</p>
-      <p>Said plainly: <strong>there is no way to move Field records into a Clinic organization today.</strong> Import from Field into Clinic is not available yet. Visits entered in Field stay in Field; they do not appear on the Clinic board, in Clinic search or in Clinic analytics. Keep the paper charts, because they are the source if the organization later needs those visits in Clinic. And do not point a Field device at the Clinic project: a Clinic project only accepts signed-in accounts, so a Field device's uploads are refused there.</p>
+      <p>The clinic sees patients on paper, then types the charts into <strong>DH EMR Field</strong>, the separate offline product, on any device with the Field app: the visits become searchable, counted in Field's analytics and backed up in a file instead of lost in a drawer. The <a href="../field/admin-guide.html#clinic-backup">Field admin guide</a> explains that setup.</p>
+      <div class="callout warn">
+        <p><strong>There is no way to move Field records into a Clinic organization today.</strong> Visits entered in Field stay in Field: not on the Clinic board, not in Clinic search, not in Clinic analytics. Keep the paper charts; they are the source if the organization later needs those visits in Clinic.</p>
+        <p>Do not point a Field device at the Clinic project: it only accepts signed-in accounts, so a Field device's uploads are refused.</p>
+      </div>
 
       <h2 id="recovery">15. If you get locked out</h2>
-      <p>The schema has no self-service administrator path, on purpose, so these situations need the project dashboard's SQL Editor. Nothing else does. The Staff screen's footer points here: "If you ever lock yourself out entirely, the recovery steps live in the setup guide (SETUP.md), using the project dashboard."</p>
+      <p>The schema has no self-service administrator path, on purpose, so these situations need the project dashboard's SQL Editor; nothing else does. The Staff screen's footer points here.</p>
       <h3>The only administrator forgot their password</h3>
-      <p>Email resets are unreliable without your own mail server, so create a replacement administrator instead. Authentication, then Users, then Add user, "Create new user" with a temporary password. Then, with the new email in place of <code>NEW@EXAMPLE.ORG</code> (one row must return):</p>
+      <ol class="steps">
+        <li>Create a replacement administrator: Authentication, then Users, then Add user, "Create new user" with a temporary password. Email resets are unreliable without your own mail server.</li>
+        <li>In the SQL Editor, run this with the new email in place of <code>NEW@EXAMPLE.ORG</code>; one row must return:
 <pre><code>UPDATE users_profiles SET is_admin = true, activated_at = now(), revoked_at = NULL
 WHERE id = (SELECT id FROM auth.users WHERE lower(email) = lower('NEW@EXAMPLE.ORG'))
-RETURNING id, is_admin, activated_at;</code></pre>
+RETURNING id, is_admin, activated_at;</code></pre></li>
+      </ol>
       <h3>The organization has no administrator</h3>
       <p>The only administrator was revoked or deleted. Run the same statement against any existing trusted account, or a fresh one. The <code>revoked_at = NULL</code> part matters: promoting a once-revoked account without clearing the revocation does nothing, silently.</p>
       <h3>A device was revoked in the dashboard</h3>
-      <p>The app can restore an account from the Staff screen, but it can never un-revoke a device. That is dashboard only:</p>
+      <p>The app can restore an account from the Staff screen, but never un-revoke a device. That is dashboard only:</p>
 <pre><code>UPDATE devices SET revoked_at = NULL WHERE id = '&lt;device id&gt;';</code></pre>
       <h3>Keep the project awake</h3>
-      <p>A free-tier project is paused after about a week with no traffic, and one paused long enough (around 90 days) can stop being restorable in place. A clinic that runs every day never hits this. If your organization runs seasonal missions, either upgrade the project to a paid tier, or put a calendar reminder to open the dashboard monthly and click Restore if prompted. And keep the device backups from <a href="#before">section 13</a>; they are the true archive.</p>
+      <p>A free-tier project pauses after about a week without traffic, and one paused long enough (around 90 days) can stop being restorable in place; a daily clinic never hits this.</p>
+      <p>For seasonal missions, upgrade to a paid tier or open the dashboard monthly and click Restore if prompted. Keep the device backups from <a href="#before">section 13</a>; they are the true archive.</p>
 
       <h2 id="limits">16. Honest limits</h2>
-      <ul>
-        <li><strong>Roles are a workflow layer, not a security wall.</strong> A role decides which workspace a person lands on and which sections of the visit form they edit by default. It does not hide records. Any approved account can read the organization's records, and the server cannot enforce permissions field by field. Approve the people you trust with the records, and revoke the ones you no longer do.</li>
-        <li><strong>The organization's settings follow the account, not the device.</strong> Any device where an administrator is signed in can change the lists, formulary, lab tests, presets and forms for everyone, including a device that joined by link. Make admins sparingly.</li>
-        <li><strong>The publishable key inside the join link is public by design.</strong> It unlocks nothing on its own, because every read and write needs an approved account. Anyone with the link can create an account that waits for your approval, and nothing more. Share the link with staff, not the public, and never confuse it with the secret key from <a href="#credentials">section 5</a>.</li>
-        <li><strong>Revoking takes effect when the device next connects.</strong> A device that is offline keeps its last confirmed access until it talks to the server again. The Staff card says so, and after a week without a server check the device shows the reconnect banner.</li>
-        <li><strong>A lost device keeps its data.</strong> Revoking an account or a device does nothing to the records already on it, and they are not encrypted at rest. Treat a lost device as a disclosure.</li>
-        <li><strong>No password reset in the app.</strong> A forgotten password means a fresh account, or for the only administrator, the dashboard route in <a href="#recovery">section 15</a>.</li>
-        <li><strong>Field cannot feed Clinic.</strong> Paper-day visits typed into DH EMR Field stay in Field. See <a href="#offline">section 14</a>.</li>
-        <li><strong>DH EMR is not a certified EHR and is not HIPAA-compliant.</strong> It must not be used where a certified EHR is required. It is intended for global-health use outside the US.</li>
-      </ul>
+      <table class="guide-table">
+        <tr><th>Limit</th><th>What it means</th></tr>
+        <tr><td>Roles are a workflow layer, not a security wall</td><td>A role sets the workspace and default sections; it hides no records. Any approved account can read everything, and the server cannot enforce field-level permissions. Approve people you trust; revoke the rest.</td></tr>
+        <tr><td>Settings follow the account, not the device</td><td>Any device with an administrator signed in changes the lists, formulary, lab tests, presets and forms for everyone, joined by link or not. Make admins sparingly.</td></tr>
+        <tr><td>The join link's publishable key is public by design</td><td>It unlocks nothing alone; the link only lets someone create an account that waits for approval. Share it with staff, not the public; never confuse it with the secret key (<a href="#credentials">section 5</a>).</td></tr>
+        <tr><td>Revoking takes effect when the device next connects</td><td>An offline device keeps its last confirmed access until it next talks to the server; after a week it shows the reconnect banner.</td></tr>
+        <tr><td>A lost device keeps its data</td><td>Revoking does nothing to records already on it, and they are not encrypted at rest. Treat a lost device as a disclosure.</td></tr>
+        <tr><td>No password reset in the app</td><td>A forgotten password means a fresh account, or for the only administrator, <a href="#recovery">section 15</a>.</td></tr>
+        <tr><td>Field cannot feed Clinic</td><td>Paper-day visits typed into DH EMR Field stay in Field (<a href="#offline">section 14</a>).</td></tr>
+        <tr><td>Not a certified EHR, not HIPAA-compliant</td><td>Must not be used where a certified EHR is required; intended for global-health use outside the US.</td></tr>
+      </table>
 
       <h3>Where to go next</h3>
       <p>Give the staff the <a href="user-guide.html">user guide</a>; it covers each role's workspace and the visit form. Keep the <a href="admin-guide.html">admin guide</a> for yourself; it covers the Staff screen and every settings editor.</p>

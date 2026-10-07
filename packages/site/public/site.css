@@ -596,6 +596,16 @@ section h2 {
   color: var(--ink-soft, #4a5568);
 }
 
+/* The first column holds short labels: never break them inside a word
+   (site.css wraps anywhere by default); the table scrolls sideways on a
+   phone instead. */
+.page table.guide-table th:first-child,
+.page table.guide-table td:first-child {
+  min-width: 6.5rem;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
 .page .what-you-see {
   margin: 4px 0 0;
   color: var(--ink-soft, #4a5568);
