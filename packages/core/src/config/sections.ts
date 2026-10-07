@@ -81,7 +81,7 @@ export function uid(prefix: string): string {
   return prefix + r
 }
 
-/** Back-compat: a lone legacy `formSchema` becomes one "General Encounter". */
+/** Back-compat: a lone legacy `formSchema` becomes one "General Visit". */
 export function normalizeLibrary(templates: unknown, legacySchema: unknown): FormTemplateLibrary {
   const t = templates as FormTemplateLibrary | null
   if (t && Array.isArray(t.templates) && t.templates.length) {
@@ -90,9 +90,9 @@ export function normalizeLibrary(templates: unknown, legacySchema: unknown): For
   const legacy = legacySchema as { sections?: RawSection[] } | null
   const schema =
     legacy && Array.isArray(legacy.sections) ? { sections: legacy.sections } : { sections: [] }
-  // Gives a brand-new org an empty General Encounter rather than nothing;
+  // Gives a brand-new org an empty General Visit rather than nothing;
   // an empty schema renders all 16 built-ins.
-  return { version: 1, templates: [{ id: 'general', name: 'General Encounter', enabled: true, schema }] }
+  return { version: 1, templates: [{ id: 'general', name: 'General Visit', enabled: true, schema }] }
 }
 
 /**

@@ -490,3 +490,17 @@ State of the release sequence, in order:
 7. Old repo DamicoHealth/damicohealth-com: nothing points at it now. Its
    old app URL (if anyone bookmarked one) is not redirected; archive or
    add a redirect page there when convenient.
+8. POST-RELEASE AUDIT (2026-10-07, 25-agent workflow: links, copy rules,
+   docs-vs-app labels, secrets exposure, PWA manifests/workers; every
+   finding verified by two independent refuters). Clean: every link,
+   fragment and precache entry resolves; no secrets, project refs,
+   source maps or em dashes in anything we wrote; every guide label
+   exists verbatim in the UI. Fixed from it: the Vite shells had no icon
+   link (favicon 404 on every app load; now the site's teal-cross icon +
+   apple-touch-icon), the default form template was "General Encounter"
+   (now "General Visit"; Clinic admin guide updated), the backup-restore
+   error said "DH Field EMR" (now "DH EMR"), Clinic short_name was
+   "DH Clinic" (now "DH EMR Clinic"), the Settings About line called
+   Clinic offline-first (now product-aware). Refuted as by design: CSV
+   legacy headers (parity-pinned), one em dash inside vendored
+   supabase-js, demo manifests sharing the product name.

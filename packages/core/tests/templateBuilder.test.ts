@@ -628,7 +628,7 @@ describe('field editor', () => {
 
 describe('read-only guards', () => {
   it('a synthesized library disables the whole builder behind a banner', async () => {
-    // Nothing stored: loadLibraryDetailed fabricates General Encounter and
+    // Nothing stored: loadLibraryDetailed fabricates General Visit and
     // flags it synthesized. Saving it would replace the org's real form.
     await openBuilder()
     await screen.findByText('Form settings have not reached this device yet')

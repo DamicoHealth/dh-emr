@@ -142,7 +142,7 @@ describe('restore merge policy', () => {
   })
 
   it('rejects a file that is not a backup', async () => {
-    await expect(restoreFromData({ nope: true })).rejects.toThrow(/not a DH Field EMR backup/i)
+    await expect(restoreFromData({ nope: true })).rejects.toThrow(/not a DH EMR backup/i)
     await expect(restoreFromData(null)).rejects.toThrow()
   })
 

@@ -155,16 +155,16 @@ describe('section operations', () => {
 });
 
 describe('library normalization (back-compat)', () => {
-  it('wraps a lone legacy formSchema as one General Encounter template', () => {
+  it('wraps a lone legacy formSchema as one General Visit template', () => {
     const lib = normalizeLibrary(null, { sections: [custom()] });
     expect(lib.templates).toHaveLength(1);
     expect(lib.templates[0]!.id).toBe('general');
     expect(lib.templates[0]!.schema.sections[0]!.id).toBe('s_dental');
   });
 
-  it('gives a brand-new org an empty General Encounter rather than nothing', () => {
+  it('gives a brand-new org an empty General Visit rather than nothing', () => {
     const lib = normalizeLibrary(null, null);
-    expect(lib.templates[0]!.name).toBe('General Encounter');
+    expect(lib.templates[0]!.name).toBe('General Visit');
     expect(getEffectiveSchema(lib.templates[0]!.schema).sections).toHaveLength(BUILTIN_SECTIONS.length);
   });
 

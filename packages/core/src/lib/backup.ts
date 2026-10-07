@@ -148,7 +148,7 @@ export async function restoreFromData(
   // Validate the envelope, not just the shape: merging an arbitrary JSON
   // file with a `records` array into the patient store is permanent.
   if (!file || !Array.isArray(file.records) || file.app !== 'DH Field EMR') {
-    throw new Error('That is not a DH Field EMR backup file.')
+    throw new Error('That is not a DH EMR backup file.')
   }
   if (typeof file.backupVersion !== 'number' || file.backupVersion > 1) {
     throw new Error('That backup was made by a newer version of the app. Update this device first.')

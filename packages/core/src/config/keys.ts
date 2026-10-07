@@ -218,7 +218,7 @@ export function visiblePresets(
 /**
  * Load the template library. `synthesized` is true when the org has NO stored
  * form config yet (nothing synced to this device) - computed from the RAW
- * reads, BEFORE normalizeLibrary fabricates 'General Encounter', because the
+ * reads, BEFORE normalizeLibrary fabricates 'General Visit', because the
  * fabricated output is indistinguishable from a real empty org afterward.
  * Saving a synthesized library would replace the org's real templates with a
  * fabricated empty one, so callers must not write it back until a sync has

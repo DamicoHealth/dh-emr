@@ -1390,9 +1390,11 @@ export default function SettingsScreen({
           <Kv k="Version" v={APP_VERSION} />
         </div>
         <p className="muted small">
-          DH EMR is an offline-first documentation tool for outreach clinics. It is not a
-          certified EHR and is not HIPAA-compliant, and it must not be used where a certified
-          EHR is required. It is intended for global-health use outside the US.
+          {clinic
+            ? 'DH EMR Clinic is a live clinic records tool for teams with constant internet.'
+            : 'DH EMR Field is an offline-first documentation tool for outreach clinics.'}{' '}
+          It is not a certified EHR and is not HIPAA-compliant, and it must not be used where a
+          certified EHR is required. It is intended for global-health use outside the US.
         </p>
       </section>
     </div>

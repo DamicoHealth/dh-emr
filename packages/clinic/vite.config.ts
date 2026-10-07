@@ -49,7 +49,7 @@ export default defineConfig({
       injectRegister: false,
       manifest: {
         name: 'DH EMR Clinic',
-        short_name: 'DH Clinic',
+        short_name: 'DH EMR Clinic',
         description: 'Live clinic records with staff accounts and a patient-flow board',
         // --bg from core/styles/tokens.css; matches index.html theme-color.
         theme_color: '#f7f8fa',
