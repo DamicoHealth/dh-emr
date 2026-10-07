@@ -1134,3 +1134,30 @@ describe("the provider's view (Alec's first live review, 2026-10-07)", () => {
     expect(screen.getByLabelText('Lab comments')).toBeTruthy()
   })
 })
+
+describe("the lab's grid", () => {
+  it('lists the tests ordered on the visit first, fixed at open', async () => {
+    // Hemoglobin is last in the default panel; ordered, it leads the lab's grid.
+    const rec = await seed(
+      makeRecord({ id: 'lg1', labs: { Hemoglobin: { ordered: true, type: 'numeric', value: '' } } }),
+    )
+    const { container } = renderForm(rec, 'lab')
+    await screen.findByLabelText('Ordered: Hemoglobin')
+    const names = () => [...container.querySelectorAll('.lab-grid .lab .lab-name')].map((el) => el.textContent)
+    expect(names()[0]).toBe('Hemoglobin')
+    // Ordering another test while editing does not reshuffle the cards.
+    fireEvent.click(screen.getByLabelText('Ordered: Malaria RDT'))
+    expect(names()[0]).toBe('Hemoglobin')
+    expect(names().indexOf('Malaria RDT')).toBeGreaterThan(0)
+  })
+
+  it('keeps the configured order for every other role', async () => {
+    const rec = await seed(
+      makeRecord({ id: 'lg2', labs: { Hemoglobin: { ordered: true, type: 'numeric', value: '' } } }),
+    )
+    const { container } = renderForm(rec, 'provider')
+    await screen.findByLabelText('Ordered: Hemoglobin')
+    const names = [...container.querySelectorAll('.lab-grid .lab .lab-name')].map((el) => el.textContent)
+    expect(names[0]).toBe('Malaria RDT')
+  })
+})

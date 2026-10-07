@@ -333,6 +333,24 @@ export function EncounterForm({
   // else orders tests and reads results (src/config/roles.ts).
   const resultsLocked = roleMode && labResultsLocked(role ?? '', isAdmin, cfg.stations)
   const summaryCtx = { formulary: cfg.formulary, age }
+  // The lab's grid lists the tests ORDERED on this visit first, so results
+  // entry starts at the top instead of hunting through the whole panel. The
+  // order is fixed when the form opens (from the stored visit), so ticking
+  // or unticking Ordered while editing never reshuffles the cards.
+  const labRole = roleMode && !isAdmin && normalizeRole(role ?? '') === 'lab'
+  const orderedAtOpen = useRef<Set<string> | null>(null)
+  if (orderedAtOpen.current === null) {
+    orderedAtOpen.current = new Set(
+      Object.entries(target?.labs ?? {})
+        .filter(([, e]) => !!e?.ordered)
+        .map(([name]) => name),
+    )
+  }
+  const labTestsInOrder = useMemo(() => {
+    if (!labRole) return cfg.labTests
+    const first = orderedAtOpen.current ?? new Set<string>()
+    return [...cfg.labTests].sort((x, y) => Number(first.has(y.name)) - Number(first.has(x.name)))
+  }, [labRole, cfg.labTests])
   const visibleSections = useMemo<RoleSection[]>(
     () =>
       roleMode
@@ -620,7 +638,7 @@ export function EncounterForm({
     labs: (
       <>
         <div className="lab-grid">
-          {cfg.labTests.map((t) => {
+          {labTestsInOrder.map((t) => {
             const cur = state.labs[t.name]
             const ordered = !!cur?.ordered
             // Ordered with no result yet: the lab workspace's queue. Only
