@@ -504,3 +504,21 @@ State of the release sequence, in order:
    Clinic offline-first (now product-aware). Refuted as by design: CSV
    legacy headers (parity-pinned), one em dash inside vendored
    supabase-js, demo manifests sharing the product name.
+9. REPORTED BY ALEC after launch: "the Clinic demo opens the Field demo".
+   Cause: the OLD site served its single-product demo at /demo/ with a
+   workbox worker registered at /demo/sw.js, scope /demo/, which covers
+   the new hub and both new demos; a browser that ever opened the old
+   demo kept serving the old cached index for every navigation under
+   /demo/. Reproduced locally with a stub worker. Fix: a kill-switch
+   worker at packages/site/public/demo/sw.js (tracked; the only other
+   tracked file under demo/ is the hub). The browser's next script
+   update check (at most daily) installs it; it claims the tabs, drops
+   the old scope's caches, unregisters and reloads. Verified end to end
+   in the built-in browser. KEEP THAT FILE FOR AT LEAST A YEAR. Alec's
+   immediate workaround: reload the page once.
+   Same pass: the old site's /privacy/ and /terms/ were missing from the
+   new site; ported for the two products (October 2026 text, PayPal
+   donation clauses dropped since this site has no donate link; no LICENSE
+   file exists in the repo, so the terms claim copyright only). Old guide
+   directory URLs (/guides/getting-started/ etc. and /guides/release-notes/)
+   now have redirect stubs. Privacy and Terms are in every footer.
