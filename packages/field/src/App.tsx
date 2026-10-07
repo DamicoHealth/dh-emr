@@ -31,6 +31,7 @@ import AnalyticsScreen from '@dh/core/ui/analytics/AnalyticsScreen'
 import { ErrorBoundary } from '@dh/core/ui/app/ErrorBoundary'
 import { SyncChip } from '@dh/core/ui/app/SyncChip'
 import { UpdateBar } from '@dh/core/ui/app/UpdateBar'
+import { startServiceWorker } from '@dh/core/sw/register'
 import EncounterForm from '@dh/core/ui/encounter/EncounterForm'
 import RecordsScreen from '@dh/core/ui/records/RecordsScreen'
 import SettingsScreen from '@dh/core/ui/settings/SettingsScreen'
@@ -115,6 +116,14 @@ function renderScreen(
 // ---------------------------------------------------------------------------
 
 export function App() {
+  // Register the service worker in EVERY boot state, not only the set-up
+  // shell: a device that opens the app once while online then has the
+  // shell cached before setup or sign-in is ever completed. Idempotent, so
+  // UpdateBar's own call in the main shell stays a no-op repeat.
+  useEffect(() => {
+    startServiceWorker()
+  }, [])
+
   const [boot, setBoot] = useState<Boot>({ state: 'loading' })
   const [tab, setTab] = useState<ScreenId>('visits')
   const [visitOpen, setVisitOpen] = useState(false)

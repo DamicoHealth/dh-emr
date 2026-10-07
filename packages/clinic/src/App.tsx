@@ -54,6 +54,7 @@ import AnalyticsScreen from '@dh/core/ui/analytics/AnalyticsScreen'
 import { ErrorBoundary } from '@dh/core/ui/app/ErrorBoundary'
 import { SyncChip } from '@dh/core/ui/app/SyncChip'
 import { UpdateBar } from '@dh/core/ui/app/UpdateBar'
+import { startServiceWorker } from '@dh/core/sw/register'
 import PendingScreen from '@dh/core/ui/auth/PendingScreen'
 import RevokedScreen from '@dh/core/ui/auth/RevokedScreen'
 import SignInScreen from '@dh/core/ui/auth/SignInScreen'
@@ -342,6 +343,14 @@ export interface AppProps {
 }
 
 export function App({ demo }: AppProps) {
+  // Register the service worker in EVERY boot state, not only the set-up
+  // shell: a device that opens the app once while online then has the
+  // shell cached before setup or sign-in is ever completed. Idempotent, so
+  // UpdateBar's own call in the main shell stays a no-op repeat.
+  useEffect(() => {
+    startServiceWorker()
+  }, [])
+
   // Honored only in a DH_DEMO build; the literal folds this to null elsewhere.
   const demoHooks: DemoAppHooks | null = __DH_DEMO__ ? (demo ?? null) : null
   const [boot, setBoot] = useState<Boot>({ state: 'loading' })

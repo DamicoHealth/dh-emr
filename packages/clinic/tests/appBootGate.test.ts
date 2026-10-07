@@ -39,7 +39,14 @@ vi.mock('@dh/core/ui/board/BoardScreen', () => ({
 }))
 import { config, setCurrentDeviceId, setSetting, settings } from '@dh/core/kernel'
 import { syncEngine } from '@dh/core/sync'
+// The worker registration is a side effect of mounting the shell; the
+// tests only need to know it was asked for.
+vi.mock('@dh/core/sw/register', () => ({
+  startServiceWorker: vi.fn(),
+  applyUpdateNow: vi.fn(async () => {}),
+}))
 import { App } from '../src/App'
+import { startServiceWorker } from '@dh/core/sw/register'
 
 const h = React.createElement
 
@@ -119,5 +126,13 @@ describe('clinic shell boot gate', () => {
     expect(screen.queryByText('Connect to your cloud')).toBeNull()
     expect(screen.queryByRole('button', { name: 'New visit' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Board' })).toBeNull()
+  })
+
+  it('the service worker registers on a fresh device at the cloud step, before any sign-in', async () => {
+    vi.mocked(startServiceWorker).mockClear()
+    render(h(App))
+    await screen.findByText('Connect to your cloud')
+    // UpdateBar (the active shell's own registration path) is not mounted here.
+    expect(startServiceWorker).toHaveBeenCalled()
   })
 })

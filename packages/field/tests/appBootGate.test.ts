@@ -30,7 +30,14 @@ vi.mock('@dh/core/ui/records/RecordsScreen', () => ({
   RecordsScreen: () => null,
 }))
 import { config, setCurrentDeviceId, setSetting, settings } from '@dh/core/kernel'
+// The worker registration is a side effect of mounting the shell; the
+// tests only need to know it was asked for.
+vi.mock('@dh/core/sw/register', () => ({
+  startServiceWorker: vi.fn(),
+  applyUpdateNow: vi.fn(async () => {}),
+}))
 import { App } from '../src/App'
+import { startServiceWorker } from '@dh/core/sw/register'
 
 const h = React.createElement
 
@@ -70,5 +77,13 @@ describe('app boot gate', () => {
     await screen.findByText('Set up this device')
     expect(screen.queryByRole('button', { name: 'New visit' })).toBeNull()
     expect(screen.queryByText('Visits')).toBeNull()
+  })
+
+  it('the service worker registers on a fresh device at the wizard, so the shell is cached from the first online open', async () => {
+    vi.mocked(startServiceWorker).mockClear()
+    render(h(App))
+    await screen.findByText('Set up this device')
+    // UpdateBar (the main shell's own registration path) is not mounted here.
+    expect(startServiceWorker).toHaveBeenCalled()
   })
 })
