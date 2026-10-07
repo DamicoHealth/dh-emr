@@ -119,8 +119,10 @@ describe('Visits tab in role mode', () => {
     fireEvent.click(within(chart).getByRole('button', { name: 'Edit' }))
     const form = await screen.findByRole('dialog', { name: 'Edit visit' })
     expect(within(form).getByText(/Pharmacy sections/)).toBeTruthy()
+    // The sections render once the template library has loaded, so the first
+    // query awaits the body; the rest can read synchronously.
     // Medications editable; Patient and Diagnosis read-only; Vitals hidden.
-    expect(inert(within(form).getByLabelText('Treatment notes'))).toBe(false)
+    expect(inert(await within(form).findByLabelText('Treatment notes'))).toBe(false)
     expect(inert(within(form).getByLabelText('Diagnosis'))).toBe(true)
     expect(inert(within(form).getByLabelText(/^Given name/))).toBe(true)
     expect(within(form).getAllByText('View only')).toHaveLength(2)
@@ -134,7 +136,7 @@ describe('Visits tab in role mode', () => {
     const form = await screen.findByRole('dialog', { name: 'New visit' })
     expect(within(form).getByText('New visit for Test Patient')).toBeTruthy()
     expect(within(form).getByText(/Pharmacy sections/)).toBeTruthy()
-    expect(inert(within(form).getByLabelText(/^Given name/))).toBe(false)
+    expect(inert(await within(form).findByLabelText(/^Given name/))).toBe(false)
     expect(inert(within(form).getByLabelText('Treatment notes'))).toBe(false)
     // View-only sections are omitted on a new visit; nothing is read-only.
     expect(within(form).queryByLabelText('Diagnosis')).toBeNull()
@@ -147,7 +149,7 @@ describe('Visits tab in role mode', () => {
     const chart = await openChart()
     fireEvent.click(within(chart).getByRole('button', { name: 'Edit' }))
     const form = await screen.findByRole('dialog', { name: 'Edit visit' })
-    expect(within(form).getByLabelText(/Temperature/)).toBeTruthy()
+    expect(await within(form).findByLabelText(/Temperature/)).toBeTruthy()
     expect(inert(within(form).getByLabelText('Diagnosis'))).toBe(false)
     expect(inert(within(form).getByLabelText(/^Given name/))).toBe(false)
     expect(within(form).queryByText('View only')).toBeNull()
