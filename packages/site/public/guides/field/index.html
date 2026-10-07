@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DH EMR Field guides</title>
+  <meta name="description" content="Guides for DH EMR Field: getting started, the user guide, the admin guide, and cloud sync setup.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e6e64'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%23ffffff' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../../site.css">
+  <style>
+    .page h2 {
+      margin: 2rem 0 0.5rem;
+      font-size: 1.35rem;
+      line-height: 1.25;
+    }
+    .page ol {
+      color: var(--ink-soft);
+      padding-left: 1.4rem;
+    }
+    .page ol li {
+      margin: 0.55rem 0;
+    }
+    .page ol a {
+      font-weight: 600;
+    }
+    .table-scroll {
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    .guide-table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.95rem;
+      background: var(--surface);
+    }
+    .guide-table th,
+    .guide-table td {
+      border: 1px solid var(--line);
+      padding: 0.5rem 0.65rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    .guide-table th {
+      background: var(--bg);
+    }
+    .guide-table td {
+      color: var(--ink-soft);
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="../../">
+      <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#0e6e64"/>
+        <path d="M32 17v30M17 32h30" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+      </svg>
+      DH EMR
+    </a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="../../#clinic">Clinic</a>
+      <a href="../../#field">Field</a>
+      <a href="../" aria-current="page">Guides</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="page">
+      <p class="kicker">DH EMR Field</p>
+      <h1>DH EMR Field guides</h1>
+      <p>DH EMR Field is for entering paper charts after clinic. It works with no internet. There are no accounts: the device is the identity. A device can work on its own, or several devices can share one cloud key and sync whenever there is signal.</p>
+
+      <h2>The guides</h2>
+      <ol>
+        <li><a href="getting-started.html">Getting started</a>: set up a device with the setup wizard, on its own or connected to your cloud. Enter your first visit. Take your first backup.</li>
+        <li><a href="user-guide.html">User guide</a>: day-to-day work on a device. Entering visits, finding patients, analytics, sync and backups, and what the banners mean.</li>
+        <li><a href="admin-guide.html">Admin guide</a>: for whoever runs the organization. Form templates, diagnosis quick-picks and prescription presets, the formulary, lab tests and reference ranges, clinic lists, and the devices.</li>
+        <li><a href="cloud-sync.html">Cloud sync setup</a>: for the admin standing up the organization's own cloud project so several devices can share records and sync.</li>
+      </ol>
+
+      <h2>Which guide do I need?</h2>
+      <div class="table-scroll">
+        <table class="guide-table">
+          <thead>
+            <tr>
+              <th scope="col">You</th>
+              <th scope="col">Read</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>have a new device to set up</td>
+              <td><a href="getting-started.html">Getting started</a></td>
+            </tr>
+            <tr>
+              <td>enter visits on a device</td>
+              <td><a href="user-guide.html">User guide</a></td>
+            </tr>
+            <tr>
+              <td>run the organization and change the forms, lists or formulary</td>
+              <td><a href="admin-guide.html">Admin guide</a></td>
+            </tr>
+            <tr>
+              <td>want several devices to share records</td>
+              <td><a href="cloud-sync.html">Cloud sync setup</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Field and Clinic</h2>
+      <p>DH EMR Field is also the backup app for a DH EMR Clinic organization when its backend is down. The two products do not share records, and there is no switch between them. The <a href="../clinic/">Clinic guides</a> are a separate set.</p>
+
+      <p>Want to try Field before setting up a real device? The <a href="../../demo/field/">Field demo</a> is a fictional clinic that stays in your browser. Ready for a real device? Open the <a href="../../field/">Field app</a> and follow Getting started.</p>
+      <p><a href="../">All guides</a></p>
+    </div>
+  </div>
+</main>
+
+<div class="notice">
+  <div class="wrap">
+    <p>DH EMR is not a certified EHR and is not HIPAA-compliant. It is intended for global-health use outside the US.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <a href="../../">Home</a>
+      <a href="../../clinic/">Clinic</a>
+      <a href="../../field/">Field</a>
+      <a href="../">Guides</a>
+      <a href="../../demo/clinic/">Clinic demo</a>
+      <a href="../../demo/field/">Field demo</a>
+    </nav>
+    <p>Damico Health - free, open tools for global-health clinics.</p>
+  </div>
+</footer>
+
+</body>
+</html>

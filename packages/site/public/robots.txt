@@ -1,2 +1,5 @@
+# damicohealth.com
+# Everything is public: the landing page, both app addresses (/clinic/ and
+# /field/), both demos and both guide sets. No sitemap is published.
 User-agent: *
 Allow: /

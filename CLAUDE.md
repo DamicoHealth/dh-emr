@@ -1,10 +1,13 @@
 # DH EMR - repo instructions
 
-Free, offline-first EMR for global-health clinics, built and maintained by one
-physician (Alec Damico, Damico Health). One app, two org-level modes:
+Free EMR for global-health clinics, built and maintained by one physician
+(Alec Damico, Damico Health). TWO SEPARATE PRODUCTS over ONE SHARED CORE,
+no mode switching in either, no data merging between them:
 
-- Field mode: offline-first, device identity, sync whenever there is signal.
-- Clinic mode: per-user auth with roles, realtime sync, patient-flow board.
+- DH EMR Field: offline paper-chart entry, no accounts (the device is the
+  identity), standalone or shared-key cloud sync.
+- DH EMR Clinic: live, constant internet, staff accounts with roles,
+  always the auth gate, patient-flow board.
 
 NOT a certified EHR, NOT HIPAA-compliant. Never claim otherwise anywhere.
 
@@ -18,13 +21,20 @@ config code. HANDOFF.md tracks current state; update it when state changes.
 
 ## Layout
 
-- packages/app - the PWA (Vite + React 18 + TypeScript strict + Vitest)
+- packages/core - the shared core (React 18 + TypeScript strict + Vitest).
+  Nothing is copied into an app; apps import it through the path alias
+  "@dh/core/*" -> "../core/src/*" (tsconfig "paths" + vite resolve.alias).
   - src/domain - pure clinical algorithms (MRN, med quantities, dates)
   - src/kernel - storage engine (per-record IndexedDB, mutex, recovery)
   - src/config - org customization model (templates, formulary, lists)
-  - src/sync - cloud sync engine (Supabase)
+  - src/sync - cloud sync engine (Supabase); src/auth - clinic sessions
+  - src/ui - the UI kit (encounter form, records, settings, board, staff,
+    templates, presets, labs, analytics, auth screens, app pieces)
   - tests/ - the executable spec; parity tests differential-test against
     vendored legacy fixtures in tests/fixtures/legacy/
+- packages/field - DH EMR Field PWA shell (Vite + vite-plugin-pwa): App.tsx,
+  main.tsx, src/demo (the public Field demo seeder), two shell tests
+- packages/clinic - DH EMR Clinic PWA shell (Vite + vite-plugin-pwa)
 - packages/site - damicohealth.com (website + guides + demo hosting)
 - supabase/ - canonical SQL schema; Alec runs it in the dashboard
 
@@ -52,6 +62,9 @@ Old implementation (reference only): github.com/DamicoHealth/dh-field-emr
 
 ## Commands
 
-- `npm test` - full suite (Vitest, jsdom, fake-indexeddb)
-- `npm run dev` - app dev server
-- `npm run build` - typecheck + production build
+- `npm test` - the shared suite in packages/core (Vitest, jsdom,
+  fake-indexeddb)
+- `npm run typecheck:all` - tsc in core, field and clinic
+- `npm run dev:field` / `npm run dev:clinic` - app dev servers
+- `npm run build:field` / `npm run build:clinic` - typecheck + production
+  build; `npm run build:demos` - both demo bundles into packages/site

@@ -1,6 +1,223 @@
 # DH EMR - current state
 
-Updated 2026-08-12 (end of day).
+Updated 2026-10-06.
+
+## PRODUCT PIVOT (2026-10-06): TWO SEPARATE PRODUCTS over ONE SHARED CORE
+
+Alec's decision after the first live two-device E2E. No mode switching,
+no data merging between products.
+
+- DH EMR CLINIC (packages/clinic): live, constant internet, staff
+  accounts with roles Reception / Triage / Provider / Lab / Pharmacy /
+  Admin, each with its own landing workspace; realtime board; join
+  links + QR onboarding (no typed keys). Always the auth gate.
+- DH EMR FIELD (packages/field): offline paper-chart entry, no accounts
+  (device identity), standalone OR shared-key cloud sync. Also the backup
+  app a Clinic org uses when its backend is down (offline -> online data
+  import is TABLED; MRN matching is the eventual path).
+- packages/core: kernel, domain, config, sync, auth, UI kit, the whole
+  test suite. Apps import via the @dh/core/* path alias. Nothing copied.
+- Website: two products, separate guide sets, demo hub with a Field demo
+  (simple) and a Clinic demo (local simulation with a role-switcher side
+  panel).
+
+## Core extraction: DONE (2026-10-06) - 472 tests green in packages/core
+
+- packages/core/src now holds everything shared: types, kernel, domain,
+  config, sync, auth, lib, sw, ui, styles (moved with mv, nothing copied).
+  packages/core/tests holds the whole suite (31 files, 471 tests plus one
+  Clinic wizard case added by the Clinic shell work = 472) plus
+  tests/setup.ts and tests/fixtures/legacy. TypeScript strict clean.
+- Apps reach core through the path alias "@dh/core/*" -> "../core/src/*"
+  (tsconfig "paths" + vite resolve.alias; packages/field is the worked
+  example, which typechecks, tests and production-builds through it).
+- core's vite.config.ts carries ONLY the vitest block and the two defines
+  (__DH_STORAGE_SUFFIX__ '', __DH_DEMO__ false). No PWA plugin: the
+  shells own vite-plugin-pwa, the manifest and the build defines.
+- Root scripts: test / typecheck -> core; typecheck:all, dev:field,
+  dev:clinic, build:field, build:clinic, build:demos point at the
+  @dh/field and @dh/clinic workspaces.
+- Still in core and shell-relevant: src/auth (sessions, profile state
+  machine, orgMode.ts) and staffApi.switchOrgMode (the vetted config
+  upsert) stay in core; the Clinic shell calls switchOrgMode automatically
+  on the first admin sign-in. The Settings screen's Organization card (the
+  only mode-switch UI) is GONE for both products. The Clinic shell gates
+  unconditionally, the Field shell never gates.
+
+## Field shell: DONE (2026-10-06) - packages/field, 30 shell tests green
+
+- packages/field (@dh/field) is DH EMR Field: src/App.tsx (tabs Visits /
+  New visit / Analytics / Settings; setupComplete-only boot gate; storage
+  health banners; adopt-older-copy; multi-tab warning; sync chip), src/
+  main.tsx (demo boot branch, device identity, sync engine init - no auth
+  session priming, Field has no accounts), src/demo (the Field demo
+  seeder, moved verbatim), index.html, public/ (PWA icons), vite.config.ts
+  (PWA prompt/autoUpdate by DH_DEMO, @dh/core alias, vitest block with
+  setupFiles ../core/tests/setup.ts). Manifest/title say "DH EMR Field".
+- Scripts: build (tsc + vite build -> dist), build:demo (DH_DEMO=1,
+  DH_STORAGE_SUFFIX=-demo, --base=/demo/field/ -> ../site/public/demo/
+  field), preview, test. The Clinic demo must use a DIFFERENT storage
+  suffix: both demos live on one origin.
+- Tests: tests/demoMode.test.ts (29) and tests/appBootGate.test.ts (1),
+  run with the shared harness through the alias. Core 471 + Field 30 =
+  the pre-split 501, same assertions.
+- core SettingsScreen gained a REQUIRED `product: 'field' | 'clinic'`
+  prop (no default, so neither shell can forget). 'field' never renders
+  the Account card and labels About "DH EMR Field"; 'clinic' renders the
+  Account card when an account is passed and labels "DH EMR Clinic". The
+  Organization (mode switch) card was then removed for BOTH products by
+  the Clinic shell work: no mode switching UI exists anywhere. Everything
+  else on the screen is unchanged.
+- packages/app (the transitional husk) is deleted. The husk's post-
+  extraction App.tsx (with the clinic gate: evaluateGate = hasCloud AND
+  orgMode == 'clinic', tabsFor with Board/Staff, ensureFleetRow on
+  activation) is the starting point for the Clinic shell; a copy was
+  stashed in the session scratchpad (husk-app/) and the pre-split
+  snapshot tgz holds the pre-alias version.
+- .claude/launch.json: field-preview (4173), field-preview-device2
+  (4174), clinic-preview (4175, @dh/clinic), site-preview (4180).
+- Known leftover for the Field Settings screen (NOT changed, structural
+  phase): the "Patient flow stations (clinic mode board)" list editor
+  still renders in Field although Field has no board. Decide in the
+  Clinic phase whether it moves behind product === 'clinic'.
+- Stale build output: packages/site/public/demo/ (gitignored) still holds
+  the pre-split demo at /demo/; the Field demo now lands at /demo/field/.
+  The website redo (CLINIC-PLAN phase 3) repoints the demo hub.
+
+## Clinic shell: DONE, phase 1 (2026-10-06) - packages/clinic, 8 shell tests green
+
+- packages/clinic (@dh/clinic) is DH EMR Clinic: src/App.tsx (ALWAYS the
+  account gate once credentials exist - evaluateGate is hasCloud() then
+  loadCurrentProfile, NO orgMode check; tabs Board / Visits / New visit /
+  Analytics / Staff (admin) / Settings product="clinic"; Board is the
+  default tab; storage health banners, adopt-older-copy, multi-tab
+  warning, sync chip, ensureFleetRow on activation), src/main.tsx (demo
+  boot branch, device identity, auth session priming, sync engine init),
+  src/clinicOrgMode.ts, src/demo (stub, see below), index.html and
+  manifest "DH EMR Clinic", public/ icons, vite.config.ts.
+- First-run: setupComplete ALONE decides, then a set-up device with no
+  credentials lands on the wizard too (gate kind 'noCloud'). The shared
+  SetupWizard gained a REQUIRED `product: 'field' | 'clinic'` prop:
+  'clinic' opens on the cloud step with no "Use this device on its own"
+  and no Back. (Internal wizard step 'clinic' was renamed 'lists'.)
+  FIELD AGENT: packages/field/src/App.tsx line ~236 must now pass
+  product="field" to SetupWizard or the field typecheck fails (left alone
+  on purpose: the Clinic agent does not touch packages/field).
+- Automatic org mode: on the first ACTIVE ADMIN sign-in,
+  ensureClinicOrgMode writes orgMode=clinic through staffApi.switchOrgMode
+  when the local mirror does not already say clinic; silent on refusal or
+  offline (logged, retried on the next gate evaluation). SETUP.md step 6
+  now says so; the SQL stays as the manual fallback.
+- STORAGE NAMESPACE: Clinic production builds default DH_STORAGE_SUFFIX
+  to '-clinic' (dhemr-clinic_ / dh-emr-db-clinic / dhemr-clinic_auth) so a
+  device with both products installed never shares a database; Field keeps
+  the bare prefix. Verified in the built bundle. Demo build: '-clinic-demo'.
+- Scripts: dev, build (tsc + vite build -> dist), build:demo (DH_DEMO=1,
+  --base=/demo/clinic/ -> ../site/public/demo/clinic), preview, test,
+  typecheck. Tests: tests/appBootGate.test.ts (3: leftover id does not
+  bypass, no-creds lands on cloud step, creds + no session = sign-in with
+  no orgMode row) and tests/clinicOrgMode.test.ts (5).
+- src/demo is a STUB until CLINIC-PLAN phase 3: bootDemo refuses outside
+  DH_DEMO builds and installs a cloud guard (connect/verify/seedConfig
+  refused, credential writes no-ops); DemoBanner says fictional and "still
+  being built". The demo build therefore opens on the cloud step and can
+  go nowhere - correct for now, and nobody can run a real clinic on the
+  demo URL. The guard duplicates packages/field/src/demo/cloudGuard.ts;
+  hoist into core when the Clinic demo is built.
+- Not in phase 1 (CLINIC-PLAN phase 2): join links + QR, realtime/auto-sync
+  (both landed since, see their own sections), role workspaces (below).
+  Clinic lists / formulary / template gating in Settings is still by DEVICE
+  role, as before.
+
+## Role workspaces: DONE (2026-10-06) - core 609 tests, clinic 31
+
+What makes Clinic an EMR rather than a shared form. Roles are FIXED:
+reception, triage, provider, lab, pharmacy, plus the admin flag
+(users_profiles.role + is_admin). 'nurse' (the pre-split name) resolves to
+triage; any other unknown role resolves to provider (the full form; a
+stranded account is worse than a wide one). STATION_ROLES in staffApi is
+now this list.
+
+- Role visibility model: core/src/config/roles.ts (PURE). Per section:
+  'edit' | 'view' | 'hidden' for a role; admins edit everything. Defaults
+  ship in DEFAULT_ROLE_ACCESS: reception -> encounter + patient edit, all
+  else view; triage -> vitals/history/chiefConcern/labs edit + patient
+  view; provider -> all; lab -> labs edit + patient/chiefConcern view;
+  pharmacy -> medications edit + patient/diagnosis view. An org overrides
+  per section with a sparse `roles: { view, edit }` on the stored section
+  (RawSection.roles; ids immutable, same saveLibrary path, formSchema
+  mirror still written); a partial override falls back per key; edit
+  implies view. Builder: every section row has a "Roles" button opening a
+  View/Edit grid per role (defaults shown, "Roles changed" chip when
+  overridden, "Reset to default" REMOVES the override), admin-gated like
+  the rest. Ops: setSectionRoles / clearSectionRoles in config/sections.
+- Visit form: EncounterForm takes optional `role` + `isAdmin` (absent = the
+  full form, so Field is untouched). Role mode renders the resolver's
+  sections: hidden omitted, view-only inside a disabled <fieldset> with a
+  "View only" chip (natively inert; assert with el.matches(':disabled'),
+  NOT el.disabled). Saving goes through the SAME buildRecord/merge path:
+  only EDIT sections' custom fields are active (mergeCustomFields keeps
+  the rest), and preserveUnrenderedSections (core/src/ui/encounter/
+  roleSections.ts) copies every unedited built-in section back from the
+  FRESHEST stored copy, so a pharmacy save never blanks the vitals and
+  keeps vitals triage wrote on another device while the form was open
+  (the stale-edit confirm still fires). Validation problems are scoped to
+  the role's editable sections. NEW-visit rules: the required sections
+  (Visit, Patient) are editable for every role and view-only sections are
+  omitted, so reception's registration is the short intake form.
+- Lab orders: in role mode every lab tile gets an "Ordered" checkbox that
+  stores { ordered: true, result: '' } (toggle) / { ordered: true, value:
+  '' } (numeric) - the "ordered, no result yet" state the Lab queue reads.
+  Field never shows the control, so it never produces a pending order.
+- Dispensing: Medication.dispensed?: { qty, by, at } INSIDE the medications
+  JSONB (no schema change), written through records.update by the
+  Pharmacy screen (sync_version bumps, syncs like any edit), preserved
+  verbatim by buildRecord on every resave, undoable.
+- Screens: core/src/ui/lab/LabScreen.tsx (today's visits with a pending
+  lab, "Enter results" opens the visit in lab role mode; "resulted today"
+  list), core/src/ui/pharmacy/PharmacyScreen.tsx (today's visits with an
+  undispensed line; per-line Qty prefilled from the computed quantity,
+  "Dispensed", "dispensed today" list with Undo, "Open visit" in pharmacy
+  role mode). Pure selection in labModel.ts / pharmacyModel.ts. Board:
+  homeStationFor (boardRole.ts) - reception = first station, others by
+  name; the home column is highlighted and scrolled into view once per
+  mount; Check in is the primary button for reception; every card has an
+  "Open" button that opens the visit in the role's view; New patient from
+  the board is role mode too.
+- Clinic shell tabs (tabsFor, exported from App.tsx with landingFor): the
+  role's workspace first (Board for reception/triage/provider/admin, Lab
+  for lab, Pharmacy for pharmacy), Visits, New visit (reception, provider,
+  admins - the roles that register), Analytics (provider, admins), Staff
+  (admins), Settings. A non-admin lab or pharmacy account has NO Board tab
+  (per plan); an admin always gets the Board, right after the workspace of
+  their own role. The landing tab is the workspace; a role change or
+  demotion falls back to it.
+- Tests: core/tests/roles.test.ts (42: resolver defaults + overrides +
+  persistence, form helpers, role-mode form RTL incl. the two vitals
+  cases, lab/pharmacy models + screens RTL, board home column RTL,
+  builder role grid RTL), clinic/tests/roleWorkspaces.test.ts (10: tab
+  sets per role pure + rendered landings with the real Lab/Pharmacy
+  screens). staff.test.ts updated for the five roles.
+- HONEST LIMIT (for the guides): roles are a workflow layer, not a security
+  wall. Any approved account can read the org's records; the server cannot
+  enforce field-level permissions.
+- NEEDS THE LIVE TEST (no backend here): the role landing and the Pharmacy
+  screen in the built artifact behind a real sign-in, and a two-device
+  pharmacy-vs-triage concurrent save. Verified in the browser: the built
+  artifact boots and its bundle carries every new screen's copy.
+
+## Live E2E (2026-10-06) against Alec's real Supabase project
+
+Field mode fully verified two-device: wizard cloud path with real table
+verification, first-admin-wins, deliberate admin claim demoted by the
+live trigger + adopted on pull, push with honest reporting, cross-device
+pull, admin-only dirty-key config push (exactly 2 keys), cross-device
+edit, tombstone propagation, gated Update now. verify.sql: 25/25 PASS.
+Two sync bugs caught and fixed with regression tests (see the commit
+"Fix two sync bugs caught by the first live two-device E2E" - PENDING:
+git is blocked by the Xcode license until Alec runs
+`sudo xcodebuild -license accept`). Pre-split snapshot of the tree is in
+the session scratchpad (pre-split-snapshot.tgz).
 
 ## Core: BUILT AND GREEN
 
@@ -166,3 +383,67 @@ Updated 2026-08-12 (end of day).
 
 - supabase-js bundle split (594 kB warning, cosmetic), PGlite SQL tests,
   Capacitor/native wrapper if ever wanted.
+
+## Clinic Phase 2 DONE (2026-10-06, uncommitted)
+
+Realtime trigger + 20 s auto-sync (core/src/sync/realtime.ts, engine
+startAutoSync), join links + QR (core/src/sync/joinLink.ts, core/src/lib/qr.ts,
+Staff InviteCard; clinic boot consumes #join=), six role workspaces (config
+SectionRoles + template Roles grid, role-mode EncounterForm, LabScreen,
+PharmacyScreen with Medication.dispensed, tabsFor per role). 670 tests
+(core 609, clinic 31, field 30); typecheck:all clean. Live E2E of the
+channel + join links still needs Alec's staff account.
+
+## Clinic demo DONE (2026-10-06, uncommitted)
+
+packages/clinic/src/demo: local simulation, no backend ever. Seeded clinic
+day (15 visits across the default stations), six-seat simulated roster,
+"You are simulating" side panel (bottom sheet on phones), scripted
+colleague activity every 25-40 s with toasts, Act now / Pause activity /
+Reset demo, DemoStaffScreen over a local roster. Five safety laws pinned
+by tests/clinicDemo.test.ts (50). build:demo -> site/public/demo/clinic;
+build:local bundle has zero demo markers. 723 tests total.
+
+## Clinic polish DONE (2026-10-06, uncommitted) - 754 tests, all green
+
+Clinic Settings now gate on the ACCOUNT (CLINIC_GATE_REASON: "Only an
+administrator account can change this. Ask your clinic's admin."), and the
+sync engine got setConfigPushPolicy so an admin account on a link-joined
+(standard) device actually pushes config (default = old device-role gate,
+Field unchanged). Make admin confirm no longer mentions a mode switch;
+roles display via ROLE_LABELS; Visits -> Edit opens the role view in
+Clinic; wizard/auth screens brand DH EMR Clinic; DEFAULT_FLOW_STATIONS
+now Check-in, Triage, Provider, Lab, Pharmacy, Done (demo seed + activity
+follow). Lab "On by default": explicit true shows (even if hidden by
+name), explicit false hides, absent follows hide-by-name
+(tests/labVisibility.test.ts). Restore confirm wording is product-aware.
+roles.test.ts flake fixed (waitFor on onRefresh). Docs re-swept and
+fact-checked; SETUP.md stale spots fixed; demo hub marks both demos live;
+.gitignore now keeps public/demo/index.html tracked and ignores only
+demo/field and demo/clinic. Totals: core 636, clinic 88, field 30.
+
+## Clinic guides WRITTEN (2026-10-06)
+
+/guides/clinic/: setup, user guide (per role), admin guide, hub. The
+inventory pass surfaced real product defects now being fixed by the
+clinic-polish workflow: Clinic Settings gated on DEVICE role instead of
+the account admin flag (link-joined admins got read-only Settings); stale
+Make admin confirm mentioning a mode switch; Visits -> Edit ignored the
+role; lowercase raw roles in Staff/Account; wizard/auth screens branded
+plain DH EMR; no Lab default station. Docs re-swept and re-fact-checked
+after the fixes; SETUP.md stale spots corrected.
+
+## Settings leftovers FIXED (2026-10-06)
+
+flowStations editor hidden for product=field; visibleLabTests drops tests
+with enabledByDefault === false (tests/labVisibility.test.ts).
+
+## Previously noted leftovers (now fixed, kept for history)
+
+- SettingsScreen still renders the "Patient flow stations (clinic mode
+  board)" list editor for product='field'; hide it for Field.
+- The Lab tests table's "On by default" checkbox is a dead control: the
+  stored enabledByDefault is read only by defaultHiddenPresets() over the
+  built-in list, nothing on the visit form honors it for org tests. Either
+  wire it (hide the test on the form unless enabled) or remove the column.
+  Deferred so as not to collide with the Phase 2 agents editing core.

@@ -3,62 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Getting started - DH EMR guides</title>
-  <meta name="description" content="Set up a DH EMR device with the setup wizard, enter your first visit, and take your first backup. Covers both the offline-only and cloud paths.">
+  <title>Getting started has moved - DH EMR guides</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="The DH EMR getting started guide has moved. DH EMR is now two products, each with its own guides.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e6e64'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%23ffffff' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="../site.css">
-  <style>
-    .page h2 {
-      margin: 2.25rem 0 0.5rem;
-      font-size: 1.35rem;
-      line-height: 1.25;
-    }
-    .page h3 {
-      margin: 1.5rem 0 0.35rem;
-      font-size: 1.08rem;
-    }
-    .page ol {
-      color: var(--ink-soft);
-      padding-left: 1.4rem;
-    }
-    .page ol li {
-      margin: 0.45rem 0;
-    }
-    .callout {
-      background: var(--warn-bg);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 0.85rem 1rem;
-      margin: 1rem 0;
-    }
-    .callout p {
-      margin: 0;
-      color: var(--warn-ink);
-    }
-    .table-scroll {
-      overflow-x: auto;
-      margin: 1rem 0;
-    }
-    .guide-table {
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 0.95rem;
-      background: var(--surface);
-    }
-    .guide-table th,
-    .guide-table td {
-      border: 1px solid var(--line);
-      padding: 0.5rem 0.65rem;
-      text-align: left;
-      vertical-align: top;
-    }
-    .guide-table th {
-      background: var(--bg);
-    }
-    .guide-table td {
-      color: var(--ink-soft);
-    }
-  </style>
+  <!--
+    Kept at this filename so old links do not 404. The guide that lived here
+    described the pre-split combined app and is gone on purpose.
+  -->
 </head>
 <body>
 
@@ -72,9 +25,9 @@
       DH EMR
     </a>
     <nav class="site-nav" aria-label="Site">
-      <a href="./">Guides</a>
-      <a href="../demo/">Demo</a>
-      <a href="../app/">App</a>
+      <a href="../#clinic">Clinic</a>
+      <a href="../#field">Field</a>
+      <a href="./" aria-current="page">Guides</a>
     </nav>
   </div>
 </header>
@@ -82,117 +35,13 @@
 <main>
   <div class="wrap">
     <div class="page">
+      <h1>This guide has moved</h1>
+      <p>DH EMR is now two separate products, DH EMR Field and DH EMR Clinic, and each has its own guides. The getting started guide that used to be here described the old combined app and is out of date.</p>
+      <ul>
+        <li><a href="field/getting-started.html">Getting started with DH EMR Field</a>, or all <a href="field/">Field guides</a></li>
+        <li><a href="clinic/">DH EMR Clinic guides</a></li>
+      </ul>
       <p><a href="./">All guides</a></p>
-      <h1>Getting started</h1>
-      <p>This guide takes you from a blank device to your first saved visit and your first backup. It covers both ways of using DH EMR: a device on its own, and a device connected to your organization's cloud.</p>
-
-      <h2 id="who-this-is-for">Who this guide is for</h2>
-      <p>Anyone setting up DH EMR on a device for the first time: a clinician preparing a tablet for tomorrow's clinic, a volunteer setting up a shared laptop, or a team lead handing out devices. No technical background is needed. If you run the organization's cloud project or customize its forms, read the admin guide after this one.</p>
-
-      <h2 id="what-you-need">What you need</h2>
-      <ul>
-        <li>A device with a modern browser: a tablet, laptop, or phone. That is all an offline device needs.</li>
-        <li>Only if your organization uses a cloud: the project address and project key. Your admin gets both from the organization's Supabase project and gives them to you. You do not need them for an offline-only device.</li>
-      </ul>
-
-      <h2 id="setup-wizard">The setup wizard</h2>
-      <p>The first time the app opens on a device it shows a short wizard headed <strong>Set up this device</strong>. It cannot be skipped, it takes about a minute, and it only happens once. Almost everything you choose here can be changed later under Settings; the one choice that sticks is whether the device is an admin device.</p>
-      <p>The first step is a choice between two buttons:</p>
-      <ul>
-        <li><strong>Connect to our clinic cloud</strong>: records sync between every device on the team. This path needs the project address and key from your admin.</li>
-        <li><strong>Use this device on its own</strong>: records stay on this device and are never sent anywhere. Take a backup at the end of each clinic day.</li>
-      </ul>
-
-      <h3>Path 1: use this device on its own</h3>
-      <p>Choosing <strong>Use this device on its own</strong> goes straight to the naming step below. There is nothing to connect.</p>
-
-      <h3>Path 2: connect to our clinic cloud</h3>
-      <p>Choosing <strong>Connect to our clinic cloud</strong> first shows a step headed <strong>Connect to your cloud</strong> with two fields:</p>
-      <ul>
-        <li><strong>Project URL</strong>: looks like https://yourproject.supabase.co</li>
-        <li><strong>Project key</strong>: a long string starting with sb_publishable_, or the long legacy anon key</li>
-      </ul>
-      <div class="callout">
-        <p><strong>Key rules.</strong> Use the Publishable key, or the legacy anon key. Never a Secret or service_role key: those bypass every database security rule and must not leave the office. The app checks the key and refuses server keys outright, so if you paste one you will see an error, not a connection. Ask your admin for the right key.</p>
-      </div>
-      <p>Tap <strong>Check and continue</strong>. This is the verify step: the app contacts the project and checks that its records table is really there before letting you continue. If the address is wrong, the device is offline, or the project has not had its setup SQL run yet, you get a plain error saying which. Nothing is saved until the check passes, so a typo here cannot leave the device half-connected.</p>
-      <p>After the check passes, the cloud path continues to the same naming and clinic-lists steps as the offline path.</p>
-
-      <h3>Naming the device</h3>
-      <p>The step headed <strong>Name this device</strong> asks for two things:</p>
-      <ul>
-        <li><strong>Device name</strong>: the name shows up in your device list and on the records this device files, so make it something you can recognise, like "iPad 2 - triage" or "Grace's tablet".</li>
-        <li><strong>What is this device allowed to do?</strong> Choose <strong>Enter and view records (most devices)</strong> for a normal device, or <strong>Also change the form and clinic settings for everyone</strong> for an admin device. Most devices should be the first option; one or two admin devices per team is plenty. There is no button in the app to change this later, so choose carefully; the admin guide explains how a cloud admin can change it.</li>
-      </ul>
-      <p>Tap <strong>Next</strong> to continue.</p>
-
-      <h3>Clinic lists: where is this device working?</h3>
-      <p>The last step is headed <strong>Where is this device working?</strong> and has two boxes, one entry per line:</p>
-      <ul>
-        <li><strong>Clinic or site names</strong>: the places you see patients, for example "Kabale Community Clinic" or "Mobile Unit A"</li>
-        <li><strong>Clinicians working on this device</strong>: the people who will be recorded as the provider on visits</li>
-      </ul>
-      <p>These fill the Site and Provider lists on the visit form. Without them every record is filed under the placeholder "Site A", which is no use in a report.</p>
-      <p>Both lists must have at least one entry before the wizard will finish. That is deliberate: every visit needs a site, so a device with an empty site list could never save a visit at all. Rather than let you set up a device that cannot save, the wizard refuses with "You need at least one site. An empty list would block every save." The clinician list works the same way.</p>
-      <p>Two small things to know:</p>
-      <ul>
-        <li>Commas belong inside an entry: "Grace N., clinical officer" is one clinician, not two. New entries go on new lines.</li>
-        <li>On the cloud path, if your organization has already set these lists up in the cloud, its lists replace yours on the first sync. Enter something sensible anyway so the device works before that first sync.</li>
-      </ul>
-      <p>Tap <strong>Start using the app</strong>. Setup is done.</p>
-
-      <h2 id="first-visit">Your first visit</h2>
-      <p>The app has tabs named <strong>Visits</strong>, <strong>New visit</strong>, <strong>Analytics</strong>, and <strong>Settings</strong>. On a phone they sit at the bottom of the screen; on a larger screen they are in the top bar. To enter a patient:</p>
-      <ol>
-        <li>Tap <strong>New visit</strong>. A panel titled "New visit" slides in. (The <strong>+ New visit</strong> button on the Visits tab does the same thing.)</li>
-        <li>In the <strong>Visit</strong> section, pick the <strong>Site</strong>, check the <strong>Date</strong>, and pick the <strong>Provider</strong>. Site and Date are required. These three stay filled between patients, so you usually set them once per clinic day.</li>
-        <li>In the <strong>Patient</strong> section, enter the <strong>Given name</strong> and <strong>Family name</strong>, tap <strong>M</strong> or <strong>F</strong> for <strong>Sex</strong>, and enter the <strong>Date of birth</strong> as DD/MM/YYYY. If the date of birth is unknown, tick <strong>Estimate from age</strong> and enter an <strong>Estimated age</strong> in years instead. <strong>Phone</strong> is optional.</li>
-        <li>Watch the <strong>Patient number</strong> field: it is read-only and fills in by itself from the name and date of birth. You never type a patient number, on any device, ever. The same patient gets the same number, and if two different patients would collide the app adds a letter to keep them apart. The number needs at least two letters in both the given and family name.</li>
-        <li>Fill in as much of the rest of the form as the visit needs: vitals, history, chief concern, labs, diagnosis, medications. Empty sections are simply left empty.</li>
-        <li>Save. There are two save buttons at the bottom:
-          <ul>
-            <li><strong>Save &amp; next patient</strong> files the visit and keeps the form open for the next person: site, date, and provider stay, everything else clears, and a green note confirms the save with the patient's number. This is the button for a busy clinic line.</li>
-            <li><strong>Save</strong> files the visit and closes the panel. Use it for the last patient, or when editing an existing visit (where it is the only save button).</li>
-          </ul>
-        </li>
-      </ol>
-      <p>If a required field is missing, the save is refused and a red summary lists exactly which fields to check. Nothing is lost; fix the fields and save again. <strong>Cancel</strong> closes the form, and if you have typed anything it first asks "Discard this visit?" - tap OK to discard or Cancel to keep working.</p>
-      <p>Saved visits appear on the <strong>Visits</strong> tab. Tap a patient's card to open their chart, see every visit, and edit or add to them.</p>
-
-      <h2 id="records">Where your records live</h2>
-      <p>Every record is saved on the device itself, always. Saving never needs a connection: the visit is on the device the moment you tap Save. On a cloud-connected device, records also upload to your organization's project whenever there is signal.</p>
-      <p>The chip at the right of the top bar shows where syncing stands. Tapping it runs a sync by hand; while records are waiting to upload it also shows a count like "3 pending".</p>
-      <div class="table-scroll">
-        <table class="guide-table">
-          <tr><th>Chip says</th><th>What it means</th></tr>
-          <tr><td><strong>Offline only</strong></td><td>Cloud sync is off for this device. Records stay on this device. The chip does nothing when tapped.</td></tr>
-          <tr><td><strong>Connected</strong></td><td>The cloud is set up but nothing has synced yet this session.</td></tr>
-          <tr><td><strong>Offline</strong></td><td>No connection right now. Everything is saved on the device and will sync when you reconnect. This is normal in the field.</td></tr>
-          <tr><td><strong>Syncing</strong></td><td>Records are being sent and received right now.</td></tr>
-          <tr><td><strong>Synced</strong></td><td>All records are backed up to your cloud.</td></tr>
-          <tr><td><strong>Sync error</strong></td><td>The last sync failed. Tap to retry, or check the connection and credentials. Records are still safe on the device.</td></tr>
-        </table>
-      </div>
-
-      <h2 id="backups">Take a backup, daily</h2>
-      <p>Open <strong>Settings</strong>, find the <strong>Backup and restore</strong> card, and tap <strong>Download backup</strong>. A backup is a single file holding every record on the device plus your form and preset settings, and it never contains your cloud key or device identity. Save the file somewhere off the device: a laptop, a USB stick, a drive folder.</p>
-      <p>Do this at the end of every clinic day. On an offline-only device the backup file is the only copy of your records that exists outside the device: if the device is lost, wiped, or broken, the backup is the difference between losing an afternoon and losing a year. Cloud-connected devices should back up too - it is the safety net for records that have not synced yet.</p>
-      <p>Restoring is on the same card and merges: nothing already on the device is lost.</p>
-
-      <h2 id="clinic-mode">Clinic mode: signing in</h2>
-      <p>Some organizations run DH EMR in clinic mode, where every staff member has their own account instead of devices sharing a key. If yours does, a device connected to the organization shows a <strong>Sign in</strong> screen: enter the <strong>Email</strong> and <strong>Password</strong> for your account and tap <strong>Sign in</strong>.</p>
-      <p>If you do not have an account yet, tap <strong>New here? Create an account</strong>, enter <strong>Your name</strong>, an <strong>Email</strong>, and a <strong>Password</strong>, and tap <strong>Create account</strong>. A new account starts with no access at all. Your administrator approves it from their device, and then you can sign in and work. That usually takes a moment, not a day.</p>
-      <p>Until then you will see a screen headed <strong>Waiting for approval</strong>. This is a normal step for every new account, not an error. Ask whoever runs your organization's records to approve you, then tap <strong>Check again</strong>. Once approved, you are in.</p>
-      <p>Clinic mode also adds a <strong>Board</strong> tab, the live patient-flow board. The user guide covers it.</p>
-
-      <h2 id="next">Where to go next</h2>
-      <ul>
-        <li>The <a href="user-guide.html">user guide</a>: day-to-day work in detail - the visit form section by section, finding and editing records, the patient chart, analytics, and the board.</li>
-        <li>The <a href="admin-guide.html">admin guide</a>: for whoever runs the organization - setting up the cloud project, customizing forms, formulary, labs and lists, managing staff accounts, and choosing between clinic and field mode.</li>
-        <li>Not ready to set up a real device? The <a href="../demo/">demo</a> is a fictional clinic with sample patients where you can try everything safely.</li>
-      </ul>
-
-      <p><a href="./">Back to all guides</a></p>
     </div>
   </div>
 </main>
@@ -207,9 +56,11 @@
   <div class="wrap">
     <nav aria-label="Footer">
       <a href="../">Home</a>
+      <a href="../clinic/">Clinic</a>
+      <a href="../field/">Field</a>
       <a href="./">Guides</a>
-      <a href="../demo/">Demo</a>
-      <a href="../app/">App</a>
+      <a href="../demo/clinic/">Clinic demo</a>
+      <a href="../demo/field/">Field demo</a>
     </nav>
     <p>Damico Health - free, open tools for global-health clinics.</p>
   </div>

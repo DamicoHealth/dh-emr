@@ -1,6 +1,6 @@
 /*
  * damicohealth.com - single stylesheet, no build step.
- * Matches the DH EMR app design family (packages/app/src/styles/tokens.css).
+ * Matches the DH EMR app design family (packages/core/src/styles/tokens.css).
  * Sunlight-legible, 4.5:1+ contrast everywhere, responsive from 320px.
  *
  * COLOR DISCIPLINE (same rules as the app):
@@ -21,6 +21,7 @@
   --brand-bright: #f68630; /* decorative fills only */
   --warn-bg: #fff4e0;
   --warn-ink: #6b4700; /* 7.6:1 on warn-bg */
+  --primary-soft: #e6f2f0; /* tinted surface; --ink on it is 12.5:1 */
   --radius: 10px;
   --shadow-1: 0 1px 2px rgba(26, 35, 48, 0.06), 0 1px 4px rgba(26, 35, 48, 0.06);
   --sans:
@@ -46,6 +47,29 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-wrap: anywhere;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 main {
@@ -192,6 +216,127 @@ main a:hover {
   background: #eef4f3;
 }
 
+/* Tertiary action: a plain link sized like a button so it is easy to tap */
+
+.btn-text {
+  display: inline-block;
+  padding: 0.7rem 0.5rem;
+  min-height: 44px;
+  line-height: 1.4;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.btn-text:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Product panels (landing page): two products, equal weight */
+
+.products {
+  padding-top: 0;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  gap: 1.25rem;
+}
+
+.product {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 6px solid var(--primary);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+  padding: 1.5rem 1.25rem;
+  scroll-margin-top: 1rem;
+}
+
+/* --brand-bright is a decorative fill here: a border, never under text. */
+.product-field {
+  border-top-color: var(--brand-bright);
+}
+
+.product h2 {
+  margin: 0.35rem 0 0.4rem;
+  font-size: clamp(1.4rem, 4.5vw, 1.8rem);
+  line-height: 1.2;
+}
+
+.product .for {
+  margin: 0 0 0.75rem;
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+}
+
+.product ul {
+  margin: 0 0 1.25rem;
+  padding-left: 1.2rem;
+  color: var(--ink-soft);
+}
+
+.product li {
+  margin: 0.4rem 0;
+}
+
+.product-actions {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.75rem;
+}
+
+.product-tag {
+  align-self: flex-start;
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--primary-ink);
+}
+
+.tag-clinic {
+  background: var(--primary); /* white on #0e6e64: 5.9:1 */
+}
+
+.tag-field {
+  background: var(--brand); /* white on #b5560a: 4.9:1 */
+}
+
+/* A plain boxed note inside a section (used for honest limits) */
+
+.plain-note {
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
+  background: var(--primary-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.plain-note h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+}
+
+.plain-note ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.plain-note li {
+  margin: 0.3rem 0;
+}
+
 /* Sections */
 
 section {
@@ -259,7 +404,7 @@ section h2 {
   color: var(--primary-ink);
 }
 
-/* Plain content pages (app placeholder, guides, 404) */
+/* Plain content pages (app URL holders, guides hub, 404) */
 
 .page {
   padding: 3rem 0;
@@ -270,6 +415,11 @@ section h2 {
   margin: 0 0 0.75rem;
   font-size: clamp(1.6rem, 5vw, 2.25rem);
   line-height: 1.2;
+}
+
+.page h2 {
+  margin: 1.5rem 0 0.4rem;
+  font-size: 1.25rem;
 }
 
 .page p {
@@ -283,6 +433,16 @@ section h2 {
 
 .page li {
   margin: 0.35rem 0;
+}
+
+.page .cta-row {
+  margin: 1.25rem 0 0.5rem;
+}
+
+.page .url {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.95em;
+  color: var(--ink);
 }
 
 /* Compliance notice - on every page, visibly */

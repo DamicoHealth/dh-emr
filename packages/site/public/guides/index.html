@@ -4,9 +4,48 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DH EMR guides</title>
-  <meta name="description" content="Guides for DH EMR: getting started, the day-to-day user guide, and the admin guide for cloud setup and customization.">
+  <meta name="description" content="Guides for DH EMR Field (getting started, user guide, admin guide, cloud sync setup) and DH EMR Clinic (setting up the organization, user guide by role, admin guide).">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e6e64'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%23ffffff' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="../site.css">
+  <style>
+    .hub-head {
+      padding: 2.5rem 0 0.5rem;
+    }
+    .hub-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: clamp(1.6rem, 5vw, 2.25rem);
+      line-height: 1.2;
+    }
+    .card ul.guide-list {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 0.85rem;
+    }
+    .card ul.guide-list li {
+      margin: 0.55rem 0;
+    }
+    .card ul.guide-list a {
+      font-weight: 600;
+    }
+    .card-cta {
+      margin-top: 1.1rem;
+    }
+    .page-section h2 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.25rem, 4vw, 1.5rem);
+    }
+    .page-section p,
+    .page-section ul {
+      color: var(--ink-soft);
+      max-width: 42rem;
+    }
+    .page-section ul {
+      padding-left: 1.2rem;
+    }
+    .page-section li {
+      margin: 0.35rem 0;
+    }
+  </style>
 </head>
 <body>
 
@@ -20,27 +59,63 @@
       DH EMR
     </a>
     <nav class="site-nav" aria-label="Site">
+      <a href="../#clinic">Clinic</a>
+      <a href="../#field">Field</a>
       <a href="./" aria-current="page">Guides</a>
-      <a href="../demo/">Demo</a>
-      <a href="../app/">App</a>
     </nav>
   </div>
 </header>
 
 <main>
-  <div class="wrap">
-    <div class="page">
+  <section class="hub-head">
+    <div class="wrap">
+      <p class="kicker">Guides</p>
       <h1>Guides</h1>
-      <p>Three guides cover DH EMR. Start with the first one.</p>
-      <ul>
-        <li><a href="getting-started.html">Getting started</a>: set up a device with the wizard, enter your first visit, take your first backup</li>
-        <li><a href="user-guide.html">User guide</a>: day-to-day work - entering visits, finding patients, the flow board, analytics, sync, and what the warning banners mean</li>
-        <li><a href="admin-guide.html">Admin guide</a>: for whoever runs the organization - standing up your cloud project, choosing field or clinic mode, customizing forms, formulary and lists, and managing staff and devices</li>
-      </ul>
-      <p>Not ready to set up a real device? The <a href="../demo/">demo</a> is a fictional clinic with sample patients where you can try everything safely.</p>
-      <p><a href="../">Back to the home page</a></p>
+      <p class="lede">DH EMR is two separate products. Each has its own set of guides. Pick the product you use.</p>
     </div>
-  </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="card-grid">
+        <div class="card">
+          <span class="mode-tag">Field</span>
+          <h3>DH EMR Field</h3>
+          <p>Offline paper-chart entry after clinic. No accounts: the device is the identity. One device on its own, or several devices sharing one cloud key. Also the backup app for a Clinic organization when its backend is down.</p>
+          <ul class="guide-list">
+            <li><a href="field/getting-started.html">Getting started</a>: set up a device with the setup wizard, enter your first visit, take your first backup</li>
+            <li><a href="field/user-guide.html">User guide</a>: day-to-day work on a device</li>
+            <li><a href="field/admin-guide.html">Admin guide</a>: for whoever runs the organization and changes the forms, lists and formulary</li>
+            <li><a href="field/cloud-sync.html">Cloud sync setup</a>: for the admin standing up the organization's own cloud project so several devices can sync</li>
+          </ul>
+          <p class="card-cta"><a class="btn btn-primary" href="field/">All Field guides</a></p>
+        </div>
+        <div class="card">
+          <span class="mode-tag">Clinic</span>
+          <h3>DH EMR Clinic</h3>
+          <p>A live clinic with internet all day. Staff sign in with their own accounts and roles: Reception, Triage, Provider, Lab and Pharmacy, plus administrators. A patient-flow board shows who is waiting, who is being seen and who is done, and every device sees a change within seconds.</p>
+          <ul class="guide-list">
+            <li><a href="clinic/setup.html">Setting up DH EMR Clinic</a>: for the organization lead, from a new cloud project and the first administrator to the join link for the staff devices</li>
+            <li><a href="clinic/user-guide.html">User guide</a>: day-to-day work by role: signing in, the board, the Lab and Pharmacy screens, the visit form as each role sees it</li>
+            <li><a href="clinic/admin-guide.html">Admin guide</a>: the Staff screen, the per-section Roles grid, and the organization's forms, lists, formulary and lab tests</li>
+          </ul>
+          <p class="card-cta"><a class="btn btn-primary" href="clinic/">All Clinic guides</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="wrap">
+      <h2>Which product do I use?</h2>
+      <ul>
+        <li>You enter visits from paper charts after the clinic day, often with no internet, and nobody signs in: that is Field.</li>
+        <li>Your staff sign in with their own accounts and use the app during the visit, with internet all day: that is Clinic.</li>
+        <li>The two products do not share records, and there is no switch between them. A Clinic organization keeps Field as its backup app for days when its backend is down.</li>
+      </ul>
+      <p>Not ready to set up a real device? The <a href="../demo/">demos</a> are fictional clinics where you can try things safely.</p>
+    </div>
+  </section>
 </main>
 
 <div class="notice">
@@ -53,9 +128,11 @@
   <div class="wrap">
     <nav aria-label="Footer">
       <a href="../">Home</a>
+      <a href="../clinic/">Clinic</a>
+      <a href="../field/">Field</a>
       <a href="./">Guides</a>
-      <a href="../demo/">Demo</a>
-      <a href="../app/">App</a>
+      <a href="../demo/clinic/">Clinic demo</a>
+      <a href="../demo/field/">Field demo</a>
     </nav>
     <p>Damico Health - free, open tools for global-health clinics.</p>
   </div>

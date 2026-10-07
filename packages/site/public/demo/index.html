@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DH EMR demos</title>
+  <meta name="description" content="Try DH EMR in your browser with fictional patients. Both demos are live: the Field demo and the Clinic demo with a role you pick.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e6e64'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%23ffffff' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../site.css">
+  <!--
+    HAND-WRITTEN demo hub, not build output. The product demos are built by
+    packages/field and packages/clinic ("build:demo") into demo/field/ and
+    demo/clinic/. Only those two directories are regenerated at deploy; this
+    file is tracked in git (see the root .gitignore).
+  -->
+  <style>
+    .hub-head {
+      padding: 2.5rem 0 0.5rem;
+    }
+    .hub-head h1 {
+      margin: 0 0 0.75rem;
+      font-size: clamp(1.6rem, 5vw, 2.25rem);
+      line-height: 1.2;
+    }
+    .mode-tag.soon {
+      background: var(--warn-bg);
+      color: var(--warn-ink);
+      border: 1px solid var(--line);
+    }
+    .card-cta {
+      margin-top: 1.1rem;
+    }
+    .page-section h2 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.25rem, 4vw, 1.5rem);
+    }
+    .page-section ul {
+      color: var(--ink-soft);
+      padding-left: 1.2rem;
+      max-width: 42rem;
+    }
+    .page-section li {
+      margin: 0.35rem 0;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="../">
+      <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#0e6e64"/>
+        <path d="M32 17v30M17 32h30" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+      </svg>
+      DH EMR
+    </a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="../#clinic">Clinic</a>
+      <a href="../#field">Field</a>
+      <a href="../guides/">Guides</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hub-head">
+    <div class="wrap">
+      <p class="kicker">Demos</p>
+      <h1>Try DH EMR in your browser</h1>
+      <p class="lede">DH EMR is two separate products, and each has its own demo. Both run in your browser with fictional patients. Nothing you type is sent anywhere.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="card-grid">
+        <div class="card">
+          <span class="mode-tag">Field - live now</span>
+          <h3>Try the Field demo</h3>
+          <p>DH EMR Field is for entering paper charts after clinic. It works with no internet and has no accounts: the device is the identity.</p>
+          <ul>
+            <li>A fictional clinic with sample patients, already entered.</li>
+            <li>Everything stays in this browser and never syncs anywhere. Cloud sync is turned off in the demo.</li>
+            <li>Try the whole app: enter a visit, open a patient's chart, change the form templates, clinic lists, formulary and lab tests under Settings, and look at Analytics.</li>
+            <li>What you add stays in this browser until you press Reset Demo. Reset Demo removes anything you added or changed and brings the original sample patients back.</li>
+          </ul>
+          <p class="card-cta"><a class="btn btn-primary" href="field/">Open the Field demo</a></p>
+        </div>
+        <div class="card">
+          <span class="mode-tag">Clinic - live now</span>
+          <h3>Try the Clinic demo</h3>
+          <p>DH EMR Clinic is for a clinic with internet all day: staff accounts with roles, and a live board of who is waiting, who is being seen and who is done.</p>
+          <ul>
+            <li>A fictional clinic day already in progress, with patients waiting at check-in, in triage, with the provider, waiting on lab results and at the pharmacy.</li>
+            <li>A side panel, "You are simulating", where you pick the role you want to try. Reception, Triage, Provider, Lab, Pharmacy and Admin each land on their own workspace.</li>
+            <li>Simulated colleagues keep working while you watch: every half minute or so someone checks a patient in, moves one to the next station, enters a result or dispenses a prescription, and the board moves. Press Act now to skip the wait, or Pause activity to stop it.</li>
+            <li>Everything stays in this browser and never syncs anywhere. There is no real clinic cloud behind it, so Cloud sync and Invite a device are turned off in the demo. Reset demo brings the original clinic day back.</li>
+          </ul>
+          <p class="card-cta"><a class="btn btn-primary" href="clinic/">Open the Clinic demo</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <div class="wrap">
+      <h2>Good to know</h2>
+      <ul>
+        <li>The demos are for learning the app and for showing it to your team. Never enter real patient information into a demo.</li>
+        <li>A demo never touches the records of a real DH EMR installed on the same device. Each demo keeps its own separate storage.</li>
+        <li>Ready for real use? Read the <a href="../guides/">guides</a> first.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<div class="notice">
+  <div class="wrap">
+    <p>DH EMR is not a certified EHR and is not HIPAA-compliant. It is intended for global-health use outside the US.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <a href="../">Home</a>
+      <a href="../clinic/">Clinic</a>
+      <a href="../field/">Field</a>
+      <a href="../guides/">Guides</a>
+      <a href="clinic/">Clinic demo</a>
+      <a href="field/">Field demo</a>
+    </nav>
+    <p>Damico Health - free, open tools for global-health clinics.</p>
+  </div>
+</footer>
+
+</body>
+</html>

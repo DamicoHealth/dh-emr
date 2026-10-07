@@ -38,10 +38,13 @@ Field mode orgs are DONE after step 3; skip to Verify.
 
 ## 4. Clinic mode: enable sign-in and create the first admin
 
-NOTE ON CURRENT APP STATUS: the clinic-mode app screens (sign-in, account
-approval, mode switch, flow board) are still being built. Every step below
-has a dashboard or SQL route that works today; the "in the app" phrases
-describe where this lands once the clinic build ships.
+Clinic mode is what DH EMR Clinic (packages/clinic) runs: staff sign-in,
+account approval and roles on the Staff screen, join links for the staff
+devices, and the patient flow board are all in the app. The dashboard and
+SQL routes below are the bootstrap for the very first administrator and the
+fallbacks for recovery; they are not the day-to-day path. The organization
+lead's guide on the website (guides/clinic/setup.html) walks the same steps
+with the app screens.
 
 1. Authentication -> Sign In / Up -> enable the Email provider.
 2. Turn OFF "Confirm email". This matters more than it looks: without your
@@ -54,7 +57,8 @@ describe where this lands once the clinic build ships.
 3. Create the org lead's account: Authentication -> Users -> Add user ->
    choose "Create new user" and set a password (do NOT use "Send
    invitation" - it depends on the same restricted mailer). Staff signing
-   up themselves in the app also works once the clinic build ships.
+   up themselves in the app also works: the Clinic sign-in screen has
+   "New here? Create an account".
    Either way, a new account NEVER has access by itself: every account
    starts pending. That is deliberate; anyone in the world who obtains
    the project URL and publishable key can sign up, so signup must carry
@@ -68,16 +72,23 @@ describe where this lands once the clinic build ships.
        WHERE id = (SELECT id FROM auth.users WHERE lower(email) = lower('LEAD@EXAMPLE.ORG'))
        RETURNING id, is_admin, activated_at;
 
-5. The admin approves every new staff account. Until the clinic-mode app
-   ships its approval screen, approval is this line (one row must return):
+5. The admin approves every new staff account from the Staff tab in DH EMR
+   Clinic (set the station role, then Approve). The SQL fallback, for an
+   admin who cannot reach the app, is this line (one row must return):
 
        UPDATE users_profiles
        SET activated_at = now()
        WHERE id = (SELECT id FROM auth.users WHERE lower(email) = lower('STAFF@EXAMPLE.ORG'))
        RETURNING id, activated_at;
 
-6. Switch the org to clinic mode from the SQL editor (or in the app once
-   its Settings -> Organization screen ships):
+6. Clinic mode itself needs NO manual step. The first time an approved
+   administrator signs in on a DH EMR Clinic device, the app writes the
+   orgMode row itself (the same vetted upsert the server trigger checks),
+   so the step that older notes had here, setting the mode by hand, is
+   gone. Nothing in either app offers a mode switch, in either direction.
+   The SQL below is the manual fallback only: to flip an org before any
+   admin has signed in, or to flip it back to field (value "field") to
+   drain stranded field records:
 
        INSERT INTO config (key, value) VALUES ('orgMode', '{"mode":"clinic"}')
        ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
@@ -85,24 +96,23 @@ describe where this lands once the clinic build ships.
    IMPORTANT if the org previously ran field devices: sync every field
    iPad to zero pending records FIRST. The moment the mode flips, the
    shared-key surface closes and stranded field records cannot push. The
-   recovery for stranded records is an admin flipping the mode back to
-   field, draining the fleet, and flipping forward again. (Signing in on
-   the stranded device also works once the clinic app ships, but note it
-   stamps whoever signs in as the author of every pushed record.)
+   recovery for stranded records is the SQL editor: flip the mode back to
+   field with the statement above, drain the fleet, then flip forward
+   again (or let the next admin sign-in on a Clinic device set it).
 
 ## 5. Verify
 
-1. In the app: Settings -> Cloud sync -> enter the URL and publishable
-   key. The app verifies the tables exist before accepting.
+1. In the app: enter the URL and publishable key (the setup wizard's cloud
+   step on a new device; in DH EMR Field also Settings -> Cloud sync). The
+   app verifies the tables exist before accepting.
 2. Field mode: save one test visit and sync; Table Editor -> records shows
    one row. Delete the test visit in the APP afterward (it tombstones;
    rows are never hard-deleted, which is by design).
-3. Clinic mode, additionally (once the clinic-mode app build ships): sign
-   in as the admin (should reach the flow board), sign up a second test
-   account (should land on "awaiting approval" and see NO data), approve
-   it, confirm it then sees data. Two minutes, and it exercises the whole
-   access model. Until then, verify.sql rows 9-24 cover the same rules
-   server-side.
+3. Clinic mode, additionally: sign in as the admin (should reach the flow
+   board), sign up a second test account (should land on "Waiting for
+   approval" and see NO data), approve it from the Staff tab, confirm it
+   then sees data. Two minutes, and it exercises the whole access model.
+   verify.sql rows 9-24 cover the same rules server-side.
 
 ## Recovery playbook (SQL Editor)
 
@@ -178,9 +188,11 @@ convenience copy for the devices, not the org's only copy).
   apart, so anyone holding the key can read everything. The revocation
   switch stops an honest revoked device, not a determined attacker who has
   the key. Clinic mode (per-user accounts) is the fix.
-- Clinic mode: an admin can flip the org back to field mode from the app.
-  That is the documented recovery path for stranded field records, and it
-  reopens the shared-key surface, so the app confirms it loudly.
+- Clinic mode: nothing in either app can change the org's mode. Flipping
+  an org back to field is a SQL-editor operation (section 4, step 6), the
+  documented recovery path for stranded field records; it reopens the
+  shared-key surface, so do it deliberately, drain the fleet, and flip
+  forward again.
 - Revoking a device does nothing to data already on a lost iPad, and that
   data is not encrypted at rest.
 - DH EMR is not a certified EHR and is not HIPAA-compliant. It is intended

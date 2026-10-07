@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>User guide - DH EMR Clinic guides</title>
+  <meta name="description" content="The day-to-day DH EMR Clinic reference, organized by role: signing in, the sync chip and Live, Reception, Triage, Provider, Lab and Pharmacy, then finding a patient, the patient chart, view-only sections, what happens when the connection drops, and updates.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e6e64'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%23ffffff' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../../site.css">
+  <style>
+    /* Guide-only styles. Everything else comes from site.css. */
+    .guide {
+      padding: 2.5rem 0 3rem;
+      max-width: 44rem;
+    }
+    .guide h1 {
+      margin: 0 0 0.75rem;
+      font-size: clamp(1.6rem, 5vw, 2.25rem);
+      line-height: 1.2;
+    }
+    .guide h2 {
+      margin: 2.4rem 0 0.5rem;
+      font-size: clamp(1.25rem, 3.5vw, 1.5rem);
+      line-height: 1.25;
+      scroll-margin-top: 1.5rem;
+      border-top: 1px solid var(--line);
+      padding-top: 1.6rem;
+    }
+    .guide h3 {
+      margin: 1.4rem 0 0.35rem;
+      font-size: 1.05rem;
+      scroll-margin-top: 1.5rem;
+    }
+    .guide p, .guide li { color: var(--ink); }
+    .guide .muted { color: var(--ink-soft); }
+    .guide ul, .guide ol {
+      padding-left: 1.3rem;
+      margin: 0.5rem 0 1rem;
+    }
+    .guide li { margin: 0.35rem 0; }
+    /* Exact UI labels: buttons, tabs, field names */
+    .ui {
+      font-weight: 600;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 0.3rem;
+    }
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-1);
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0 0.5rem;
+    }
+    .toc p { margin: 0 0 0.4rem; font-weight: 700; }
+    .toc ol {
+      margin: 0;
+      padding-left: 1.3rem;
+      columns: 2;
+      column-gap: 2rem;
+    }
+    @media (max-width: 34rem) {
+      .toc ol { columns: 1; }
+    }
+    .toc li { margin: 0.25rem 0; }
+    .toc a { color: var(--primary); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .guide table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.75rem 0 1rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      font-size: 0.95rem;
+    }
+    .guide th, .guide td {
+      text-align: left;
+      vertical-align: top;
+      padding: 0.5rem 0.65rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .guide tr:last-child td { border-bottom: 0; }
+    .guide th { font-size: 0.9rem; background: var(--bg); }
+    /* Tables wrap at spaces only, never mid-word; a table too wide for a phone scrolls sideways instead. */
+    .guide table { overflow-wrap: normal; }
+    .guide th, .guide td:first-child { white-space: nowrap; }
+    .table-scroll { overflow-x: auto; }
+    .callout {
+      background: var(--warn-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      margin: 0.9rem 0;
+      color: var(--warn-ink);
+    }
+    .callout p { color: var(--warn-ink); margin: 0.35rem 0; }
+    .callout p:first-child { margin-top: 0; }
+    .callout p:last-child { margin-bottom: 0; }
+    .tip {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      margin: 0.9rem 0;
+    }
+    .tip p { margin: 0.35rem 0; }
+    .tip p:first-child { margin-top: 0; }
+    .tip p:last-child { margin-bottom: 0; }
+    .confirm {
+      margin: 1rem 0;
+      padding: 0.85rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius);
+    }
+    .confirm .lead {
+      margin: 0 0 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .confirm p { margin: 0.4rem 0; }
+    .role-tag {
+      display: inline-block;
+      margin-left: 0.5rem;
+      padding: 0.1rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: var(--primary-soft);
+      color: var(--ink);
+      vertical-align: middle;
+    }
+    .backlink { margin-top: 2.5rem; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="../../">
+      <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#0e6e64"/>
+        <path d="M32 17v30M17 32h30" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+      </svg>
+      DH EMR
+    </a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="../../#clinic">Clinic</a>
+      <a href="../../#field">Field</a>
+      <a href="../" aria-current="page">Guides</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="guide">
+      <p class="kicker">DH EMR Clinic guides</p>
+      <h1>User guide</h1>
+      <p class="muted">The day-to-day reference for everyone who works in DH EMR Clinic. It starts with what everyone does: sign in, and read the sync chip. Then there is one section for each role: Reception, Triage, Provider, Lab and Pharmacy. Read your own section first. The last sections are for everyone again: finding a patient, the patient chart, view-only sections, what happens when the connection drops, and updates. Setting up the organization, approving accounts and changing the forms and lists is admin work and lives in the other <a href="./">Clinic guides</a>.</p>
+      <p class="muted">Two words the app uses everywhere: a <strong>visit</strong> is one patient seen on one day, and the <strong>patient number</strong> is the short code the app creates for each patient. The app makes the patient number by itself from the name and date of birth. You never type it.</p>
+      <p class="muted">One visit record is shared by the whole clinic. Reception creates it, Triage adds vitals, the Provider adds the diagnosis and prescription, Lab adds results, Pharmacy marks what was handed over. Each role sees its own part of the same record, and the patient moves across the board as the day goes on.</p>
+
+      <nav class="toc" aria-label="On this page">
+        <p>On this page</p>
+        <ol>
+          <li><a href="#signing-in">Signing in on any device</a></li>
+          <li><a href="#live">The sync chip and "Live"</a></li>
+          <li><a href="#screens">The screens, by role</a></li>
+          <li><a href="#reception">Reception</a></li>
+          <li><a href="#triage">Triage</a></li>
+          <li><a href="#provider">Provider</a></li>
+          <li><a href="#lab">Lab</a></li>
+          <li><a href="#pharmacy">Pharmacy</a></li>
+          <li><a href="#finding">Finding a patient</a></li>
+          <li><a href="#chart">The patient chart</a></li>
+          <li><a href="#view-only">View-only sections and why</a></li>
+          <li><a href="#offline">If the connection drops</a></li>
+          <li><a href="#updates">Updating the app</a></li>
+        </ol>
+      </nav>
+
+      <h2 id="signing-in">1. Signing in on any device</h2>
+      <p>DH EMR Clinic uses staff accounts. Every device in the clinic can be used by anyone with an account: sign in, work, sign out. A device only needs to be connected to your organization once, by your admin, using a join link or its QR code. If a device shows a setup screen headed "Connect to your cloud" with the note "Open the link your admin sent you", it has not been connected yet. Ask your admin for the link; nothing on that screen is for you to type.</p>
+
+      <h3>Sign in</h3>
+      <p>A connected device opens on the <span class="ui">Sign in</span> screen. Enter your <span class="ui">Email</span> and <span class="ui">Password</span> and tap <span class="ui">Sign in</span>. The button reads "Signing in…" for a moment, and then the app opens on your role's workspace: the board for Reception, Triage and Provider, the Lab screen for Lab, the Pharmacy screen for Pharmacy. Signing in needs internet. Once you are in, the app keeps working if the connection drops; see <a href="#offline">section 12</a>.</p>
+      <p>If you have no account yet, tap <span class="ui">New here? Create an account</span>. The screen changes to "Create your account" with <span class="ui">Your name</span>, <span class="ui">Email</span> and <span class="ui">Password</span>, and a <span class="ui">Create account</span> button. Use your real name: it is stamped on the work you do, and Pharmacy records show who handed over each medication. A new account can do nothing until your admin approves it. The screen says so: "A new account starts with no access at all. Your administrator approves it from their device, and then you can sign in and work. That usually takes a moment, not a day."</p>
+      <p>After creating the account you see a screen headed "Waiting for approval". It has two buttons: <span class="ui">Check again</span> and <span class="ui">Sign out</span>. Tell your admin, wait for them to approve you, then tap <span class="ui">Check again</span>. If instead you see "Cannot confirm your account yet", the device could not reach the server. Check the connection and tap <span class="ui">Check again</span>.</p>
+      <p>If you see "This account has been turned off", your admin has revoked your account. Talk to them. The screen says it plainly: "No records have been lost. Anything this account already saved is safe with your organization." If they restore you, <span class="ui">Check again</span> lets you straight in.</p>
+      <p>There is no password reset in the app. The sign-in screen says why: "Forgot your password? Your administrator can set up a fresh account for you - password reset emails are not reliable on most clinic projects." Ask your admin.</p>
+
+      <h3>Sign out</h3>
+      <p>Go to <span class="ui">Settings</span>. The first card is <span class="ui">Account</span>, with three rows: <span class="ui">Name</span>, <span class="ui">Role</span> (for example "Triage") and <span class="ui">Admin</span> ("Yes" or "No"). Tap <span class="ui">Sign out</span>. The app asks first:</p>
+      <div class="confirm">
+        <p class="lead">The sign-out confirm</p>
+        <p>"Sign out of this device?</p>
+        <p>Records stay safely on the device. Signing back in needs a working internet connection, so avoid this while offline mid-clinic."</p>
+      </div>
+      <p>Take that seriously. Signing out never deletes anything, but signing back in needs the server. Do not sign out of a device that is offline in the middle of the clinic day.</p>
+
+      <h2 id="live">2. The sync chip and "Live"</h2>
+      <p>At the right of the top bar is a small chip. It tells you whether this device is talking to your organization's cloud right now. In Clinic the app syncs by itself: a full sync runs about every 20 seconds while you are signed in, and when another device saves something the change usually arrives on your screen within a few seconds. The board, the Lab list and the Pharmacy list update on their own. You do not refresh anything.</p>
+      <div class="table-scroll">
+      <table>
+        <tr><th>Chip says</th><th>What it means</th><th>What to do</th></tr>
+        <tr><td><span class="ui">Live</span></td><td>This device is connected live. Changes from other devices arrive within seconds. This is normal all day.</td><td>Nothing.</td></tr>
+        <tr><td><span class="ui">Connected</span></td><td>The cloud is reachable but no sync has run yet this session. You see this for a moment after signing in.</td><td>Wait, or tap the chip.</td></tr>
+        <tr><td><span class="ui">Syncing</span></td><td>Records are being sent and received right now.</td><td>Wait a moment.</td></tr>
+        <tr><td><span class="ui">Synced</span></td><td>Everything on this device is backed up to the cloud, but the live channel is not connected at this moment. Changes from other devices arrive on the next 20-second sync instead of within seconds.</td><td>Nothing. It usually goes back to Live by itself.</td></tr>
+        <tr><td><span class="ui">Offline</span></td><td>No internet right now. Everything you save stays on this device. Other devices do not see your work, and you do not see theirs, until the connection returns.</td><td>Keep working. Read <a href="#offline">section 12</a>.</td></tr>
+        <tr><td><span class="ui">Sync error</span></td><td>The last sync failed.</td><td>Tap the chip to retry and check the connection. If it stays red, tell your admin.</td></tr>
+      </table>
+      </div>
+      <p>The word "Live" is honest. It shows only while the live channel is actually subscribed and the device is at rest. If you see "Synced" or "Connected" instead, the device is fine, but other people's changes arrive on the next automatic sync rather than at once.</p>
+      <p>Tapping the chip runs a sync by hand; the label reads "Syncing…" while it runs. A small badge such as "3 pending" means records on this device are still waiting to upload. The badge is not shown on a phone-sized screen; there, the <span class="ui">Waiting to sync</span> row on the <span class="ui">Cloud sync</span> card in Settings always shows the count. If you sync by hand and records still cannot upload, the app says so: "Not backed up." followed by how many records are waiting and why, for example "This device is offline." It ends: "Try again when you have signal. Do not wipe or hand on this device until this clears." Those records exist only on that device until it clears.</p>
+
+      <h2 id="screens">3. The screens, by role</h2>
+      <p>The top bar shows the name "DH EMR Clinic" and the tabs for your role. On a phone the tabs sit at the bottom of the screen. The first tab is where you land after signing in.</p>
+      <div class="table-scroll">
+      <table>
+        <tr><th>Role</th><th>Tabs</th></tr>
+        <tr><td>Reception</td><td><span class="ui">Board</span>, <span class="ui">Visits</span>, <span class="ui">New visit</span>, <span class="ui">Settings</span></td></tr>
+        <tr><td>Triage</td><td><span class="ui">Board</span>, <span class="ui">Visits</span>, <span class="ui">Settings</span></td></tr>
+        <tr><td>Provider</td><td><span class="ui">Board</span>, <span class="ui">Visits</span>, <span class="ui">New visit</span>, <span class="ui">Analytics</span>, <span class="ui">Settings</span></td></tr>
+        <tr><td>Lab</td><td><span class="ui">Lab</span>, <span class="ui">Visits</span>, <span class="ui">Settings</span></td></tr>
+        <tr><td>Pharmacy</td><td><span class="ui">Pharmacy</span>, <span class="ui">Visits</span>, <span class="ui">Settings</span></td></tr>
+      </table>
+      </div>
+      <p>An admin account gets every tab: its own role's workspace first, then <span class="ui">Board</span>, <span class="ui">Visits</span>, <span class="ui">New visit</span>, <span class="ui">Analytics</span>, <span class="ui">Staff</span> and <span class="ui">Settings</span>. Lab and Pharmacy accounts have no Board tab unless they are admins. <span class="ui">New visit</span> is an action, not a screen: it opens the visit form on top of whatever you are looking at.</p>
+      <p>Your role decides which parts of the visit form you can change. When you open a visit, the title line under "Edit visit" ends with your role's name, for example "Triage sections" or "Pharmacy sections". Sections you can read but not change carry a <span class="ui">View only</span> chip. Sections that are not your job are not shown at all. This is the same wherever you open a visit: from the board, the Lab or Pharmacy list, the New visit tab, or a patient's chart on the Visits tab. <a href="#view-only">Section 11</a> explains this and its limits.</p>
+
+      <h2 id="reception">4. Reception<span class="role-tag">Board</span></h2>
+      <p>Reception owns the front of the board: registering each arrival and placing the visit in the first column.</p>
+
+      <h3>The board</h3>
+      <p>The <span class="ui">Board</span> tab is headed <span class="ui">Patient flow</span>, with today's date and a count, for example "06/10/2026 · 7 on the board". It shows today's visits only. Visits from earlier days stay on the Visits tab.</p>
+      <p>The board is a row of columns, one per station. The default stations are <span class="ui">Check-in</span>, <span class="ui">Triage</span>, <span class="ui">Provider</span>, <span class="ui">Lab</span>, <span class="ui">Pharmacy</span> and <span class="ui">Done</span>. Your organization may have renamed, added or removed stations, so yours may differ. Each column header shows the station name and how many patients are in it. The column that is yours carries the tag <span class="ui">your station</span>; for Reception that is always the first column, whatever it is called, and the board scrolls to it when it opens. An empty column says "Empty".</p>
+      <p>The last column is the done-for-the-day column, and it starts collapsed. Its header reads "No one is done yet" until someone finishes, then <span class="ui">Show 3 done</span> (with the real count). Tap it to open the column; <span class="ui">Collapse</span> closes it again.</p>
+      <p>Each patient is one card:</p>
+      <ul>
+        <li>The name, and a chip showing how long the patient has been at this station: "12 min", "1 h", "1 h 20 min".</li>
+        <li>"No." followed by the patient number, and an <span class="ui">Open</span> button that opens the visit in your role's view.</li>
+        <li>A <span class="ui">Next:</span> button naming the following station, for example "Next: Triage". One tap moves the card there. The last column has no Next button.</li>
+        <li>A station list showing the current station. Pick any other station to move the card straight there, for example back to Triage, or to Done for a patient who left.</li>
+      </ul>
+      <p>On an empty board you see "No patients on the board yet" and the text "The board fills as patients are checked in. Use New patient to register an arrival, or Check in to place a visit that was already saved today. Visits from previous days stay on the Visits tab."</p>
+      <p>If you move a card and another device deleted that visit at the same moment, the board says "That visit is no longer on this device. The board has been refreshed." with a <span class="ui">Dismiss</span> button. Nothing of yours was lost.</p>
+
+      <h3>Registering a new patient</h3>
+      <p>Above the board are two buttons. For Reception, <span class="ui">Check in</span> is the filled, primary one, and <span class="ui">+ New patient</span> is next to it. Tap <span class="ui">+ New patient</span> for a patient who has just walked in. The visit form opens headed "New visit", and because you are Reception it is the short intake form: just the <strong>Visit</strong> and <strong>Patient</strong> sections. The line under the title reads "Patient number generates from name + date of birth · Reception sections".</p>
+      <ul>
+        <li><strong>Visit</strong>: <span class="ui">Site</span> (required), <span class="ui">Date</span> (required, starts as today) and <span class="ui">Provider</span>. The site you pick is remembered for the next patient.</li>
+        <li><strong>Patient</strong>: <span class="ui">Given name</span> and <span class="ui">Family name</span>, both required, each with at least two letters. Spell them the same way every time the patient comes back, because the patient number is built from them. <span class="ui">Sex</span>, required: tap <span class="ui">M</span> or <span class="ui">F</span>. <span class="ui">Date of birth</span> typed as DD/MM/YYYY; if the patient does not know it, tick <span class="ui">Estimate from age</span> next to "Date of birth unknown" and enter an <span class="ui">Estimated age</span> in years. <span class="ui">Phone</span> is optional. <span class="ui">Patient number</span> is filled in by the app; you cannot type in it.</li>
+      </ul>
+      <p>Once you have typed a name and date of birth the app already knows, a blue <span class="ui">Returning patient</span> notice appears. It tells you how many previous visits there are, when the patient was last seen and the last diagnosis, with one button: <span class="ui">Copy allergies, history and medications forward</span>. Tap it to carry the patient's allergies, past history and current medications into this visit from the last one, so Triage and the Provider do not retype them. They are carried into the visit even though your view does not show those sections. If this is really a different person with the same name and birthday, do not tap it.</p>
+      <p>At the bottom are three buttons:</p>
+      <ul>
+        <li><span class="ui">Save</span> files the visit, closes the form and places the card in the first column of the board.</li>
+        <li><span class="ui">Save &amp; next patient</span> files the visit, places the card, and keeps the form open for the next arrival. Site, Date and Provider stay filled in; everything else clears. A green note confirms, for example "Saved Grace Auma (GRAU03021988). Ready for the next patient." Use this when a queue is waiting.</li>
+        <li><span class="ui">Cancel</span> closes without saving. If you have typed anything, the app asks: "Discard this visit? Anything you have entered will be lost."</li>
+      </ul>
+      <p>If something is missing, the visit is not saved. A red summary such as "Check 2 fields" lists each problem in plain words ("Family name is required.", "Site is required."). Fix them and save again.</p>
+      <div class="tip">
+        <p>Register arrivals from the board's <span class="ui">+ New patient</span> button, not from the <span class="ui">New visit</span> tab. Both open the same form, but only the board's button places the visit on the board. A visit saved from the <span class="ui">New visit</span> tab goes to the Visits tab and waits in the <span class="ui">Check in</span> list until someone places it.</p>
+      </div>
+
+      <h3>Checking in a visit that is already saved</h3>
+      <p>When today's visits exist that are not on the board, the <span class="ui">Check in</span> button shows a count, for example "Check in (2)". That happens when a visit was saved from the New visit tab, or from a patient chart on the Visits tab, on this device or any other. Tap it to open the <span class="ui">Check in</span> panel: "Today's saved visits that are not on the board yet." Each row shows the name and patient number and a button reading "Check in to" followed by the first station's name, for example "Check in to Check-in". Tap it and the card appears in the first column. The panel stays open so you can place several arrivals in a row; <span class="ui">Close</span> closes it. When there is nothing left to place it says "Every visit saved today is already on the board. Use New patient to register a new arrival."</p>
+
+      <h3>Moving patients on</h3>
+      <p>When Triage is ready for the patient, tap <span class="ui">Next: Triage</span> on the card (or whatever your second station is called). The card moves, and every other device sees it move within seconds. If a patient leaves without being seen, pick the last station from the card's station list so the board stays honest. The <span class="ui">Open</span> button on a card opens the visit with your Reception sections: Visit and Patient can be changed, and everything else, once it exists, shows as View only.</p>
+
+      <h2 id="triage">5. Triage<span class="role-tag">Board</span></h2>
+      <p>Triage works from the board's Triage column, recording vitals, history and the chief concern, and ordering labs before the provider sees the patient.</p>
+
+      <h3>Your column</h3>
+      <p>Your <span class="ui">Board</span> tab is the same board Reception sees, described in <a href="#reception">section 4</a>. The column named "Triage" (if your organization kept that name) carries the <span class="ui">your station</span> tag and the board scrolls to it when it opens. New cards arrive there when Reception taps "Next: Triage", with no refresh needed; the wait chip on each card counts how long the patient has been waiting for you. Take the longest-waiting first.</p>
+
+      <h3>Vitals, history and chief concern</h3>
+      <p>Tap <span class="ui">Open</span> on the card. The visit form opens headed "Edit visit", and under it the patient number, age and "Triage sections". You see:</p>
+      <ul>
+        <li><strong>Patient</strong>, marked <span class="ui">View only</span>: name, sex, date of birth and patient number as Reception entered them. If something is wrong here, tell Reception; you cannot change it.</li>
+        <li><strong>Vitals</strong>: <span class="ui">Temperature</span> in °C, <span class="ui">Blood pressure</span> written like 120/80, and <span class="ui">Weight</span> in kg. When Sex is not M, <span class="ui">Pregnant</span> and <span class="ui">Breastfeeding</span> appear, each answered <span class="ui">Yes</span> or <span class="ui">No</span>. A temperature outside 25 to 45 is refused at save, and the message asks whether it was entered in Fahrenheit.</li>
+        <li><strong>History</strong>: <span class="ui">Allergies</span>, <span class="ui">Current medications</span> and <span class="ui">Past medical history</span>. If Reception copied these forward from the last visit, they are already filled in. Check them with the patient.</li>
+        <li><strong>Chief Concern</strong>: type in the <span class="ui">Chief concern</span> box, or tap the complaint buttons under it, for example "Fever" or "Cough". Tapping a button adds that complaint to the text; tapping it again removes just that entry.</li>
+        <li><strong>Labs</strong>: see below.</li>
+      </ul>
+      <p>Everything else on the visit, such as the diagnosis and medications, is not shown to Triage. Your organization can change which sections each role sees; <a href="#view-only">section 11</a> explains.</p>
+
+      <h3>Ordering labs</h3>
+      <p>The <strong>Labs</strong> section shows one tile per test your clinic offers, for example "Malaria RDT" or "Hemoglobin". Each tile has an <span class="ui">Ordered</span> checkbox in its header. Tick it for each test the patient should have. The tile then shows "Awaiting result". That is what puts the visit on the Lab team's list: a visit appears on their screen as soon as a test is ordered with no result yet.</p>
+      <p>If a point-of-care test is done at triage, you can enter the result yourself: tap <span class="ui">POS</span> or <span class="ui">NEG</span> on a positive/negative test, or type the number on a number test. The tile is then ordered and resulted in one go, and it does not go to the Lab list. There is also a <span class="ui">Lab comments</span> box and a <span class="ui">Urinalysis</span> block with one row of buttons per parameter.</p>
+
+      <h3>Saving and advancing</h3>
+      <p>Tap <span class="ui">Save</span>. Only your sections are written. Everything else on the visit is kept exactly as it is, even if the provider or Reception saved the same visit on another device while you had it open. If a red "Not saved" notice or a "Check 2 fields" list appears, it names only fields in your sections; fix them and save again.</p>
+      <p>Back on the board, tap <span class="ui">Next: Provider</span> on the card. The patient's card moves to the provider's column, and the provider's device shows it within seconds. If the provider should wait for a lab result first, that is your clinic's rule to agree on: the card can move to Provider with tests still awaiting results, and the Lab list keeps the visit until the results are in.</p>
+      <p class="muted">Triage has no New visit tab, but the board's <span class="ui">+ New patient</span> button still works for you. For a new visit it opens Visit and Patient plus your Triage sections, and the saved visit lands in the first column.</p>
+
+      <h2 id="provider">6. Provider<span class="role-tag">Board</span></h2>
+      <p>The provider sees the whole visit: everything Reception and Triage entered, the lab results as they come in, and the sections only a provider fills: diagnosis, medications, procedures, referral, imaging, surgery and notes.</p>
+
+      <h3>Your column</h3>
+      <p>The <span class="ui">Board</span> tab is described in <a href="#reception">section 4</a>. The column named "Provider" carries the <span class="ui">your station</span> tag. For a provider the filled, primary button above the board is <span class="ui">+ New patient</span>, so a walk-in can be registered without going through Reception; for a provider it opens the full form. Tap <span class="ui">Open</span> on a card to see the visit. The form is headed "Edit visit" with the patient number, age and "Provider sections", and every section is yours to change.</p>
+
+      <h3>The full visit</h3>
+      <p>The sections appear in your organization's order. By default: Visit, Patient, Vitals, History, Chief Concern, Labs, Diagnosis, Medications, then Procedures, Referral, Imaging, Surgery and Notes, which start closed with a "+" on the header. Tap a header to open it. Triage's vitals, history and chief concern are already there. Required fields show a red "*".</p>
+      <p>In <strong>Labs</strong>, a tile that Triage ordered and Lab has not yet resulted shows "Awaiting result". When Lab saves a result, it appears here on the next sync, within seconds while the chip says Live; if the form is already open, close it and tap <span class="ui">Open</span> again to see the new result. A number test shows the value, and the chart records a label with it, such as "Normal" or "High", using the ranges your admin set. You can order tests yourself with the <span class="ui">Ordered</span> checkbox, or enter a result directly with <span class="ui">POS</span>, <span class="ui">NEG</span> or a number, the same way as Triage.</p>
+
+      <h3>Diagnosis</h3>
+      <p>Type in the <span class="ui">Diagnosis</span> box, or tap the quick-pick buttons under it, for example "Malaria" or "URTI". Tap to add, tap again to remove that entry. You can mix buttons and typing. Pharmacy sees the diagnosis next to the patient's name on their list, so it is worth filling in.</p>
+
+      <h3>Prescriptions and presets</h3>
+      <p>Each medication is one line in the <strong>Medications</strong> section: pick the drug from the list (its first entry reads "Select medication"), type the dose (for example "500mg" or "2 tabs"), then pick a <span class="ui">Frequency</span> and a <span class="ui">Duration</span>. Picking a drug fills the dose from the formulary if the box is still empty. Tap <span class="ui">+ Add medication</span> for another line and the <span class="ui">×</span> at the end of a line to remove it. There is a <span class="ui">Treatment notes</span> box at the bottom.</p>
+      <p>If your clinic has prescription presets, a row headed <span class="ui">Prescription presets</span> sits at the top of the section with one button per preset, for example "UTI" or "Malaria &gt;35kg". Tapping one adds its medication lines and its treatment notes in one go. It only ever adds; you can edit or delete the added lines like any others.</p>
+      <p>Next to each line, once a drug is chosen, the app shows the quantity Pharmacy will hand out:</p>
+      <div class="table-scroll">
+      <table>
+        <tr><th>Next to the line</th><th>What it means</th></tr>
+        <tr><td>"20 tabs"</td><td>The dose was understood. This is the quantity for the chosen frequency and duration, and it is what Pharmacy sees prefilled.</td></tr>
+        <tr><td>"20 tabs?"</td><td>The dose could not be read, so the app assumed 1 per dose. Check it. Writing the dose as a number of tabs or in mg fixes the guess.</td></tr>
+        <tr><td>"ongoing"</td><td>The duration is Ongoing, so no quantity is calculated.</td></tr>
+        <tr><td>"no qty"</td><td>The dose could not be read at all. Pharmacy will see "no quantity worked out, count by hand".</td></tr>
+      </table>
+      </div>
+      <p>Write doses the app can read. A line with a clear quantity is one Pharmacy can dispense with one tap.</p>
+
+      <h3>Referrals, procedures, imaging, surgery, notes</h3>
+      <ul>
+        <li><strong>Referral</strong>: pick a <span class="ui">Referral type</span>. The first entry is "None". Once a type is chosen, a <span class="ui">Scheduled date</span> box appears. A referred visit is marked "Referred" on the Visits tab.</li>
+        <li><strong>Procedures</strong>: tap the buttons for what was done, for example "Wound Closure/Sutures".</li>
+        <li><strong>Imaging</strong>: <span class="ui">Ultrasound type</span> and <span class="ui">Findings</span>.</li>
+        <li><strong>Surgery</strong>: tick <span class="ui">Yes</span> next to "Surgery performed" to open the <span class="ui">Type</span> and <span class="ui">Notes</span> boxes.</li>
+        <li><strong>Notes</strong>: a free text box for anything else.</li>
+      </ul>
+      <p>Your organization may have added its own sections with their own questions. They work like the built-in fields; a required one that is left blank is named in the "Check" list at save, for example "Social History: Smokes is required."</p>
+
+      <h3>Saving and advancing</h3>
+      <p>Tap <span class="ui">Save</span>. Then move the card. On the default board the station after Provider is Lab, so the card's button reads <span class="ui">Next: Lab</span>: tap it if you ordered tests and the patient is going to the lab. If you prescribed and nothing is waiting on the lab, pick <span class="ui">Pharmacy</span> from the card's station list instead. The visit appears on the Pharmacy list as soon as it has a prescription line that has not been dispensed, whether or not the card has moved, so the card's position is for the people in the room, and the prescription itself is what reaches Pharmacy. If nothing was prescribed and no test is waiting, use the station list to move the patient straight to the last station. When the lab is done with a patient, whoever has the board moves the card on from the Lab column with <span class="ui">Next: Pharmacy</span>; the Lab team itself has no board.</p>
+      <p>Two warnings can appear when you save, because another device may have touched the same visit while you had it open. The second one is the one to know:</p>
+      <div class="confirm">
+        <p class="lead">If the visit was changed elsewhere</p>
+        <p>"This visit was changed on another device while you had it open.</p>
+        <p>Saving now replaces those changes with what is on your screen. Cancel instead to close without saving and reopen the visit to see them first."</p>
+      </div>
+      <p>In a busy clinic this usually means Lab saved a result, or Triage corrected a vital, while your form was open. Choose Cancel, tap <span class="ui">Open</span> again, and your sections are quick to re-enter. Choosing OK overwrites the sections you edit with what is on your screen; sections you did not edit are never touched by your save, whichever you choose.</p>
+
+      <h3>Analytics</h3>
+      <p>Providers and admins have an <span class="ui">Analytics</span> tab: counts and charts built from every visit synced to the device, with <span class="ui">From</span>, <span class="ui">To</span>, <span class="ui">Site</span> and <span class="ui">Provider</span> filters and a <span class="ui">Reset</span> button. The tiles are <span class="ui">Visits</span>, <span class="ui">Patients</span>, <span class="ui">New patients</span>, <span class="ui">Referrals</span>, <span class="ui">Lab positive</span> and <span class="ui">Median age</span>; the panels are <span class="ui">Visits over time</span>, <span class="ui">Age and sex</span>, <span class="ui">Lab positivity</span>, <span class="ui">Top diagnoses</span>, <span class="ui">Top medications</span>, <span class="ui">Visits by site</span>, <span class="ui">Visits by provider</span> and <span class="ui">Data quality</span>. It is the same screen as in DH EMR Field, and the <a href="../field/user-guide.html#analytics">Field user guide</a> explains each tile and panel.</p>
+
+      <h2 id="lab">7. Lab<span class="role-tag">Lab</span></h2>
+      <p>The Lab role lands on its own screen, a list of today's visits waiting for a result. Lab accounts have no Board tab, so you do not move patients on the board; you work from this list.</p>
+
+      <h3>The Lab workspace</h3>
+      <p>The <span class="ui">Lab</span> tab is headed <span class="ui">Lab</span>, with today's date and a count, for example "06/10/2026 · 3 waiting on results". It lists every visit from today that has at least one test marked Ordered with no result yet, longest-waiting first. Each row shows the patient's name, "No." and the patient number, the station the patient's card is at on the board (for example "· Lab" once someone has moved the card there, or "· Triage" if it has not moved yet), one chip per test still waiting, and an <span class="ui">Enter results</span> button. The list updates by itself as Triage and providers order tests on other devices.</p>
+      <p>When nothing is waiting the screen says "No visits are waiting on lab results" and explains: "A visit appears here when a test is marked Ordered on its Labs section and has no result yet. Enter the result from this screen and the visit leaves the list."</p>
+
+      <h3>Entering results</h3>
+      <p>Tap <span class="ui">Enter results</span>. The visit opens headed "Edit visit" with the patient number, age and "Lab sections":</p>
+      <ul>
+        <li><strong>Patient</strong>, marked <span class="ui">View only</span>: confirm you have the right person.</li>
+        <li><strong>Chief Concern</strong>, marked <span class="ui">View only</span>: why the test was ordered.</li>
+        <li><strong>Labs</strong>, yours to fill in.</li>
+      </ul>
+      <p>In Labs, the tiles that were ordered have <span class="ui">Ordered</span> ticked and say "Awaiting result". For a positive/negative test, tap <span class="ui">POS</span> or <span class="ui">NEG</span>. For a number test, for example "Blood Glucose" or "Hemoglobin", type the value in the box; the unit is shown inside it. Leave tests that were not done alone. If a test was done that nobody ordered, you can result it anyway: tap its result or type its value, and it is recorded as ordered and resulted. Use <span class="ui">Lab comments</span> for anything the tiles cannot say, and the <span class="ui">Urinalysis</span> block for a dipstick: one row of buttons per parameter (leukocytes, nitrite, protein and so on).</p>
+      <p>Tap <span class="ui">Save</span>. Only the Labs section is written; the rest of the visit is kept as it is, including anything the provider saved on another device while you were typing. Once every ordered test on the visit has a result, the visit leaves your list. The provider sees the result within seconds while their chip says Live.</p>
+
+      <h3>Interpretations</h3>
+      <p>For a number test, the app records a label with the value using the reference ranges your admin set for that test, for example "Normal", "Elevated" or "Severe Anemia". You do not pick the label; it is worked out from the number at the moment you enter it and saved with the result. On the patient chart the result reads like "11.2 g/dL (Mild Anemia)". The label is a snapshot: if your admin changes the ranges later, results already saved keep the label they were given. A positive result on a positive/negative test shows in red on the chart.</p>
+      <p>If a test your clinic runs is missing from the Labs section, your admin has its <span class="ui">On by default</span> box unticked in Settings under Lab tests, or has not added it yet, and can put it on the form for your organization. Tell them.</p>
+
+      <h3>Resulted today</h3>
+      <p>Under the list is a toggle: <span class="ui">Show 2 resulted today</span> (with the real count), and <span class="ui">Hide 2 resulted today</span> once open. It lists today's visits you have resulted, with the tests, and an <span class="ui">Open</span> button to reopen one, for example to correct a value that was typed wrong. Opening gives you the same Lab sections.</p>
+      <p class="muted">The default board has a Lab column, between Provider and Pharmacy, and your rows show the station each patient's card is at. Your list does not depend on that column: a visit is on it because a test is ordered with no result, wherever the card sits. Lab accounts have no Board tab, so someone with the board (Reception, Triage, the provider or an admin) moves the card to Lab and on again when you are done. Your Visits tab shows every patient, not only today's; see <a href="#finding">section 9</a>.</p>
+
+      <h2 id="pharmacy">8. Pharmacy<span class="role-tag">Pharmacy</span></h2>
+      <p>The Pharmacy role lands on a dispensing list: today's visits with a prescription line that has not yet been handed over. Pharmacy accounts have no Board tab.</p>
+
+      <h3>The Pharmacy workspace</h3>
+      <p>The <span class="ui">Pharmacy</span> tab is headed <span class="ui">Pharmacy</span>, with today's date and two counts, for example "06/10/2026 · 4 waiting · 9 lines to dispense". Visits are listed longest-waiting first. Each visit shows the name, then "No." and the patient number, the diagnosis, and "Allergies:" followed by the patient's allergies when any are recorded. Read the allergies before you hand anything over.</p>
+      <p>Under the name, one row per prescription line still to dispense:</p>
+      <ul>
+        <li>The drug name, then the dose, frequency and duration, then the quantity the app worked out, for example "500mg · Three times daily q8h · 7d · 21 tabs". When the provider's dose could not be read, the line ends "· no quantity worked out, count by hand".</li>
+        <li>A <span class="ui">Qty</span> box, prefilled with that quantity. Change it if you hand over a different amount, for example when stock runs short. It is empty when no quantity could be worked out; type what you gave.</li>
+        <li>A <span class="ui">Dispensed</span> button. Tap it once the medication is in the patient's hands. It reads "Saving…" for a moment. The line disappears from the list, and when every line on the visit is done, the visit does too.</li>
+      </ul>
+      <p>Each dispensed line records the quantity, your account's name and the time, on the visit itself. It syncs like any other change, so the provider's chart and the admin's reports show it.</p>
+      <p>When the list is empty the screen says "Nothing is waiting to be dispensed" and explains: "A visit appears here when a prescription on it has not been marked dispensed yet. Each line is marked with the quantity handed over, by whom and when."</p>
+
+      <h3>Opening the visit</h3>
+      <p>Each visit on the list has an <span class="ui">Open visit</span> button. It opens the visit headed "Edit visit" with the patient number, age and "Pharmacy sections": <strong>Patient</strong> and <strong>Diagnosis</strong> marked <span class="ui">View only</span>, and <strong>Medications</strong>, which you can change. Use it to fix a line the provider wrote in a way the app could not read, to add a line the provider asked for by phone, or to add a note in <span class="ui">Treatment notes</span>. The <span class="ui">Prescription presets</span> row and <span class="ui">+ Add medication</span> work here the same as for the provider. <span class="ui">Save</span> writes only the Medications section; the rest of the visit is left as it is.</p>
+
+      <h3>Dispensed today and Undo</h3>
+      <p>Under the list is a toggle: <span class="ui">Show dispensed today (6)</span> (with the real count), and <span class="ui">Hide dispensed today (6)</span> once open. Each line shows what was recorded, for example "21 tabs · Grace N. · 10:42", or "Qty not recorded" when the box was empty, with an <span class="ui">Undo</span> button. Undo puts the line back on the waiting list and clears the record of who dispensed it. Use it for an honest mistake, such as tapping Dispensed on the wrong line.</p>
+      <p>If a line cannot be marked because the visit was deleted on another device at that moment, the screen says "That visit is no longer on this device. The list has been refreshed." with a <span class="ui">Dismiss</span> button.</p>
+      <p class="muted">Marking lines dispensed does not move the patient's card on the board, and Pharmacy has no Board tab. Agree in your clinic who moves the card to the last station: usually Reception or the provider, from their board, when the patient leaves.</p>
+
+      <h2 id="finding">9. Finding a patient<span class="role-tag">Everyone</span></h2>
+      <p>Every role has a <span class="ui">Visits</span> tab. It lists every patient whose visits have synced to this device, from any day, not only today. Across the top are four counts: <span class="ui">Visits</span>, <span class="ui">Patients</span>, <span class="ui">Today</span> and <span class="ui">Pediatric (&lt;18)</span>.</p>
+      <p>Type in the search box (its hint reads "Search name, patient number, concern, diagnosis...") to find someone by name, patient number, concern, diagnosis, site or provider. Tap <span class="ui">Filters</span> to narrow the list by <span class="ui">Site</span>, <span class="ui">Provider</span>, <span class="ui">Referral</span>, or a date range with <span class="ui">From</span> and <span class="ui">To</span>; <span class="ui">Reset</span> clears them. When filters are active the button shows how many, for example "Filters (2)".</p>
+      <p>Each patient is one card, most recently seen first: the name, then the latest site, the latest date, sex and age, and "No." followed by the patient number, then the latest diagnosis. Badges flag a positive lab ("Lab+"), a referral ("Referred"), pregnancy ("Pregnant"), and how many visits the patient has, for example "3 visits".</p>
+      <p>Three messages can replace the list. "No visits recorded on this device yet." means nothing has synced to this device; on a freshly joined device, wait for the chip to say Live or Synced. "No visits match those filters." means your search or filters excluded everything; tap Reset. With more than 150 patients the list shows the first 150 and says so; type a name to narrow it.</p>
+      <p>The Visits tab also has a <span class="ui">+ New visit</span> button. Unlike the board's <span class="ui">+ New patient</span>, a visit saved from here is not placed on the board; Reception finds it in the <span class="ui">Check in</span> list. Like <span class="ui">Edit</span> on the chart, it opens the form as your role sees it; see <a href="#view-only">section 11</a>.</p>
+
+      <h2 id="chart">10. The patient chart<span class="role-tag">Everyone</span></h2>
+      <p>Tap a card on the Visits tab to open the patient's chart, a panel over the list. Tapping outside the panel closes it. The header shows the name, then "Patient number" with the number, sex and age, and "DOB" with the date of birth when known ("(est.)" after it when the age was estimated). There are two buttons: <span class="ui">+ New visit</span> to start a new visit for this patient with their identity already filled in, and <span class="ui">Close</span>.</p>
+      <p>The body starts with the visit count. Once a patient has two or more visits, a <span class="ui">Vitals trend</span> card appears: small graphs for temperature and weight, and a table of Temp, BP and Weight across the visits, oldest first as V1, V2 and so on.</p>
+      <p>Below that, every visit is its own card, newest first: "Visit 3" and so on, then the date, site and provider, and the name of the form it was filed under. Each visit card has an <span class="ui">Edit</span> button, which opens that visit as your role sees it, and a <span class="ui">Delete</span> button, then blocks for Vitals, History, Labs (each result with its label, positives in red), Urinalysis, Clinical (diagnosis, each medication line with its quantity, treatment notes, procedures, imaging, surgery, referral, notes) and Additional (your clinic's own questions). Empty rows are not shown.</p>
+      <p>This is the place to look up what happened last time while the patient is in front of you, whatever your role. Lab can check an earlier hemoglobin; Pharmacy can see what was dispensed on the last visit.</p>
+
+      <h3>Deleting a visit</h3>
+      <p><span class="ui">Delete</span> on a visit card asks first, and the warning means exactly what it says:</p>
+      <div class="confirm">
+        <p class="lead">The delete confirm</p>
+        <p>"Delete the 12/04/2026 visit for Amara Nakato?</p>
+        <p>The visit is removed from this device and from every device that syncs with it. This cannot be undone from inside the app - only a backup taken before now can bring it back."</p>
+      </div>
+      <p>After you tap OK, the Visits tab shows "Deleted the 12/04/2026 visit for Amara Nakato." with a <span class="ui">Dismiss</span> button. The deletion syncs, so the visit disappears from every device in the clinic and leaves the board, the Lab list and the Pharmacy list. Any role can do this, so be sure you have the right visit for the right patient. A duplicate registration is the usual good reason.</p>
+
+      <h2 id="view-only">11. View-only sections and why<span class="role-tag">Everyone</span></h2>
+      <p>When you open a visit from the board, the Lab list, the Pharmacy list, the New visit tab or a patient's chart on the Visits tab, the form shows your role's view of it:</p>
+      <ul>
+        <li>Sections you edit look normal.</li>
+        <li>Sections you may read but not change carry a <span class="ui">View only</span> chip in the header, and their fields are greyed out and cannot be tapped.</li>
+        <li>Sections that are not part of your job are not shown at all.</li>
+      </ul>
+      <p>The shipped defaults are: Reception edits Visit and Patient and views the rest. Triage edits Vitals, History, Chief Concern and Labs and views Patient. Provider edits everything. Lab edits Labs and views Patient and Chief Concern. Pharmacy edits Medications and views Patient and Diagnosis. Admins edit everything. Your organization can change this per section: in the template editor, every section has a <span class="ui">Roles</span> button opening a grid of <span class="ui">View</span> and <span class="ui">Edit</span> checkboxes for each role. So if your view differs from this guide, that is your admin's choice, not a fault.</p>
+      <p>The reason for the split is safety of the record, not secrecy. When you save, the app writes only the sections you can edit and copies every other section from the freshest saved copy of the visit. That is why a Pharmacy save can never blank the vitals, and why Triage saving on one device does not undo a diagnosis the provider typed on another a moment earlier. A smaller form is also a faster one.</p>
+      <div class="callout">
+        <p><strong>An honest limit.</strong> Roles are a workflow layer, not a security wall. Any approved account in your organization can read every record: the patient chart on the Visits tab shows the whole visit, every section, to every role. The role view decides what the form shows and saves, not who may see a record, and the server cannot enforce who may read or change which field. Approve accounts for people you trust with the whole record, and use the role views as the fast path for the day's work, not as a lock.</p>
+      </div>
+
+      <h2 id="offline">12. If the connection drops<span class="role-tag">Everyone</span></h2>
+      <p>The chip turns to <span class="ui">Offline</span>. Keep working. Everything you save goes to this device first, always, so a dropped connection never loses a save. What changes while you are offline:</p>
+      <ul>
+        <li>Nothing you save reaches the other devices, and nothing they save reaches you, until the connection returns. The board, the Lab list and the Pharmacy list on your device stop updating from others. A card you move stays moved on your screen and is sent later.</li>
+        <li>When the connection returns, the device syncs by itself. The chip goes through <span class="ui">Syncing</span> and back to <span class="ui">Live</span>. Everyone's changes merge.</li>
+        <li>If two devices changed the same visit while apart, the later save wins for the sections it edits, and the sections a role did not edit are preserved from the other side. If you still have a form open when the connection returns and the visit changed elsewhere, you get the "This visit was changed on another device while you had it open." warning at save; read it and choose.</li>
+        <li>Do not sign out while offline. Signing back in needs the server. The Account card in Settings says so.</li>
+      </ul>
+      <p>If the connection has been gone a long time, tap the chip when it is back; if the app replies "Not backed up." with a count of waiting records, the upload has not finished yet. Do not wipe the device or hand it to someone else until that clears.</p>
+      <p>Your account itself is checked with the server from time to time. If a device has not been able to reach the server for over a week, a banner appears: "Reconnect to confirm your account." followed by "Everything keeps working; connect to the internet when you can so your account can be confirmed." Connect when you can; nothing is blocked meanwhile. The flip side is that if an admin revokes an account, the revocation takes effect the next time that device talks to the server, not before.</p>
+      <p class="muted">The storage warning banners ("Back this device up today.", "This device cannot read its records. Do not enter more patients here.", "Close the other tabs.") are the same in Clinic as in Field. The <a href="../field/user-guide.html#banners">Field user guide</a> explains each one and what to do. The short version: stop, tell your admin, and never "fix" anything by clearing the browser's data or reinstalling the app.</p>
+
+      <h2 id="updates">13. Updating the app<span class="role-tag">Everyone</span></h2>
+      <p>The app never updates itself. An update reloads the app, and a reload in the middle of a visit is exactly the interruption you do not need, so updating is always your choice, at your moment.</p>
+      <p>When a new version is ready, a bar appears: "A new version of DH EMR is ready." with the note "Updating reloads the app, so finish and save any open visit first. Saved records are not affected." Finish and save the visit, then tap <span class="ui">Update now</span>. <span class="ui">Not now</span> hides the bar until the next time the app starts, when it offers again. You stay signed in across the update.</p>
+      <p>Each device updates on its own, so one device can be on the new version while another is still on the old one. Take updates when they are offered, between patients or at the end of the day, on every device. If your admin sends a new join link and the app says "That join link was made by a newer version of DH EMR Clinic. Update this app, then open the link again.", tap <span class="ui">Update now</span> first.</p>
+
+      <p class="backlink"><a href="../">Back to all guides</a></p>
+    </div>
+  </div>
+</main>
+
+<div class="notice">
+  <div class="wrap">
+    <p>DH EMR is not a certified EHR and is not HIPAA-compliant. It is intended for global-health use outside the US.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <a href="../../">Home</a>
+      <a href="../../clinic/">Clinic</a>
+      <a href="../../field/">Field</a>
+      <a href="../">Guides</a>
+      <a href="../../demo/clinic/">Clinic demo</a>
+      <a href="../../demo/field/">Field demo</a>
+    </nav>
+    <p>Damico Health - free, open tools for global-health clinics.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -2,10 +2,22 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "app-preview",
+      "name": "field-preview",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--workspace", "@dh/app", "exec", "vite", "preview", "--", "--port", "4173", "--strictPort"],
+      "runtimeArgs": ["--workspace", "@dh/field", "exec", "vite", "preview", "--", "--port", "4173", "--strictPort"],
       "port": 4173
+    },
+    {
+      "name": "field-preview-device2",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--workspace", "@dh/field", "exec", "vite", "preview", "--", "--port", "4174", "--strictPort"],
+      "port": 4174
+    },
+    {
+      "name": "clinic-preview",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--workspace", "@dh/clinic", "exec", "vite", "preview", "--", "--port", "4175", "--strictPort"],
+      "port": 4175
     },
     {
       "name": "site-preview",

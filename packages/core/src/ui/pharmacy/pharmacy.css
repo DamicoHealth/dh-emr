@@ -1,0 +1,55 @@
+/* Pharmacy workspace: prescription lines inside a ws-row (see ../lab/lab.css). */
+
+.rx-visit .ws-main {
+  flex-basis: 100%;
+}
+
+.rx-lines {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rx-line {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+
+@media (min-width: 640px) {
+  .rx-line {
+    grid-template-columns: 1fr auto auto;
+  }
+}
+
+.rx-line-name {
+  font-weight: 600;
+}
+
+.rx-line-sig {
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.rx-qty {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rx-qty input {
+  width: 88px;
+  min-height: var(--tap);
+  font-variant-numeric: tabular-nums;
+}
+
+.rx-dispense,
+.rx-undo {
+  min-height: var(--tap);
+}

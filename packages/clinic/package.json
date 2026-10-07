@@ -1,0 +1,30 @@
+{
+  "name": "@dh/clinic",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DH EMR Clinic: the live, constant-internet product. Staff accounts with roles, the patient-flow board, always behind the sign-in gate. Shell only; everything shared comes from @dh/core through the @dh/core/* alias.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build --base=/clinic/ --outDir=../site/public/clinic --emptyOutDir",
+    "build:demo": "DH_DEMO=1 DH_STORAGE_SUFFIX=-clinic-demo vite build --base=/demo/clinic/ --outDir=../site/public/demo/clinic --emptyOutDir",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "build:local": "tsc --noEmit && vite build"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.112.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^25.0.1",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "vite-plugin-pwa": "^0.21.1",
+    "vitest": "^2.1.8"
+  }
+}

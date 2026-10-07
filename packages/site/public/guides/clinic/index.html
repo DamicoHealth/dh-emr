@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DH EMR Clinic guides</title>
+  <meta name="description" content="Guides for DH EMR Clinic: setting up your organization (your own cloud project, the first administrator, join links for staff devices), the user guide by role, and the admin guide.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e6e64'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%23ffffff' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../../site.css">
+  <style>
+    .page h2 {
+      margin: 2rem 0 0.5rem;
+      font-size: 1.35rem;
+      line-height: 1.25;
+    }
+    .page ol {
+      color: var(--ink-soft);
+      padding-left: 1.4rem;
+    }
+    .page ol li {
+      margin: 0.55rem 0;
+    }
+    .page ol a {
+      font-weight: 600;
+    }
+    .table-scroll {
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    .guide-table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.95rem;
+      background: var(--surface);
+    }
+    .guide-table th,
+    .guide-table td {
+      border: 1px solid var(--line);
+      padding: 0.5rem 0.65rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    .guide-table th {
+      background: var(--bg);
+    }
+    .guide-table td {
+      color: var(--ink-soft);
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="../../">
+      <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#0e6e64"/>
+        <path d="M32 17v30M17 32h30" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+      </svg>
+      DH EMR
+    </a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="../../#clinic">Clinic</a>
+      <a href="../../#field">Field</a>
+      <a href="../" aria-current="page">Guides</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="page">
+      <p class="kicker">DH EMR Clinic</p>
+      <h1>DH EMR Clinic guides</h1>
+      <p>DH EMR Clinic is for a clinic with internet all day and a team that works from the same records at the same time. Staff sign in with their own accounts and roles: Reception, Triage, Provider, Lab and Pharmacy, plus administrators. Each role lands on its own workspace. A patient-flow board shows who is waiting, who is being seen and who is done, and every device sees a change within seconds. The organization owns its own cloud project; Damico Health hosts nothing and sees nothing.</p>
+
+      <h2>The guides</h2>
+      <ol>
+        <li><a href="setup.html">Setting up DH EMR Clinic for your organization</a>: for the organization lead, start to finish. Create your own cloud project, make the first administrator, set up your own device, invite the staff devices with a join link or QR code, approve accounts and set roles, and watch the board come alive. With what you need, the honest limits, and what to do when the internet goes down.</li>
+        <li><a href="user-guide.html">User guide</a>: day-to-day work by role. Signing in, the board, the Lab and Pharmacy screens, the visit form as each role sees it, finding patients, and what the chip and the banners mean.</li>
+        <li><a href="admin-guide.html">Admin guide</a>: for the administrators. The Staff screen (approving, roles, revoking, other administrators), and customizing the organization's forms, lists, formulary, lab tests and presets for everyone.</li>
+      </ol>
+
+      <h2>Which guide do I need?</h2>
+      <div class="table-scroll">
+        <table class="guide-table">
+          <thead>
+            <tr>
+              <th scope="col">You</th>
+              <th scope="col">Read</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>are starting a new organization, or standing up its cloud project</td>
+              <td><a href="setup.html">Setting up DH EMR Clinic</a></td>
+            </tr>
+            <tr>
+              <td>work at reception, triage, the provider's desk, the lab or the pharmacy</td>
+              <td><a href="user-guide.html">User guide</a></td>
+            </tr>
+            <tr>
+              <td>approve staff accounts, set roles, or change the forms, lists or formulary</td>
+              <td><a href="admin-guide.html">Admin guide</a></td>
+            </tr>
+            <tr>
+              <td>were sent a join link and want to know what to do with it</td>
+              <td><a href="setup.html#invite">Setting up, section 9</a>, then the <a href="user-guide.html">User guide</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Clinic and Field</h2>
+      <p>DH EMR Field is the separate offline product for entering paper charts after clinic, with no accounts at all. It is also the backup app for a Clinic organization when its internet or backend is down: the clinic charts on paper, and the charts are typed into Field afterwards. The two products do not share records, there is no switch between them, and there is no import from Field into Clinic today. The <a href="../field/">Field guides</a> are a separate set.</p>
+
+      <p>Want to try Clinic before setting up a real organization? The <a href="../../demo/clinic/">Clinic demo</a> is a fictional clinic day already in progress, with a "You are simulating" panel where you pick the role you want to try: Reception, Triage, Provider, Lab, Pharmacy or Admin, each landing on its own workspace while simulated colleagues keep the board moving. It stays in your browser and never syncs anywhere. The <a href="../../demo/">demo hub</a> has both demos. Ready to set up? Open the <a href="../../clinic/">Clinic app</a> and follow the setup guide.</p>
+      <p><a href="../">All guides</a></p>
+    </div>
+  </div>
+</main>
+
+<div class="notice">
+  <div class="wrap">
+    <p>DH EMR is not a certified EHR and is not HIPAA-compliant. It is intended for global-health use outside the US.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <a href="../../">Home</a>
+      <a href="../../clinic/">Clinic</a>
+      <a href="../../field/">Field</a>
+      <a href="../">Guides</a>
+      <a href="../../demo/clinic/">Clinic demo</a>
+      <a href="../../demo/field/">Field demo</a>
+    </nav>
+    <p>Damico Health - free, open tools for global-health clinics.</p>
+  </div>
+</footer>
+
+</body>
+</html>

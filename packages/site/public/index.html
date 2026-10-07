@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DH EMR - free, offline-first EMR for global-health clinics</title>
-  <meta name="description" content="DH EMR by Damico Health: a free, offline-first EMR for global-health clinics. One app, two modes. Your forms, your formulary, your lab panel, your sites - without touching code.">
+  <title>DH EMR - free clinic records software for global health</title>
+  <meta name="description" content="DH EMR by Damico Health: two free products for global-health clinics. DH EMR Clinic runs a connected clinic with staff accounts and a live patient-flow board. DH EMR Field enters paper charts offline after clinic. Your forms, your formulary, your lab panel, your sites - without touching code.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e6e64'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%23ffffff' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="site.css">
 </head>
@@ -20,90 +20,148 @@
       DH EMR
     </a>
     <nav class="site-nav" aria-label="Site">
+      <a href="#clinic">Clinic</a>
+      <a href="#field">Field</a>
       <a href="guides/">Guides</a>
-      <a href="demo/">Demo</a>
-      <a href="app/">App</a>
     </nav>
   </div>
 </header>
 
 <main>
   <!--
-    HERO: current positioning. Alec's new organizational story replaces the
-    kicker, h1, and lede below when it lands. Keep the structure exactly:
-    p.kicker, h1, p.lede, div.cta-row. Nothing else depends on the copy.
+    HERO COPY SLOT. Alec's Damico Health story replaces the kicker, h1 and
+    lede below when it lands. Keep the structure exactly: p.kicker, h1,
+    p.lede. The two product panels that follow do not depend on this copy.
   -->
   <section class="hero">
     <div class="wrap">
       <p class="kicker">DH EMR by Damico Health</p>
-      <h1>A free, offline-first EMR for global-health clinics</h1>
-      <p class="lede">One app, two modes: a connected clinic with named users and a live patient-flow board, or a field team that works fully offline and syncs when there is signal. Your forms, your formulary, your lab panel, your sites - all of it yours, without touching code.</p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href="demo/">Try the demo</a>
-        <a class="btn btn-secondary" href="app/">Launch the app</a>
+      <h1>Free clinic records software for global health</h1>
+      <p class="lede">Two products, one shared core. DH EMR Clinic runs a connected clinic with staff accounts and a live patient-flow board. DH EMR Field enters paper charts after clinic, offline, with no accounts at all. Both are free, and your records stay yours.</p>
+    </div>
+  </section>
+
+  <section class="products" aria-labelledby="products-heading">
+    <div class="wrap">
+      <h2 id="products-heading" class="visually-hidden">The two products</h2>
+      <div class="product-grid">
+
+        <article class="product product-clinic" id="clinic" aria-labelledby="clinic-heading">
+          <span class="product-tag tag-clinic">Connected</span>
+          <h2 id="clinic-heading">DH EMR Clinic</h2>
+          <p class="for">For a clinic with internet all day and a team that works from the same records at the same time.</p>
+          <ul>
+            <li>Staff accounts with roles: Reception, Triage, Provider, Lab, Pharmacy and Admin.</li>
+            <li>A live patient-flow board: who is waiting, who is being seen, who is done.</li>
+            <li>Every device sees the same visit within seconds of a change.</li>
+            <li>New devices join by opening a link or scanning a QR code from the admin.</li>
+            <li>Needs a constant internet connection.</li>
+          </ul>
+          <div class="product-actions">
+            <a class="btn btn-primary" href="demo/clinic/">Try the demo</a>
+            <a class="btn btn-secondary" href="clinic/">Launch</a>
+            <a class="btn-text" href="guides/clinic/">Guides</a>
+          </div>
+        </article>
+
+        <article class="product product-field" id="field" aria-labelledby="field-heading">
+          <span class="product-tag tag-field">Offline</span>
+          <h2 id="field-heading">DH EMR Field</h2>
+          <p class="for">For outreach teams that chart on paper during clinic and enter the visits afterwards, with little or no signal.</p>
+          <ul>
+            <li>Works fully offline. Nothing needs a connection.</li>
+            <li>No accounts and no sign-in. The device is the identity.</li>
+            <li>Use one device on its own, or connect several devices to one cloud project with a shared key so records sync whenever there is signal.</li>
+            <li>Backup and restore from Settings, so a clinic day is never lost.</li>
+            <li>Also the backup app for a Clinic organization when its backend is down.</li>
+          </ul>
+          <div class="product-actions">
+            <a class="btn btn-primary" href="demo/field/">Try the demo</a>
+            <a class="btn btn-secondary" href="field/">Launch</a>
+            <a class="btn-text" href="guides/field/">Guides</a>
+          </div>
+        </article>
+
       </div>
     </div>
   </section>
 
-  <section>
+  <section id="which" aria-labelledby="which-heading">
     <div class="wrap">
-      <h2>One app, two modes</h2>
-      <p class="section-lede">Pick the mode that matches how your organization works. Same app, same records, same customization either way.</p>
+      <h2 id="which-heading">Which one is for us?</h2>
+      <p class="section-lede">Pick by how your clinic day actually runs. There is no switching between the two products, and records do not move from one to the other.</p>
       <div class="card-grid">
         <div class="card">
-          <span class="mode-tag">Clinic mode</span>
-          <h3>A connected clinic</h3>
-          <p>For a clinic with connectivity and a team.</p>
+          <h3>Choose Clinic when</h3>
           <ul>
-            <li>Named users with roles</li>
-            <li>Realtime sync across devices</li>
-            <li>A live patient-flow board: who is waiting, who is being seen, who is done</li>
+            <li>Internet is on all day, every day.</li>
+            <li>The record is open while the patient is in front of you.</li>
+            <li>More than one person works on the same visit on the same day: reception, triage, the provider, the lab, the pharmacy.</li>
+            <li>You want to see who is waiting from any device in the building.</li>
+            <li>Each staff member should sign in as themselves.</li>
           </ul>
         </div>
         <div class="card">
-          <span class="mode-tag">Field mode</span>
-          <h3>Offline in the field</h3>
-          <p>For mobile teams and sites where connectivity is a rumor.</p>
+          <h3>Choose Field when</h3>
           <ul>
-            <li>Offline-first: every feature works with no connection at all</li>
-            <li>Each device has its own identity</li>
-            <li>Sync whenever there is signal - hours or weeks later</li>
+            <li>Visits are written on paper charts and typed in after clinic.</li>
+            <li>Signal is absent, slow or occasional.</li>
+            <li>One device, or a few, and nobody wants to manage accounts.</li>
+            <li>Your team moves between sites.</li>
+            <li>You already run Clinic and need a way to keep working when the backend is down.</li>
           </ul>
         </div>
+      </div>
+      <div class="plain-note">
+        <h3>Honest limits</h3>
+        <ul>
+          <li>Records entered in Field stay in Field. There is no import into Clinic today.</li>
+          <li>Clinic is built for a constant connection. When the backend is down, the team charts on paper and enters the visits in Field.</li>
+          <li>Both apps can be installed on the same device. They keep separate records.</li>
+          <li>Clinic roles are a workflow layer, not a security wall. Any approved staff account can read the organization's records.</li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <section>
+  <section id="customize" aria-labelledby="customize-heading">
     <div class="wrap">
-      <h2>Your clinic, not ours</h2>
-      <p class="section-lede">Everything a clinic actually argues about is configuration, not code. Set it up once in Settings and every device follows.</p>
+      <h2 id="customize-heading">Your clinic, not ours</h2>
+      <p class="section-lede">Both products share the same customization. Set it up once in Settings and every device in the organization follows. No code, no developer.</p>
       <div class="card-grid">
         <div class="card">
           <h3>Your forms</h3>
-          <p>Visit templates built from the fields your visits actually need - vitals, history, exam, plan, whatever your workflow is.</p>
+          <p>Form templates built from the sections your visits actually need: vitals, history, exam, plan, or whatever your workflow is.</p>
         </div>
         <div class="card">
           <h3>Your formulary</h3>
-          <p>Your medication list, with dispensing quantities calculated for you at the point of care.</p>
+          <p>Your medication list with doses and units. The quantity to dispense is worked out on the visit form as the prescription is written.</p>
         </div>
         <div class="card">
           <h3>Your lab panel</h3>
-          <p>Your tests, your reference ranges, flagged the way your clinicians expect.</p>
+          <p>Your lab tests and your reference ranges, so results are flagged the way your clinicians expect.</p>
         </div>
         <div class="card">
-          <h3>Your sites</h3>
-          <p>Multiple sites and your own dropdown lists. Patient numbers are generated on the device, per site, with no server needed.</p>
+          <h3>Your sites and lists</h3>
+          <p>Site names, clinicians, complaints, procedures and referral destinations. Patient numbers are generated on the device, with no server needed.</p>
+        </div>
+        <div class="card">
+          <h3>Your quick-picks</h3>
+          <p>Diagnosis quick-picks and prescription presets for the things you see every day, applied with one tap.</p>
+        </div>
+        <div class="card">
+          <h3>Your reports</h3>
+          <p>Analytics on the device: visits over time, top diagnoses, top medications, visits by site and provider, and a data-quality check before a donor report.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section>
+  <section id="ownership" aria-labelledby="ownership-heading">
     <div class="wrap">
-      <h2>Records belong to the organization</h2>
-      <p class="section-lede">Your records live on your devices, and optionally in your own Supabase project that you control. Damico Health hosts nothing and sees nothing: no central server, no account with us, no subscription. Free means free.</p>
-      <p class="section-lede">DH EMR is built and maintained by Alec Damico, an emergency medicine physician, through the nonprofit Damico Health. Guides for setup, customization, and syncing are being rewritten for the new app - see <a href="guides/">Guides</a> for what is coming.</p>
+      <h2 id="ownership-heading">Records belong to the organization</h2>
+      <p class="section-lede">Your records live on your devices and, if you choose, in your own Supabase project that you control. Damico Health hosts nothing and sees nothing: no central server, no account with us, no subscription. Free means free.</p>
+      <p class="section-lede">DH EMR is built and maintained by Alec Damico, an emergency medicine physician, through the nonprofit Damico Health. The <a href="guides/">guides</a> cover setup, day-to-day use and administration for each product.</p>
     </div>
   </section>
 </main>
@@ -118,9 +176,11 @@
   <div class="wrap">
     <nav aria-label="Footer">
       <a href="./">Home</a>
+      <a href="clinic/">Clinic</a>
+      <a href="field/">Field</a>
       <a href="guides/">Guides</a>
-      <a href="demo/">Demo</a>
-      <a href="app/">App</a>
+      <a href="demo/clinic/">Clinic demo</a>
+      <a href="demo/field/">Field demo</a>
     </nav>
     <p>Damico Health - free, open tools for global-health clinics.</p>
   </div>

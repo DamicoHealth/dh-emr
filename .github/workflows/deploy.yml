@@ -1,0 +1,51 @@
+# Deploys damicohealth.com from packages/site/public via GitHub Pages.
+# Build outputs (the two apps and the two demos) are produced here, never
+# committed. One job builds and tests; a second publishes. Nothing deploys
+# if the test suite or any typecheck fails.
+name: Deploy damicohealth.com
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck:all
+      - run: npm --workspace @dh/field run test
+      - run: npm --workspace @dh/clinic run test
+      - run: npm run build:field
+      - run: npm run build:clinic
+      - run: npm run build:demos
+      - run: echo damicohealth.com > packages/site/public/CNAME
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: packages/site/public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

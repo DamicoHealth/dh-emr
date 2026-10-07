@@ -2,15 +2,19 @@
   "name": "dh-emr",
   "version": "0.1.0",
   "private": true,
-  "description": "DH EMR - free, offline-first EMR for global-health clinics. One app, two modes: connected clinic and offline field.",
+  "description": "DH EMR - free EMR for global-health clinics. Two separate products over one shared core: DH EMR Field (offline paper-chart entry) and DH EMR Clinic (live, staff accounts and roles).",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm --workspace @dh/app run dev",
-    "build": "npm --workspace @dh/app run build",
-    "test": "npm --workspace @dh/app run test",
-    "test:watch": "npm --workspace @dh/app run test:watch",
-    "typecheck": "npm --workspace @dh/app run typecheck"
+    "test": "npm --workspace @dh/core run test",
+    "test:watch": "npm --workspace @dh/core run test:watch",
+    "typecheck": "npm --workspace @dh/core run typecheck",
+    "typecheck:all": "npm --workspace @dh/core run typecheck && npm --workspace @dh/field run typecheck && npm --workspace @dh/clinic run typecheck",
+    "dev:field": "npm --workspace @dh/field run dev",
+    "dev:clinic": "npm --workspace @dh/clinic run dev",
+    "build:field": "npm --workspace @dh/field run build",
+    "build:clinic": "npm --workspace @dh/clinic run build",
+    "build:demos": "npm --workspace @dh/field run build:demo && npm --workspace @dh/clinic run build:demo"
   }
 }

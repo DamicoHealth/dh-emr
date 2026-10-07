@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Getting started - DH EMR Field guides</title>
+  <meta name="description" content="Set up a DH EMR Field device with the setup wizard, enter your first visit from a paper chart, and take your first backup. Covers one device on its own and several devices syncing through your organization's cloud.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e6e64'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%23ffffff' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../../site.css">
+  <style>
+    /* Guide-only styles. Everything else comes from site.css. */
+    .guide {
+      padding: 2.5rem 0 3rem;
+      max-width: 44rem;
+    }
+    .guide h1 {
+      margin: 0 0 0.75rem;
+      font-size: clamp(1.6rem, 5vw, 2.25rem);
+      line-height: 1.2;
+    }
+    .guide h2 {
+      margin: 2.4rem 0 0.5rem;
+      font-size: clamp(1.25rem, 3.5vw, 1.5rem);
+      line-height: 1.25;
+      scroll-margin-top: 1.5rem;
+      border-top: 1px solid var(--line);
+      padding-top: 1.6rem;
+    }
+    .guide h3 {
+      margin: 1.4rem 0 0.35rem;
+      font-size: 1.05rem;
+      scroll-margin-top: 1.5rem;
+    }
+    .guide p, .guide li { color: var(--ink); }
+    .guide .muted { color: var(--ink-soft); }
+    .guide ul, .guide ol {
+      padding-left: 1.3rem;
+      margin: 0.5rem 0 1rem;
+    }
+    .guide li { margin: 0.35rem 0; }
+    /* Exact UI labels: buttons, tabs, field names */
+    .ui {
+      font-weight: 600;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 0.3rem;
+    }
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-1);
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0 0.5rem;
+    }
+    .toc p { margin: 0 0 0.4rem; font-weight: 700; }
+    .toc ol { margin: 0; padding-left: 1.3rem; }
+    .toc li { margin: 0.25rem 0; }
+    .toc a { color: var(--primary); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .guide table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.75rem 0 1rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      font-size: 0.95rem;
+    }
+    .guide th, .guide td {
+      text-align: left;
+      vertical-align: top;
+      padding: 0.5rem 0.65rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .guide tr:last-child td { border-bottom: 0; }
+    .guide th { font-size: 0.9rem; background: var(--bg); }
+    .table-scroll { overflow-x: auto; }
+    .callout {
+      background: var(--warn-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      margin: 0.9rem 0;
+      color: var(--warn-ink);
+    }
+    .callout p { color: var(--warn-ink); margin: 0.35rem 0; }
+    .callout p:first-child { margin-top: 0; }
+    .callout p:last-child { margin-bottom: 0; }
+    .tip {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      margin: 0.9rem 0;
+    }
+    .tip p { margin: 0.35rem 0; }
+    .tip p:first-child { margin-top: 0; }
+    .tip p:last-child { margin-bottom: 0; }
+    .confirm {
+      margin: 1rem 0;
+      padding: 0.85rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius);
+    }
+    .confirm .lead {
+      margin: 0 0 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .confirm p { margin: 0.4rem 0; }
+    .backlink { margin-top: 2.5rem; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="../../">
+      <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#0e6e64"/>
+        <path d="M32 17v30M17 32h30" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+      </svg>
+      DH EMR
+    </a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="../../#clinic">Clinic</a>
+      <a href="../../#field">Field</a>
+      <a href="../" aria-current="page">Guides</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="guide">
+      <p class="kicker">DH EMR Field guides</p>
+      <h1>Getting started with DH EMR Field</h1>
+      <p class="muted">DH EMR Field is for entering visits from paper charts after clinic. This guide takes one device from blank to its first saved visit and its first backup. It covers both ways of running Field: one device on its own, or several devices that sync through your organization's own cloud.</p>
+      <p class="muted">Two words the app uses everywhere: a <strong>visit</strong> is one patient seen on one day, and the <strong>patient number</strong> is the short code the app creates for each patient from the name and date of birth. You never type it.</p>
+
+      <nav class="toc" aria-label="On this page">
+        <p>On this page</p>
+        <ol>
+          <li><a href="#who">Who Field is for</a></li>
+          <li><a href="#need">What you need</a></li>
+          <li><a href="#wizard">The setup wizard</a></li>
+          <li><a href="#lists">Clinic lists, and why empty lists are refused</a></li>
+          <li><a href="#first-visit">Your first visit, end to end</a></li>
+          <li><a href="#records">Where your records live</a></li>
+          <li><a href="#backup">Take a backup, daily</a></li>
+          <li><a href="#next">Where to go next</a></li>
+        </ol>
+      </nav>
+
+      <h2 id="who">1. Who Field is for</h2>
+      <p>Field is the paper-chart product. The clinic runs on paper during the day. Afterward, at the end of the day or the next morning, someone opens Field and enters each chart as a visit. Everything is saved on the device. No connection is needed to enter or read a visit.</p>
+      <p>There are two ways to run it:</p>
+      <ul>
+        <li><strong>One device on its own.</strong> Records stay on that device and are never sent anywhere. The backup file you download is the only other copy.</li>
+        <li><strong>Several devices, one cloud.</strong> Each device enters visits on its own and syncs them to a cloud project that your organization owns, whenever there is signal. After a sync, every device holds every visit. There are no accounts: every device uses the same project address and project key, which your admin gives you. The <a href="cloud-sync.html">cloud sync guide</a> explains how an admin sets that up.</li>
+      </ul>
+      <p>Field is also the fallback for an organization that runs DH EMR Clinic. When the Clinic backend is down, staff chart on paper and enter the day's charts in Field afterward. The <a href="admin-guide.html#clinic-backup">admin guide</a> explains what that does and does not give you.</p>
+      <h3>What Field does not have</h3>
+      <p>There are no accounts and no sign-in; the device is the identity. There are no staff roles and no patient-flow board. Those belong to DH EMR Clinic, which is a separate product. There is no switch between the two products, and there is no way to move records from Field into Clinic today.</p>
+
+      <h2 id="need">2. What you need</h2>
+      <ul>
+        <li>A device with a modern browser: a tablet, a laptop, or a phone. Open the <a href="../../field/">Field app</a>. On most tablets and phones the browser can add it to the home screen so it opens like an app.</li>
+        <li>Only for the cloud path: the project address and project key. Your admin gets both from the organization's Supabase project. You do not need them for a device on its own.</li>
+        <li>A few paper charts to enter.</li>
+      </ul>
+
+      <h2 id="wizard">3. The setup wizard</h2>
+      <p>The first time the app opens on a device it shows a short wizard headed <span class="ui">Set up this device</span>. The app's own words: "This takes about a minute and only happens once. You can change any of it later under Settings." One choice is harder to change than the rest, whether the device is an admin device, and this guide says so below.</p>
+      <p>The wizard shows until setup is finished. If the app is closed part way through, it starts again from the first step next time. Nothing is stored until the last step succeeds, so a wrong key or a typo cannot leave the device half set up.</p>
+      <p>The first step is a choice between two buttons:</p>
+      <ul>
+        <li><span class="ui">Connect to our clinic cloud</span>: "Records sync between every device on the team. Needs the project address and key from your admin."</li>
+        <li><span class="ui">Use this device on its own</span>: "Records stay on this device and are never sent anywhere. Take a backup at the end of each clinic day."</li>
+      </ul>
+
+      <h3>Path 1: use this device on its own</h3>
+      <p>Tap <span class="ui">Use this device on its own</span>. The wizard goes straight to naming the device. There is nothing to connect.</p>
+
+      <h3>Path 2: connect to our clinic cloud</h3>
+      <p>Tap <span class="ui">Connect to our clinic cloud</span>. The next step is headed <span class="ui">Connect to your cloud</span>. It says where the values come from: "Your admin gets both of these from the Supabase project, under Settings then API Keys." There are two boxes:</p>
+      <ul>
+        <li><span class="ui">Project URL</span>: looks like https://yourproject.supabase.co</li>
+        <li><span class="ui">Project key</span>: a long string that starts with sb_publishable_, or the long legacy anon key</li>
+      </ul>
+      <div class="callout">
+        <p><strong>The key rule, in the app's own words:</strong> "Use the Publishable key, or the legacy anon key. Never a Secret or service_role key: those bypass every database security rule and must not leave the office." The app refuses server keys. If you paste one you get an error, not a connection. Ask your admin for the publishable key.</p>
+      </div>
+      <p>Tap <span class="ui">Check and continue</span>. The button reads "Checking…" while the app contacts the project and checks that its tables are really there. If something is wrong, a plain message says what:</p>
+      <div class="table-scroll">
+      <table>
+        <tr><th>The wizard says</th><th>What to do</th></tr>
+        <tr><td>"That does not look like a Supabase project URL. It should look like https://yourproject.supabase.co"</td><td>Check the address with your admin. It must start with https:// and end in .supabase.co.</td></tr>
+        <tr><td>"Paste the project anon key."</td><td>The key box is empty.</td></tr>
+        <tr><td>"That is a server key (service_role or sb_secret). It bypasses every database security rule and must never go on a field device. Use the Publishable key, or the legacy anon key."</td><td>You were given the wrong kind of key. Ask your admin for the publishable key. Do not try to work around this.</td></tr>
+        <tr><td>"Could not reach the project tables:" followed by the reason the project gave</td><td>The project answered but something is wrong with it. Show the reason to your admin.</td></tr>
+        <tr><td>"Connected, but the records table was not found. Run the setup SQL on this Supabase project first."</td><td>The project exists but has not been set up yet. Your admin needs to finish the <a href="cloud-sync.html">cloud sync setup</a>.</td></tr>
+        <tr><td>"Could not reach that project. Check the device is online and the URL is right. (...)"</td><td>The device is offline, or the address is wrong. Get signal and try again.</td></tr>
+      </table>
+      </div>
+      <p><span class="ui">Back</span> returns to the first step. After the check passes, the cloud path continues to the same naming and clinic-lists steps as the other path.</p>
+
+      <h3>Naming the device, both paths</h3>
+      <p>The step headed <span class="ui">Name this device</span> asks for two things:</p>
+      <ul>
+        <li><span class="ui">Device name</span>. The app says why it matters: "The name shows up in your device list and on the records this device files, so make it something you can recognise: "iPad 2 - triage", "Grace's tablet"." A blank name is refused: "Give this device a name so it can be told apart from the others."</li>
+        <li><span class="ui">What is this device allowed to do?</span> A list with two choices: <span class="ui">Enter and view records (most devices)</span> and <span class="ui">Also change the form and clinic settings for everyone</span>. The first choice makes a standard device. The second makes an admin device, which can change the clinic lists, the formulary, the lab tests, the presets and the visit form for the whole team. Most devices should be standard. One or two admin devices per team is plenty.</li>
+      </ul>
+      <p>Under those, the wizard says which kind of device this is: "This device is offline only. Nothing it records leaves the device." on the first path, or "This device is connected to your cloud. Records sync automatically." on the cloud path.</p>
+      <div class="callout">
+        <p><strong>Choose the admin question carefully.</strong> There is no control in the app to change it later. On a cloud device, the admin can change a device's role in the project's device list, and the device picks it up on its next sync; the <a href="admin-guide.html#roles">admin guide</a> explains how. On a device on its own, the choice stands.</p>
+      </div>
+      <p>Tap <span class="ui">Next</span>.</p>
+
+      <h2 id="lists">4. Clinic lists, and why empty lists are refused</h2>
+      <p>The last step is headed <span class="ui">Where is this device working?</span>. The app explains: "These fill the Site and Provider lists on the visit form. Without them every record is filed under the placeholder "Site A", which is no use in a report. One per line, and you can change them later under Settings." There are two boxes:</p>
+      <ul>
+        <li><span class="ui">Clinic or site names</span>: the places where you see patients, one per line, for example "Kabale Community Clinic" and "Mobile Unit A"</li>
+        <li><span class="ui">Clinicians working on this device</span>: the people who will be recorded as the provider on visits, one per line, for example "Dr. A. Mensah" and "Grace N., clinical officer"</li>
+      </ul>
+      <p>Two rules, both written on the step itself:</p>
+      <ul>
+        <li><strong>One entry per line.</strong> Commas belong inside an entry: "Grace N., clinical officer" is one clinician, not two. The app never splits on commas.</li>
+        <li><strong>Both lists need at least one entry.</strong> The step says: "Both lists are needed to finish: a device with an empty list cannot save a visit." If you try to finish with a box empty, the wizard refuses: "You need at least one site. An empty list would block every save." and the same for clinicians.</li>
+      </ul>
+      <p>Why the refusal? Every visit must have a site. If the site list were empty, the visit form could never be completed, and the device would be set up but useless. The wizard would rather stop you here than let that happen.</p>
+      <p>On the cloud path the step adds one line: "If your organization has already set these up in the cloud, its list replaces these on the first sync." Enter something sensible anyway, so the device works before that first sync.</p>
+      <p>Tap <span class="ui">Start using the app</span>. The button reads "Finishing…" while the device is registered. On the cloud path, if the project refuses at this moment, the wizard says "Could not finish setup:" with the reason. Nothing was stored; get signal and try again.</p>
+      <p>Setup is done. If you entered placeholder names to get through setup, Settings will show a red warning until real sites and clinicians are set. The <a href="admin-guide.html#lists">admin guide</a> covers the Clinic lists card.</p>
+
+      <h2 id="first-visit">5. Your first visit, end to end</h2>
+      <p>The app has four tabs: <span class="ui">Visits</span>, <span class="ui">New visit</span>, <span class="ui">Analytics</span> and <span class="ui">Settings</span>. On a phone they sit at the bottom of the screen; on a tablet or computer they are in the top bar. Take one paper chart and enter it:</p>
+      <ol>
+        <li>Tap <span class="ui">New visit</span>. A panel titled "New visit" slides in. The <span class="ui">+ New visit</span> button on the Visits tab does the same thing. Under the title it says "Patient number generates from name + date of birth".</li>
+        <li>In the <strong>Visit</strong> section, pick the <span class="ui">Site</span>, set the <span class="ui">Date</span>, and pick the <span class="ui">Provider</span>. Site and Date are required. The date starts as today. For a paper chart, change it to the date written on the chart, the day the patient was seen, not the day you are typing. The app refuses a date in the future.</li>
+        <li>In the <strong>Patient</strong> section, enter the <span class="ui">Given name</span> and <span class="ui">Family name</span>, tap <span class="ui">M</span> or <span class="ui">F</span> for <span class="ui">Sex</span>, and type the <span class="ui">Date of birth</span> as DD/MM/YYYY. If the chart has no date of birth, tick <span class="ui">Estimate from age</span> next to "Date of birth unknown" and type an <span class="ui">Estimated age</span> in years instead. <span class="ui">Phone</span> is optional.</li>
+        <li>Watch the <span class="ui">Patient number</span> box. It is read-only and fills in by itself once the name and date of birth are entered. It is two letters of the given name, two letters of the family name, and the date of birth. A patient named Amara Nakato born on 12 April 1991 becomes AMNA12041991. The same patient gets the same number every time, and if two different patients would collide the app adds a letter to keep them apart. Both names need at least two letters.</li>
+        <li>Fill in the rest of the form from the chart: <strong>Vitals</strong>, <strong>History</strong>, <strong>Chief Concern</strong>, <strong>Labs</strong>, <strong>Diagnosis</strong>, <strong>Medications</strong>. The sections <strong>Procedures</strong>, <strong>Referral</strong>, <strong>Imaging</strong>, <strong>Surgery</strong> and <strong>Notes</strong> start closed; tap a section header to open it. Enter what is on the chart and leave the rest empty. The <a href="user-guide.html#entering">user guide</a> explains every field.</li>
+        <li>Save. There are two save buttons at the bottom of the panel:
+          <ul>
+            <li><span class="ui">Save &amp; next patient</span> files the visit and keeps the form open for the next chart. Site, Date and Provider stay filled; everything else clears. A green note confirms it, for example "Saved Amara Nakato (AMNA12041991). Ready for the next patient." This is the button for a pile of charts.</li>
+            <li><span class="ui">Save</span> files the visit and closes the panel. Use it for the last chart of the pile.</li>
+          </ul>
+        </li>
+      </ol>
+      <p>If a required field is missing, the visit is not saved. A red summary appears, for example "Check 2 fields", listing each problem in plain words such as "Family name is required." The form jumps to the first one. Fix the fields and save again. Nothing is lost.</p>
+      <p><span class="ui">Cancel</span> closes the form. If you have typed anything, the app first asks "Discard this visit? Anything you have entered will be lost." Tap OK to discard, or Cancel to keep working. Tapping outside the panel does nothing, on purpose, so a stray touch cannot lose a visit.</p>
+      <p>Saved visits appear on the <span class="ui">Visits</span> tab, one card per patient. The four counts at the top of that tab, <span class="ui">Visits</span>, <span class="ui">Patients</span>, <span class="ui">Today</span> and <span class="ui">Pediatric (&lt;18)</span>, cover everything on the device. Tap a card to open the patient's chart.</p>
+
+      <h2 id="records">6. Where your records live</h2>
+      <p>Every visit is saved on the device itself, always. Saving never needs a connection. On a cloud device, visits also upload to your organization's project whenever there is signal, and visits from the other devices download.</p>
+      <p>The chip at the right of the top bar shows where syncing stands. On a device on its own it reads <span class="ui">Offline only</span> and does nothing when tapped. On a cloud device, tapping it runs a sync by hand, and while records are waiting to upload it shows a count like "3 pending" (on a phone the count is in Settings instead, on the <span class="ui">Waiting to sync</span> row of the Cloud sync card).</p>
+      <div class="table-scroll">
+      <table>
+        <tr><th>Chip says</th><th>What it means</th></tr>
+        <tr><td><span class="ui">Offline only</span></td><td>Cloud sync is off for this device. Records stay on the device.</td></tr>
+        <tr><td><span class="ui">Connected</span></td><td>The cloud is set up but nothing has synced yet this session.</td></tr>
+        <tr><td><span class="ui">Offline</span></td><td>No connection right now. Everything is saved on the device and syncs when you reconnect. This is normal.</td></tr>
+        <tr><td><span class="ui">Syncing</span></td><td>Records are being sent and received right now.</td></tr>
+        <tr><td><span class="ui">Synced</span></td><td>All records are backed up to your cloud.</td></tr>
+        <tr><td><span class="ui">Sync error</span></td><td>The last sync failed. Tap to retry, or check the connection. Records are still safe on the device.</td></tr>
+      </table>
+      </div>
+
+      <h2 id="backup">7. Take a backup, daily</h2>
+      <p>Open <span class="ui">Settings</span>, find the <strong>Backup and restore</strong> card, and tap <span class="ui">Download backup</span>. The card explains what you get: "A backup is a single file holding every record on this device plus your form and preset settings. It never contains your cloud key or device identity. Take one at the end of each clinic day - it is the safety net if a device is lost, wiped, or replaced."</p>
+      <p>The file is named dh-emr-backup followed by the date, for example dh-emr-backup-2026-10-06.json, and the app confirms with "Backup downloaded with 12 records. Keep it somewhere safe." Move the file off the device: a laptop, a USB stick, a shared drive folder.</p>
+      <p>Do this at the end of every day of entry. On a device on its own, the backup file is the only copy of your records that exists outside the device. If the device is lost, wiped or broken, the backup is the difference between losing an afternoon and losing a year. Cloud devices should back up too; it is the safety net for records that have not synced yet.</p>
+      <p>Restoring is on the same card, with <span class="ui">Restore from a backup</span>. It merges: "nothing already on this device is lost, and where the same record exists in both the more recently saved version wins."</p>
+
+      <h2 id="next">8. Where to go next</h2>
+      <ul>
+        <li>The <a href="user-guide.html">user guide</a>: day-to-day work in detail. The visit form section by section, finding and editing visits, returning patients, deleting, analytics, the sync chip, the warning banners and updates.</li>
+        <li>The <a href="admin-guide.html">admin guide</a>: for whoever runs the team's devices. Admin and standard devices, the clinic lists, the form templates, the formulary, lab tests and reference ranges, presets, the device fleet, backups and restore, and the honest limits.</li>
+        <li>The <a href="cloud-sync.html">cloud sync guide</a>: for the admin standing up the organization's own cloud project so several Field devices can sync.</li>
+        <li>Not ready to set up a real device? The <a href="../../demo/field/">Field demo</a> is a fictional clinic with sample patients where you can try everything safely.</li>
+      </ul>
+
+      <p class="backlink"><a href="../">Back to all guides</a></p>
+    </div>
+  </div>
+</main>
+
+<div class="notice">
+  <div class="wrap">
+    <p>DH EMR is not a certified EHR and is not HIPAA-compliant. It is intended for global-health use outside the US.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <a href="../../">Home</a>
+      <a href="../../clinic/">Clinic</a>
+      <a href="../../field/">Field</a>
+      <a href="../">Guides</a>
+      <a href="../../demo/clinic/">Clinic demo</a>
+      <a href="../../demo/field/">Field demo</a>
+    </nav>
+    <p>Damico Health - free, open tools for global-health clinics.</p>
+  </div>
+</footer>
+
+</body>
+</html>
