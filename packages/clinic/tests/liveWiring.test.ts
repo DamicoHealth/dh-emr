@@ -130,7 +130,9 @@ describe('clinic shell live wiring', () => {
     render(h(App))
     await screen.findByRole('button', { name: 'Board' })
 
-    expect(startAuto).toHaveBeenCalledTimes(1)
+    // The Board tab paints in the same commit that activates the gate; the
+    // effect that starts sync flushes after it, so wait for the call.
+    await waitFor(() => expect(startAuto).toHaveBeenCalledTimes(1))
     expect(startAuto).toHaveBeenCalledWith({ intervalMs: CLINIC_AUTO_SYNC_INTERVAL_MS })
     expect(startAuto).toHaveBeenCalledWith({ intervalMs: 20_000 })
     expect(startRt).toHaveBeenCalledTimes(1)

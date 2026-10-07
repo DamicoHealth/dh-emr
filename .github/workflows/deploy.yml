@@ -28,10 +28,11 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm test
       - run: npm run typecheck:all
-      - run: npm --workspace @dh/field run test
-      - run: npm --workspace @dh/clinic run test
+      - run: npm run test:all
+      # Same suites with every kernel call delayed 15 ms: catches tests that
+      # query async-rendered content synchronously (see core/tests/slowIo.ts).
+      - run: npm run test:slow
       - run: npm run build:field
       - run: npm run build:clinic
       - run: npm run build:demos

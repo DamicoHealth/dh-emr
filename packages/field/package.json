@@ -10,6 +10,7 @@
     "build:demo": "DH_DEMO=1 DH_STORAGE_SUFFIX=-demo vite build --base=/demo/field/ --outDir=../site/public/demo/field --emptyOutDir",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:slow": "DH_SLOW_IO=1 vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "build:local": "tsc --noEmit && vite build"

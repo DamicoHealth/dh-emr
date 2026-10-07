@@ -79,7 +79,7 @@ export default defineConfig({
     environment: 'jsdom',
     // The storage harness (fake-indexeddb + Map-backed localStorage +
     // resetStorage) is shared from core; shells never carry a second copy.
-    setupFiles: ['../core/tests/setup.ts'],
+    setupFiles: ['../core/tests/setup.ts', '../core/tests/slowIo.ts'],
     include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],
   },
 })

@@ -63,7 +63,10 @@ Old implementation (reference only): github.com/DamicoHealth/dh-field-emr
 ## Commands
 
 - `npm test` - the shared suite in packages/core (Vitest, jsdom,
-  fake-indexeddb)
+  fake-indexeddb); `npm run test:all` adds the field and clinic shells
+- `npm run test:slow` - all three suites with every kernel call delayed
+  15 ms (packages/core/tests/slowIo.ts). Run it before pushing any UI
+  test: it reproduces the slow-runner races CI otherwise finds first.
 - `npm run typecheck:all` - tsc in core, field and clinic
 - `npm run dev:field` / `npm run dev:clinic` - app dev servers
 - `npm run build:field` / `npm run build:clinic` - typecheck + production

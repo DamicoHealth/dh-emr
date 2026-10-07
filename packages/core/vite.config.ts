@@ -18,7 +18,7 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
-    setupFiles: ['tests/setup.ts'],
+    setupFiles: ['tests/setup.ts', 'tests/slowIo.ts'],
     include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],
   },
 })

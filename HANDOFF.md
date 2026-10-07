@@ -461,14 +461,14 @@ State of the release sequence, in order:
 3. DONE: GitHub Pages enabled on dh-emr in workflow mode (gh api POST
    repos/DamicoHealth/dh-emr/pages -f build_type=workflow). Default Pages
    URL is https://damicohealth.github.io/dh-emr/ until the domain moves.
-4. BLOCKED on Alec: "git push -u origin main" was rejected because the
-   stored gh OAuth token has scopes gist, read:org, repo but not
-   "workflow", and every commit on main carries .github/workflows/deploy.yml.
-   Fix (browser device flow, Alec only):
-   gh auth refresh -h github.com -s workflow
-   then git push -u origin main. The push triggers the Deploy workflow
-   (build job: npm ci, core + shell tests, typecheck:all, four builds;
-   deploy job: deploy-pages). Watch with gh run watch.
+4. DONE 2026-10-07: Alec added the "workflow" scope (gh auth refresh);
+   main pushed. The first two Deploy runs FAILED in tests that pass
+   locally: both were tests querying async-rendered content synchronously
+   (the GitHub runner is slower than the laptop). Fixed: recordsRole (3),
+   roles (3), clinic liveWiring (1), clinicDemo (2). Added an opt-in
+   slow-storage test mode (packages/core/tests/slowIo.ts, DH_SLOW_IO=1,
+   `npm run test:slow`) that reproduces this class deterministically; the
+   workflow now runs test:all then test:slow before building.
 5. AFTER GREEN: move the custom domain. The old site repo
    DamicoHealth/damicohealth-com currently owns damicohealth.com (legacy
    Pages build). Remove it there (Settings -> Pages, or

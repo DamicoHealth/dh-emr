@@ -7,6 +7,7 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:slow": "DH_SLOW_IO=1 vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

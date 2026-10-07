@@ -752,14 +752,15 @@ describe('the role switch lands on the right workspace', () => {
     await screen.findByRole('heading', { name: 'Lab' })
     expect(screen.getByRole('button', { name: 'Lab' }).getAttribute('aria-current')).toBe('page')
     expect(screen.queryByRole('button', { name: 'Board' })).toBeNull()
-    expect(screen.getByText(/2 waiting on results/)).toBeTruthy()
+    // The heading paints before the waiting list loads from storage: await it.
+    expect(await screen.findByText(/2 waiting on results/)).toBeTruthy()
     expect(screen.getAllByRole('button', { name: /^Enter results for/ })).toHaveLength(2)
 
     await pick('pharmacy')
     await screen.findByRole('heading', { name: 'Pharmacy' })
     expect(screen.getByRole('button', { name: 'Pharmacy' }).getAttribute('aria-current')).toBe('page')
     expect(screen.queryByRole('button', { name: 'Board' })).toBeNull()
-    expect(screen.getByText(/3 waiting/)).toBeTruthy()
+    expect(await screen.findByText(/3 waiting/)).toBeTruthy()
     expect(screen.getByText(/Allergies: Penicillin \(rash\)/)).toBeTruthy()
 
     await pick('admin')

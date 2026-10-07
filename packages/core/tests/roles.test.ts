@@ -783,7 +783,8 @@ describe('lab workspace logic', () => {
     const dialog = await screen.findByRole('dialog', { name: 'Edit visit' })
     expect(within(dialog).getByText(/Lab sections/)).toBeTruthy()
     // Lab's slice: Labs editable, Patient and Chief Concern read-only, no Vitals.
-    const order = within(dialog).getByLabelText('Ordered: Malaria RDT') as HTMLInputElement
+    // (The sections render after the template library loads: first query awaits.)
+    const order = (await within(dialog).findByLabelText('Ordered: Malaria RDT')) as HTMLInputElement
     expect(order.checked).toBe(true)
     expect(inert(order)).toBe(false)
     expect(inert(within(dialog).getByLabelText(/^Given name/))).toBe(true)
@@ -909,7 +910,7 @@ describe('pharmacy workspace logic', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Open the visit for Test Patient' }))
     const dialog = await screen.findByRole('dialog', { name: 'Edit visit' })
     expect(within(dialog).getByText(/Pharmacy sections/)).toBeTruthy()
-    expect(inert(within(dialog).getByLabelText('Treatment notes'))).toBe(false)
+    expect(inert(await within(dialog).findByLabelText('Treatment notes'))).toBe(false)
     expect(inert(within(dialog).getByLabelText('Diagnosis'))).toBe(true)
     expect(within(dialog).queryByLabelText(/Temperature/)).toBeNull()
   })
@@ -953,7 +954,7 @@ describe('board home column', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Open the visit for Test Patient' }))
     const dialog = await screen.findByRole('dialog', { name: 'Edit visit' })
     expect(within(dialog).getByText(/Reception sections/)).toBeTruthy()
-    expect(inert(within(dialog).getByLabelText(/^Given name/))).toBe(false)
+    expect(inert(await within(dialog).findByLabelText(/^Given name/))).toBe(false)
     expect(inert(within(dialog).getByLabelText(/Temperature/))).toBe(true)
   })
 

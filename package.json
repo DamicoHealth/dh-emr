@@ -9,6 +9,8 @@
   "scripts": {
     "test": "npm --workspace @dh/core run test",
     "test:watch": "npm --workspace @dh/core run test:watch",
+    "test:all": "npm --workspace @dh/core run test && npm --workspace @dh/field run test && npm --workspace @dh/clinic run test",
+    "test:slow": "npm --workspace @dh/core run test:slow && npm --workspace @dh/field run test:slow && npm --workspace @dh/clinic run test:slow",
     "typecheck": "npm --workspace @dh/core run typecheck",
     "typecheck:all": "npm --workspace @dh/core run typecheck && npm --workspace @dh/field run typecheck && npm --workspace @dh/clinic run typecheck",
     "dev:field": "npm --workspace @dh/field run dev",
