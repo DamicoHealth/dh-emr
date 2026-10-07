@@ -374,8 +374,8 @@ the session scratchpad (pre-split-snapshot.tgz).
 1. Live clinic-mode E2E: Alec creates a Supabase project per
    supabase/SETUP.md (a scratch one is fine), then drive both modes
    against real Postgres.
-2. Deploy: GitHub repo + Pages + damicohealth.com DNS
-   (packages/site/DEPLOY.md). Hero copy awaits the pivot story.
+2. Deploy: IN PROGRESS, see "Public release" at the bottom. Hero copy
+   awaits the pivot story.
 3. Device tests on real hardware (DEVICE-TEST checklist to be written
    from the old repo's when hardware is scheduled).
 
@@ -384,7 +384,7 @@ the session scratchpad (pre-split-snapshot.tgz).
 - supabase-js bundle split (594 kB warning, cosmetic), PGlite SQL tests,
   Capacitor/native wrapper if ever wanted.
 
-## Clinic Phase 2 DONE (2026-10-06, uncommitted)
+## Clinic Phase 2 DONE (2026-10-06, committed in 4656145)
 
 Realtime trigger + 20 s auto-sync (core/src/sync/realtime.ts, engine
 startAutoSync), join links + QR (core/src/sync/joinLink.ts, core/src/lib/qr.ts,
@@ -394,7 +394,7 @@ PharmacyScreen with Medication.dispensed, tabsFor per role). 670 tests
 (core 609, clinic 31, field 30); typecheck:all clean. Live E2E of the
 channel + join links still needs Alec's staff account.
 
-## Clinic demo DONE (2026-10-06, uncommitted)
+## Clinic demo DONE (2026-10-06, committed in 4656145)
 
 packages/clinic/src/demo: local simulation, no backend ever. Seeded clinic
 day (15 visits across the default stations), six-seat simulated roster,
@@ -404,7 +404,7 @@ Reset demo, DemoStaffScreen over a local roster. Five safety laws pinned
 by tests/clinicDemo.test.ts (50). build:demo -> site/public/demo/clinic;
 build:local bundle has zero demo markers. 723 tests total.
 
-## Clinic polish DONE (2026-10-06, uncommitted) - 754 tests, all green
+## Clinic polish DONE (2026-10-06, committed in 4656145) - 754 tests, all green
 
 Clinic Settings now gate on the ACCOUNT (CLINIC_GATE_REASON: "Only an
 administrator account can change this. Ask your clinic's admin."), and the
@@ -447,3 +447,36 @@ with enabledByDefault === false (tests/labVisibility.test.ts).
   built-in list, nothing on the visit form honors it for org tests. Either
   wire it (hide the test on the form unless enabled) or remove the column.
   Deferred so as not to collide with the Phase 2 agents editing core.
+
+## Public release (2026-10-06, in progress)
+
+State of the release sequence, in order:
+
+1. DONE: day's work committed as 4656145; built-shell cleanup committed as
+   623a5f9 (packages/site/public/{field,clinic} and demo/* are ignored
+   entirely now; only the hand-written demo hub index.html is tracked).
+   PHI tripwire printed nothing before both commits.
+2. DONE: public repo github.com/DamicoHealth/dh-emr created (gh repo
+   create, remote "origin" added). Homepage + description set.
+3. DONE: GitHub Pages enabled on dh-emr in workflow mode (gh api POST
+   repos/DamicoHealth/dh-emr/pages -f build_type=workflow). Default Pages
+   URL is https://damicohealth.github.io/dh-emr/ until the domain moves.
+4. BLOCKED on Alec: "git push -u origin main" was rejected because the
+   stored gh OAuth token has scopes gist, read:org, repo but not
+   "workflow", and every commit on main carries .github/workflows/deploy.yml.
+   Fix (browser device flow, Alec only):
+   gh auth refresh -h github.com -s workflow
+   then git push -u origin main. The push triggers the Deploy workflow
+   (build job: npm ci, core + shell tests, typecheck:all, four builds;
+   deploy job: deploy-pages). Watch with gh run watch.
+5. AFTER GREEN: move the custom domain. The old site repo
+   DamicoHealth/damicohealth-com currently owns damicohealth.com (legacy
+   Pages build). Remove it there (Settings -> Pages, or
+   gh api -X PUT repos/DamicoHealth/damicohealth-com/pages -F cname=null),
+   then attach it here:
+   gh api -X PUT repos/DamicoHealth/dh-emr/pages -f cname=damicohealth.com -f build_type=workflow
+   DNS already points at GitHub Pages for the old repo, so no DNS change
+   is expected. Verify https://damicohealth.com/, /field/, /clinic/,
+   /demo/field/, /demo/clinic/, /guides/field/, /guides/clinic/.
+6. Then: redirect the old repo's app URL (if any) to /field/; enforce
+   HTTPS once the certificate is issued for the new site.
