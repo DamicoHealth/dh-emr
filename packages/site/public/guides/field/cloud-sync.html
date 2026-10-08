@@ -158,7 +158,7 @@
       <table class="guide-table">
         <tr><th>You need</th><th>Where</th></tr>
         <tr><td>A Supabase account</td><td>supabase.com. The free tier is enough for a small fleet.</td></tr>
-        <tr><td><code>setup.sql</code> and <code>verify.sql</code></td><td>The <code>supabase</code> folder of the DH EMR source code, next to the step-by-step in <code>SETUP.md</code>. Until they are published on this site, that is where they live.</td></tr>
+        <tr><td><code>setup.sql</code> and <code>verify.sql</code></td><td>The <a href="../../supabase/">database setup scripts</a> page of this site. Each has a Copy button; nothing to download or install.</td></tr>
         <tr><td>A browser on a computer</td><td>The dashboard is easier on a large screen.</td></tr>
       </table>
 
@@ -172,8 +172,8 @@
       <h2 id="schema">Run the schema</h2>
       <ol class="steps">
         <li><p>In the left sidebar, open SQL Editor, then New query.</p></li>
-        <li><p>Paste the entire contents of <code>setup.sql</code> and click Run. Safe to run twice; re-running is the documented upgrade path.</p></li>
-        <li><p>Recommended: paste and run <code>verify.sql</code>. It changes nothing and ends by rolling itself back.</p><p class="what-you-see">Every row of its output must say PASS.</p></li>
+        <li><p>Open the <a href="../../supabase/">database setup scripts</a> page, press Copy under <code>setup.sql</code>, paste it into the query and click Run. Safe to run twice; re-running is the documented upgrade path.</p></li>
+        <li><p>Recommended: do the same with <code>verify.sql</code>. It changes nothing and ends by rolling itself back.</p><p class="what-you-see">Every row of its output must say PASS.</p></li>
       </ol>
       <div class="callout warn">
         <p>Upgrading a project already in use? Run it after clinic hours: it briefly locks the records table, and a device syncing in those seconds shows a sync error, retries, and succeeds. Nothing is lost, but it is alarming to watch mid-clinic.</p>

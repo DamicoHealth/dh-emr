@@ -174,7 +174,7 @@
         <tr><td>A Supabase account</td><td>At supabase.com; the free tier is enough for a small clinic.</td></tr>
         <tr><td>One administrator to start: you</td><td>An email and a password you will remember. The app has no password reset, so write it down somewhere safe.</td></tr>
         <tr><td>A computer with a browser</td><td>For the project dashboard; easier on a large screen.</td></tr>
-        <tr><td>The two SQL files</td><td><code>setup.sql</code> and <code>verify.sql</code>, in the <code>supabase</code> folder of the DH EMR source code next to <code>SETUP.md</code>, until they are published on this site.</td></tr>
+        <tr><td>The two SQL files</td><td><code>setup.sql</code> and <code>verify.sql</code>, on the <a href="../../supabase/">database setup scripts</a> page of this site. Each has a Copy button; nothing to download or install.</td></tr>
         <tr><td>Your own device</td><td>A tablet, laptop or phone with a modern browser. Most can add the app to the home screen so it opens like an app.</td></tr>
         <tr><td>About an hour</td><td>Plus a few minutes per staff device.</td></tr>
       </table>
@@ -189,8 +189,8 @@
       <h2 id="schema">4. Run the schema</h2>
       <ol class="steps">
         <li>In the left sidebar, open SQL Editor, then New query.</li>
-        <li>Paste all of <code>setup.sql</code> and click Run. It is safe to run twice; re-running is the upgrade path.</li>
-        <li>Recommended: run <code>verify.sql</code> next.
+        <li>Open the <a href="../../supabase/">database setup scripts</a> page, press Copy under <code>setup.sql</code>, paste it into the query and click Run. It is safe to run twice; re-running is the upgrade path.</li>
+        <li>Recommended: do the same with <code>verify.sql</code> next.
           <p class="what-you-see">Every row must say PASS. It changes nothing and ends by rolling itself back.</p></li>
       </ol>
       <p>The schema creates the tables, the rules that make every read and write need an approved account, the server-side checks behind the Staff screen, and the live updates that reach every device within seconds.</p>

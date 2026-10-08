@@ -628,3 +628,17 @@ every hand-written page (og:url per page) and on both app shells (no
 og:url there: the demos share the template). Facebook caches a link's
 preview; after any change, paste the URL into the Sharing Debugger
 (developers.facebook.com/tools/debug) and press "Scrape again".
+
+## SQL published on the site (2026-10-08)
+
+Alec: "where is the actual setup and verify for people?" The guides told
+readers the files were in the repo's supabase folder "until published on
+this site". Now published: scripts/build-sql-page.mjs (npm run build:sql,
+in the deploy workflow after build:demos) copies supabase/*.sql into
+packages/site/public/supabase/ (gitignored) and generates an index.html
+there that shows each script in full with a Copy button and a download
+link; the guides (Clinic setup, Field cloud sync, Clinic admin guide) link
+to https://damicohealth.com/supabase/. The canonical files stay in
+supabase/; never edit the published copies. The copy button uses the
+clipboard API and falls back to selecting the text (the built-in browser
+pane blocks clipboard writes, so the fallback is what was exercised).

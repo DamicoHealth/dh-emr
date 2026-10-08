@@ -548,7 +548,7 @@ RETURNING id, is_admin, activated_at;</code></pre></li>
       <p>The setup guide uses the same line for the <a href="setup.html#first-admin">very first admin</a>; its <a href="setup.html#recovery">recovery section</a> repeats these steps. A revoked device is different: accounts are restored from the Staff screen, devices only by the SQL line in <a href="#fleet">section 4</a>.</p>
 
       <h3>Where the SQL and the setup guide live</h3>
-      <p><code>SETUP.md</code> and the two SQL files that set up and check a project, <code>setup.sql</code> and <code>verify.sql</code>, live in the <code>supabase</code> folder of the DH EMR source code until they are published here. The setup guide also has a row-count check to run before and after any change to the project.</p>
+      <p>The two SQL files that set up and check a project, <code>setup.sql</code> and <code>verify.sql</code>, are on the <a href="../../supabase/">database setup scripts</a> page of this site, each with a Copy button. The <a href="setup.html">setup guide</a> also has a row-count check to run before and after any change to the project.</p>
       <div class="callout warn">
         <p><strong>Free-tier pausing.</strong> A project that goes a week without traffic is paused, and one paused long enough can stop being restorable in place. A seasonal clinic is idle that long; keep the backup files either way.</p>
       </div>

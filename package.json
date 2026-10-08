@@ -17,6 +17,7 @@
     "dev:clinic": "npm --workspace @dh/clinic run dev",
     "build:field": "npm --workspace @dh/field run build",
     "build:clinic": "npm --workspace @dh/clinic run build",
-    "build:demos": "npm --workspace @dh/field run build:demo && npm --workspace @dh/clinic run build:demo"
+    "build:demos": "npm --workspace @dh/field run build:demo && npm --workspace @dh/clinic run build:demo",
+    "build:sql": "node scripts/build-sql-page.mjs"
   }
 }

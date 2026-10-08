@@ -36,6 +36,7 @@ jobs:
       - run: npm run build:field
       - run: npm run build:clinic
       - run: npm run build:demos
+      - run: npm run build:sql
       - run: echo damicohealth.com > packages/site/public/CNAME
       - uses: actions/upload-pages-artifact@v3
         with:

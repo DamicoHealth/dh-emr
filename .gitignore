@@ -24,3 +24,6 @@ packages/site/public/clinic/
 # Scratch reference copy, never committed
 packages/site/public/_old/
 packages/site/public/_lp/
+
+# Published copies of supabase/*.sql plus the page that shows them (npm run build:sql).
+packages/site/public/supabase/
