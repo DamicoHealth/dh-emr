@@ -717,7 +717,12 @@ section h2 {
   .lp-hero {
     padding: 3.5rem 0 4rem;
   }
+}
 
+/* Side by side only once the device column can be ~560 px or wider: a
+   six-column board squeezed beside the copy at tablet and small-laptop
+   widths broke names mid-word (Alec's screenshot, 2026-10-07). */
+@media (min-width: 1024px) {
   .lp-hero-grid {
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     gap: 2.5rem;
@@ -738,7 +743,11 @@ section h2 {
 
 .lp-devices {
   position: relative;
-  padding: 0 0 8%;
+  padding: 0 9% 9% 0;
+  /* Mockup text never breaks inside a word (site.css wraps anywhere by
+     default); names, numbers and buttons ellipsize instead. */
+  overflow-wrap: normal;
+  word-break: keep-all;
 }
 
 .lp-tablet,
@@ -751,25 +760,27 @@ section h2 {
   font-size: 9px;
 }
 
-/* 78% + 24% leaves a 2% overlap that stays inside the tablet's bezel, so
-   every station, Done included, stays visible beside the phone. */
+/* The tablet takes the whole column; the phone hangs over its bottom-right
+   corner, where the board's Done column has only "Show 4 done", so every
+   station stays readable. The type ratio is set so a 13-character name
+   fits a card at every container width above the restack point. */
 .lp-tablet {
-  width: 78%;
+  width: 100%;
   aspect-ratio: 4 / 3;
   border-radius: 1.5em;
   padding: 0.9em;
-  font-size: clamp(6px, 1.75cqw, 10.5px);
+  font-size: clamp(6px, 1.5cqw, 9.5px);
 }
 
 .lp-devices .lp-phone {
   position: absolute;
   right: 0;
   bottom: 0;
-  width: 24%;
+  width: 19%;
   aspect-ratio: 9 / 16.5;
   border-radius: 1.9em;
   padding: 0.6em;
-  font-size: clamp(5.5px, 1.5cqw, 8.8px);
+  font-size: clamp(5px, 1.2cqw, 7.6px);
 }
 
 .lp-screen {
@@ -804,6 +815,7 @@ section h2 {
   align-items: center;
   gap: 0.8em;
   padding: 0.55em 0.8em;
+  overflow: hidden;
   background: var(--surface);
   border-bottom: 1px solid var(--line);
   font-size: 0.9em;
@@ -826,10 +838,13 @@ section h2 {
 
 .lp-appbar-tabs {
   display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
   gap: 0.9em;
   margin-left: 0.4em;
   color: var(--ink-soft);
   white-space: nowrap;
+  overflow: hidden;
 }
 
 .lp-appbar-tabs b {
@@ -861,7 +876,11 @@ section h2 {
 }
 
 .lp-appbar-user {
+  flex: none;
+  max-width: 42%;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--ink-soft);
 }
 
@@ -928,16 +947,19 @@ section h2 {
 
 .lp-colhead {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.15em 0.3em;
   padding: 0.1em 0.2em 0.35em;
   font-weight: 700;
   font-size: 0.9em;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .lp-colhead i {
+  flex: none;
   min-width: 1.5em;
   padding: 0 0.35em;
   border-radius: 999px;
@@ -974,16 +996,24 @@ section h2 {
   margin-bottom: 0;
 }
 
+/* Name on its own line, wait chip under it: beside the name, the chip
+   left every name in a narrow card ellipsized. */
 .lp-card-top {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.3em;
+  gap: 0.15em;
 }
 
 .lp-card-top b {
+  flex: none;
+  max-width: 100%;
+  min-width: 0;
   font-size: 0.95em;
   line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .lp-wait {
@@ -1000,6 +1030,9 @@ section h2 {
 .lp-card-no {
   display: block;
   margin-top: 0.15em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.72em;
   color: var(--ink-soft);
@@ -1015,12 +1048,15 @@ section h2 {
 .lp-open,
 .lp-next {
   flex: 1 1 auto;
+  min-width: 0;
   padding: 0.25em 0.4em;
   border-radius: 0.4em;
   font-weight: 700;
   font-size: 0.8em;
   text-align: center;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .lp-open {
@@ -1084,6 +1120,9 @@ section h2 {
 
 .lp-visit b {
   display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .lp-visit span {
@@ -1091,6 +1130,9 @@ section h2 {
   margin-top: 0.1em;
   font-size: 0.78em;
   color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .lp-visit .lp-dx {
@@ -1281,6 +1323,8 @@ section h2 {
   align-items: center;
   gap: 1.25rem;
   margin-top: 1.75rem;
+  overflow-wrap: normal;
+  word-break: keep-all;
 }
 
 .lp-paper {

@@ -601,3 +601,18 @@ page and the rules forbade cutting them. The gain is structure (per page
 5-21 step lists, 5-15 tables, 7-21 callouts, a contents box), not length.
 Verified in the built-in browser at phone width (fixed first-column table
 labels breaking mid-word with a keep-all rule).
+
+Hero mockup fix (same evening, after Alec's desktop screenshot): the
+tablet's board broke names mid-word ("Jos eph Oke llo") on desktops. Two
+causes: site.css sets overflow-wrap: anywhere on body, and the six-column
+board at 78% of a ~570 px column left ~61 px per card for 9.5 px names.
+Fix in site.css: the mockups never break inside words (keep-all) and
+ellipsize names, numbers, buttons and app-bar items instead; the tablet
+takes the full column (type ratio 1.5cqw, max 9.5 px) with the wait chip
+under the name; the phone (19%) hangs over the Done column only; the hero
+goes two-column at 1024 px instead of 720 px so the device column is never
+squeezed beside the copy. Measured in the built-in browser at 375, 900,
+1024, 1100, 1440 and 1800 px: zero multi-line names, phone clear of the
+Pharmacy column, only the two longest demo names ellipsized. Lesson: the
+pane is 560 px wide, so desktop layouts must be MEASURED (getClientRects,
+scrollWidth) with viewport emulation, not eyeballed.
