@@ -616,3 +616,15 @@ squeezed beside the copy. Measured in the built-in browser at 375, 900,
 Pharmacy column, only the two longest demo names ellipsized. Lesson: the
 pane is 560 px wide, so desktop layouts must be MEASURED (getClientRects,
 scrollWidth) with viewport emulation, not eyeballed.
+
+## Social preview (2026-10-08)
+
+Alec asked how to control the image Facebook picks for the link. The site
+had no Open Graph tags and no raster image at all. Added
+packages/site/public/og-image.png (1200x630, rendered from a canvas
+drawing of the brand mark, "Connected. Offline." and a simplified board;
+regenerate the same way if the brand changes) and og:/twitter: tags on
+every hand-written page (og:url per page) and on both app shells (no
+og:url there: the demos share the template). Facebook caches a link's
+preview; after any change, paste the URL into the Sharing Debugger
+(developers.facebook.com/tools/debug) and press "Scrape again".
